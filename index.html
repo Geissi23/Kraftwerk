@@ -670,20 +670,28 @@ function wavFromSamples(samples,sr){
   return new Blob([buf],{type:'audio/wav'});
 }
 function buildAlarmWav(silenceSec){
-  const sr=ALARM_SR,freqs=[880,1109,1319],toneDur=.15,fade=.02,gap=.25,blocks=3;
-  const toneN=Math.round(toneDur*sr),gapN=Math.round(gap*sr);
+  const sr=ALARM_SR;
+  // rising A-major arpeggio resolving on the octave (A5-C#6-E6-A6): a short, upbeat "ta-da" instead of a flat alarm beep
+  const notes=[[880,.11],[1109,.11],[1319,.11],[1760,.3]];
+  const fadeIn=.015,fadeOut=.05,gap=.3,blocks=2,amp=100;
+  const noteNs=notes.map(([,d])=>Math.round(d*sr));
+  const phraseN=noteNs.reduce((a,n)=>a+n,0);
+  const gapN=Math.round(gap*sr);
   const silN=Math.max(0,Math.round(Math.min(silenceSec,ALARM_MAX_SILENCE)*sr));
-  const total=silN+blocks*freqs.length*toneN+(blocks-1)*gapN;
+  const total=silN+blocks*phraseN+(blocks-1)*gapN;
   const data=new Uint8Array(total).fill(128);
   let off=silN;
   for(let bI=0;bI<blocks;bI++){
-    freqs.forEach(f=>{
-      for(let i=0;i<toneN;i++){
-        const t=i/sr;let amp=1;
-        if(t<fade)amp=t/fade;else if(t>toneDur-fade)amp=(toneDur-t)/fade;
-        data[off+i]=128+Math.round(Math.sin(2*Math.PI*f*t)*amp*110);
+    notes.forEach(([f,d],ni)=>{
+      const n=noteNs[ni];
+      for(let i=0;i<n;i++){
+        const t=i/sr;let env=1;
+        if(t<fadeIn)env=.5-.5*Math.cos(Math.PI*t/fadeIn);
+        else if(t>d-fadeOut)env=.5-.5*Math.cos(Math.PI*(d-t)/fadeOut);
+        const s=(Math.sin(2*Math.PI*f*t)*.78+Math.sin(2*Math.PI*2*f*t)*.22)*env;
+        data[off+i]=128+Math.round(s*amp);
       }
-      off+=toneN;
+      off+=n;
     });
     if(bI<blocks-1)off+=gapN;
   }
