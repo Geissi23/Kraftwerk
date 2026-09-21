@@ -246,6 +246,7 @@ textarea.ti{min-height:110px;padding:10px 12px;font-size:13px;font-family:ui-mon
 <div id="sheetbg"><div id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div id="sheetc"></div></div></div>
 <div id="toast" role="status"></div>
 <canvas id="fx"></canvas>
+<audio id="alarmaudio" preload="auto" style="display:none"></audio>
 <datalist id="exlib"></datalist>
 
 <script>
@@ -272,39 +273,55 @@ const checkSvg='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>'
 
 /* ---------- default plan ---------- */
 const LIB=['Schrägbankdrücken (Kurzhantel)','Schrägbankdrücken (Langhantel)','Chest Press (Maschine)','Chest Fly','Triceps Pushdown (Kabel)','Triceps Extension (Kabel)','Triceps Extension (Langhantel)','Dips','Squat (Langhantel)','Leg Press','Bulgarian Split Squat','Seated Leg Curl (Maschine)','Leg Extension (Maschine)','Wadenheben stehend','Wadenheben sitzend','Hip Thrust','Rumänisches Kreuzheben','Hip Abductor (Maschine)','Hip Adductor (Maschine)','Lat Pulldown (Kabel)','Lat Pulldown (enger Griff)','Seated Row (Kabel)','Rudern vorgebeugt (Langhantel)','Klimmzüge','Einarmiges Kurzhantelrudern','Preacher Curl (Langhantel)','Incline Curl (Kurzhantel)','Hammer Curl (Kabel)','Hammer Curl (Kurzhantel)','Overhead Press (Langhantel)','Schulterdrücken (Kurzhantel)','Lateral Raise (Maschine)','Lateral Raise (Kurzhantel)','Face Pulls','Cable Crunch','Hanging Leg Raises','Pallof Press'];
+const PLAN_VER=2;
 function defaultPlan(){
   const ex=(name,sets,a,b,rest,ss='')=>({id:uid(),name,sets,repMin:a,repMax:b,rest,ss});
   const routines=[
-    {id:'r_chest',name:'Brust & Trizeps',ex:[
-      ex('Schrägbankdrücken (Kurzhantel)',4,6,10,120),ex('Chest Press (Maschine)',3,8,12,90),
-      ex('Chest Fly',3,12,15,60,'A'),ex('Triceps Pushdown (Kabel)',3,10,12,60,'A'),ex('Triceps Extension (Kabel)',3,12,12,60)]},
-    {id:'r_legs',name:'Beine',ex:[
-      ex('Squat (Langhantel)',4,5,7,120),ex('Leg Press',3,10,12,90),ex('Bulgarian Split Squat',3,8,10,90),
-      ex('Seated Leg Curl (Maschine)',3,10,12,60,'A'),ex('Leg Extension (Maschine)',3,12,15,60,'A'),ex('Wadenheben stehend',4,10,12,45)]},
-    {id:'r_back',name:'Rücken & Bizeps',ex:[
-      ex('Lat Pulldown (Kabel)',4,8,10,120),ex('Seated Row (Kabel)',4,8,10,90),
-      ex('Lat Pulldown (enger Griff)',3,10,12,60,'A'),ex('Preacher Curl (Langhantel)',3,8,10,60,'A'),
-      ex('Incline Curl (Kurzhantel)',3,10,12,60,'B'),ex('Hammer Curl (Kabel)',2,12,12,60,'B')]},
-    {id:'r_shoulders',name:'Schultern & Arme',ex:[
-      ex('Overhead Press (Langhantel)',4,6,8,120),ex('Lateral Raise (Maschine)',4,12,15,60,'A'),ex('Face Pulls',3,15,15,60,'A'),
-      ex('Triceps Extension (Langhantel)',3,8,10,60,'B'),ex('Preacher Curl (Langhantel)',2,10,10,60,'B')]}
+    {id:'r_ua',name:'Oberkörper A',ex:[
+      ex('Schrägbankdrücken (Kurzhantel)',4,6,8,120),ex('Lat Pulldown (Kabel)',3,8,10,90),
+      ex('Overhead Press (Langhantel)',3,6,8,120),ex('Seated Row (Kabel)',3,8,10,60,'A'),
+      ex('Triceps Pushdown (Kabel)',3,10,12,60,'A'),ex('Preacher Curl (Langhantel)',2,8,10,60)]},
+    {id:'r_la',name:'Unterkörper A',ex:[
+      ex('Squat (Langhantel)',4,5,7,120),ex('Leg Press',3,10,12,90),
+      ex('Seated Leg Curl (Maschine)',3,10,12,60,'A'),ex('Leg Extension (Maschine)',3,12,15,60,'A'),
+      ex('Wadenheben stehend',4,10,12,45),ex('Cable Crunch',3,10,12,45)]},
+    {id:'r_ub',name:'Oberkörper B',ex:[
+      ex('Chest Press (Maschine)',3,8,12,90),ex('Seated Row (Kabel)',3,8,10,90),
+      ex('Chest Fly',3,12,15,60,'A'),ex('Lat Pulldown (enger Griff)',3,10,12,60,'A'),
+      ex('Lateral Raise (Maschine)',4,12,15,60,'B'),ex('Face Pulls',2,15,15,60,'B'),
+      ex('Incline Curl (Kurzhantel)',2,10,12,60,'C'),ex('Triceps Extension (Kabel)',2,12,12,60,'C')]},
+    {id:'r_lb',name:'Unterkörper B',ex:[
+      ex('Bulgarian Split Squat',3,8,10,90),ex('Rumänisches Kreuzheben',3,8,10,90),
+      ex('Seated Leg Curl (Maschine)',3,12,15,60,'A'),ex('Leg Extension (Maschine)',2,12,15,60,'A'),
+      ex('Hip Abductor (Maschine)',2,15,15,45,'B'),ex('Hip Adductor (Maschine)',2,15,15,45,'B'),
+      ex('Wadenheben sitzend',3,15,15,45),ex('Hanging Leg Raises',3,10,15,45)]}
   ];
   const schedules={
-    normal:{1:'r_chest',2:'r_legs',3:'',4:'r_back',5:'r_shoulders',6:'mma',0:''},
-    mmaMon:{1:'mma',2:'r_legs',3:'r_chest',4:'',5:'r_back',6:'r_shoulders',0:''},
-    mmaWed:{1:'r_chest',2:'r_legs',3:'mma',4:'r_back',5:'r_shoulders',6:'',0:''}
+    normal:{1:'r_ua',2:'r_la',3:'',4:'r_ub',5:'r_lb',6:'mma',0:''},
+    mmaMon:{1:'mma',2:'r_ua',3:'r_la',4:'',5:'r_ub',6:'r_lb',0:''},
+    mmaWed:{1:'r_ua',2:'r_la',3:'mma',4:'r_ub',5:'r_lb',6:'',0:''}
   };
   return {routines,schedules};
 }
 function baseState(){
   const p=defaultPlan();
-  return {v:1,pt:0,mode:'normal',goal:4,sound:true,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null};
+  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:4,sound:true,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null};
 }
 
 /* ---------- storage ---------- */
 const KEY='kraftwerk.v1';
 function loadState(){
-  try{const s=localStorage.getItem(KEY);if(s)return Object.assign(baseState(),JSON.parse(s));}catch(e){}
+  try{
+    const s=localStorage.getItem(KEY);
+    if(s){
+      const raw=JSON.parse(s),st=Object.assign(baseState(),raw);
+      if(!(raw.planVer>=PLAN_VER)){
+        const p=defaultPlan();
+        st.routines=p.routines;st.schedules=p.schedules;st.planVer=PLAN_VER;st.pt=Date.now();
+      }
+      return st;
+    }
+  }catch(e){}
   return baseState();
 }
 let S=loadState();
@@ -313,7 +330,7 @@ function savePlan(){S.pt=Date.now();persist();schedulePush();}
 
 /* ---------- optional cloud sync (db capability) ---------- */
 const Sync={db:null,base:null,status:'Nur auf diesem Gerät gespeichert',timer:null};
-const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt});
+const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer});
 function schedulePush(){clearTimeout(Sync.timer);Sync.timer=setTimeout(pushPlan,1500);}
 async function pushPlan(){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/plan').set({json:JSON.stringify(planPart()),t:Date.now()});}catch(e){}}
 async function pushWorkout(w){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/w_'+w.id).set({json:JSON.stringify(w),t:Date.now()});}catch(e){}}
@@ -333,7 +350,7 @@ async function syncInit(){
     if(rp){
       S.deleted=[...new Set([...(S.deleted||[]),...(rp.deleted||[])])];
       if((rp.pt||0)>(S.pt||0)){
-        ['routines','schedules','mode','goal','sound','bodyweight','bwTarget','pt'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});
+        ['routines','schedules','mode','goal','sound','bodyweight','bwTarget','pt','planVer'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});
         changed=true;
       }else pushPlan();
     }else pushPlan();
@@ -640,6 +657,51 @@ function beep(times=2){
     o.frequency.value=i===times-1?1046:784;g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.3,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+.18);
     o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.2);}}catch(e){}
 }
+/* rest alarm: WAV blob (silence + chime) so it plays through headphones and a locked screen */
+const ALARM_SR=8000,ALARM_MAX_SILENCE=1200;
+function wavFromSamples(samples,sr){
+  const n=samples.length,buf=new ArrayBuffer(44+n),v=new DataView(buf);
+  const ws=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+  ws(0,'RIFF');v.setUint32(4,36+n,true);ws(8,'WAVE');
+  ws(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,sr,true);v.setUint32(28,sr,true);v.setUint16(32,1,true);v.setUint16(34,8,true);
+  ws(36,'data');v.setUint32(40,n,true);
+  new Uint8Array(buf,44).set(samples);
+  return new Blob([buf],{type:'audio/wav'});
+}
+function buildAlarmWav(silenceSec){
+  const sr=ALARM_SR,freqs=[880,1109,1319],toneDur=.15,fade=.02,gap=.25,blocks=3;
+  const toneN=Math.round(toneDur*sr),gapN=Math.round(gap*sr);
+  const silN=Math.max(0,Math.round(Math.min(silenceSec,ALARM_MAX_SILENCE)*sr));
+  const total=silN+blocks*freqs.length*toneN+(blocks-1)*gapN;
+  const data=new Uint8Array(total).fill(128);
+  let off=silN;
+  for(let bI=0;bI<blocks;bI++){
+    freqs.forEach(f=>{
+      for(let i=0;i<toneN;i++){
+        const t=i/sr;let amp=1;
+        if(t<fade)amp=t/fade;else if(t>toneDur-fade)amp=(toneDur-t)/fade;
+        data[off+i]=128+Math.round(Math.sin(2*Math.PI*f*t)*amp*110);
+      }
+      off+=toneN;
+    });
+    if(bI<blocks-1)off+=gapN;
+  }
+  return wavFromSamples(data,sr);
+}
+const alarmAudio=$('#alarmaudio');
+let alarmUrl=null,alarmFailed=false;
+function freeAlarmUrl(){if(alarmUrl){try{URL.revokeObjectURL(alarmUrl);}catch(e){}alarmUrl=null;}}
+function stopAlarmAudio(){try{alarmAudio&&alarmAudio.pause();}catch(e){}freeAlarmUrl();}
+function playAlarmFor(sec){
+  if(!alarmAudio)return;
+  freeAlarmUrl();
+  alarmFailed=false;
+  alarmUrl=URL.createObjectURL(buildAlarmWav(Math.max(0,sec)));
+  alarmAudio.src=alarmUrl;
+  try{if('mediaSession' in navigator&&window.MediaMetadata)navigator.mediaSession.metadata=new MediaMetadata({title:'Pause läuft'});}catch(e){}
+  try{const p=alarmAudio.play();if(p&&p.catch)p.catch(()=>{alarmFailed=true;});}catch(e){alarmFailed=true;}
+}
 async function wake(){try{if('wakeLock' in navigator)wl=await navigator.wakeLock.request('screen');}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.active&&$('#wk').classList.contains('open'))wake();});
 
@@ -735,21 +797,32 @@ ACT.addexok=()=>{
 };
 
 /* rest timer */
-function startRest(sec,name){restState={end:Date.now()+sec*1000,total:sec,label:name,fired:false};$('#rest').className='on';tickRest();}
-function stopRest(){restState=null;$('#rest').className='';}
+function startRest(sec,name){
+  restState={end:Date.now()+sec*1000,total:sec,label:name,fired:false};
+  $('#rest').className='on';
+  if(S.sound)playAlarmFor(sec);else stopAlarmAudio();
+  tickRest();
+}
+function stopRest(){restState=null;$('#rest').className='';stopAlarmAudio();}
 function tickRest(){
   if(!restState)return;
   const left=(restState.end-Date.now())/1000;
   if(left<=0){
-    if(!restState.fired){restState.fired=true;beep(3);if(navigator.vibrate)navigator.vibrate([200,100,200]);}
+    if(!restState.fired){restState.fired=true;if(alarmFailed)beep(3);if(navigator.vibrate)navigator.vibrate([200,100,200]);}
     $('#rest').className='on go';$('#resttime').textContent='Los!';$('#restlbl').textContent='Nächster Satz';$('#restbar').style.width='0%';
     if(left<-6)stopRest();return;
   }
   $('#rest').className='on';$('#restlbl').textContent='Pause · '+restState.label;
   $('#resttime').textContent=fmtClock(left);$('#restbar').style.width=Math.min(100,left/restState.total*100)+'%';
 }
-ACT.restm=()=>{if(restState){restState.end-=15000;restState.total=Math.max(restState.total,1);tickRest();}};
-ACT.restp=()=>{if(restState){restState.end+=15000;restState.total+=15;restState.fired=false;tickRest();}};
+function refreshAlarm(){
+  if(!restState)return;
+  const remain=(restState.end-Date.now())/1000;
+  if(S.sound&&remain>0.05)playAlarmFor(remain);
+  else{stopAlarmAudio();if(S.sound)alarmFailed=true;}
+}
+ACT.restm=()=>{if(restState){restState.end-=15000;restState.total=Math.max(restState.total,1);refreshAlarm();tickRest();}};
+ACT.restp=()=>{if(restState){restState.end+=15000;restState.total+=15;restState.fired=false;refreshAlarm();tickRest();}};
 ACT.restskip=stopRest;
 setInterval(()=>{if($('#wk').classList.contains('open'))updateWk();tickRest();},500);
 
@@ -871,6 +944,7 @@ ACT.settings=()=>{
       <div class="stepper"><button data-act="goalm" aria-label="Weniger">−</button><b id="goalv">${S.goal}</b><button data-act="goalp" aria-label="Mehr">+</button></div></div>
     <div class="row2" style="margin-bottom:16px"><div><div class="t" style="font-weight:600">Ton am Pausenende</div><div class="small muted">Signal, wenn die Pause vorbei ist</div></div>
       <button class="tog ${S.sound?'on':''}" data-act="sound" role="switch" aria-checked="${S.sound}" aria-label="Ton"><i></i></button></div>
+    <button class="btn ghost full" style="margin-bottom:16px" data-act="testalarm">Weckton testen (Kopfhörer)</button>
     <div class="card" style="margin-bottom:12px"><div class="t" style="font-weight:600">Datensicherung</div><div class="small muted">${esc(Sync.status)}. Zusätzlich kannst du alles als Text sichern.</div></div>
     <div class="btnrow" style="margin-top:0"><button class="btn ghost" data-act="export">Backup anzeigen und kopieren</button><button class="btn ghost" data-act="import">Backup wiederherstellen</button>
     <button class="btn danger" data-act="resetplan">Standardplan wiederherstellen</button></div>
@@ -880,7 +954,8 @@ ACT.settings=()=>{
 };
 ACT.goalm=()=>{S.goal=Math.max(1,S.goal-1);$('#goalv').textContent=S.goal;savePlan();};
 ACT.goalp=()=>{S.goal=Math.min(7,S.goal+1);$('#goalv').textContent=S.goal;savePlan();};
-ACT.sound=b=>{S.sound=!S.sound;b.classList.toggle('on',S.sound);b.setAttribute('aria-checked',S.sound);savePlan();if(S.sound){unlockAudio();beep(1);}};
+ACT.sound=b=>{S.sound=!S.sound;b.classList.toggle('on',S.sound);b.setAttribute('aria-checked',S.sound);savePlan();if(S.sound){unlockAudio();beep(1);}else stopAlarmAudio();};
+ACT.testalarm=()=>{playAlarmFor(.2);};
 ACT.export=()=>{
   const data=JSON.stringify({app:'kraftwerk',v:1,data:Object.assign({},S,{active:null})});
   openSheet(`<h2>Backup</h2><p class="muted small">Kopiere diesen Text und bewahre ihn z. B. in einer Notiz auf.</p><textarea class="ti" id="bk" readonly>${esc(data)}</textarea>
