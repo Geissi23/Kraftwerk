@@ -219,7 +219,7 @@ textarea.ti{min-height:110px;padding:10px 12px;font-size:13px;font-family:ui-mon
 .sum{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 
 /* toast + confetti */
-#toast{position:fixed;left:50%;bottom:calc(64px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);z-index:95;background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;font-weight:600;max-width:90%;text-align:center;transition:transform .25s}
+#toast{position:fixed;left:50%;bottom:calc(64px + env(safe-area-inset-bottom,0px));transform:translate(-50%,220px);z-index:95;background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;font-weight:600;max-width:90%;text-align:center;transition:transform .25s}
 #toast.show{transform:translate(-50%,0)}
 #toast.above-rest{bottom:calc(116px + env(safe-area-inset-bottom,0px))}
 #toast.gold{background:var(--gold);color:#241800}
@@ -621,12 +621,15 @@ function exInfoBody(e,ctx){
 }
 function openExInfo(key,ctx){
   const e=EX_LIB[key];if(!e)return;
+  const backBtn=ctx&&ctx.mode==='editor'?'<button class="btn ghost" data-act="backtoeditor">Zurück</button>'
+    :ctx&&ctx.mode==='browse'?'<button class="btn ghost" data-act="exlibback">Zurück</button>'
+    :'<button class="btn ghost" data-act="closesheet">Schliessen</button>';
   openSheet(`<h2>${esc(e.n)}</h2>${exInfoBody(e,ctx)}
-    <div class="btnrow">${ctx&&ctx.mode==='editor'?'<button class="btn ghost" data-act="backtoeditor">Zurück</button>':'<button class="btn ghost" data-act="closesheet">Schliessen</button>'}</div>`);
+    <div class="btnrow">${backBtn}</div>`);
 }
 
 /* exercise library tab */
-let LIB_Q='',LIB_BP='';
+let LIB_Q='',LIB_BP='',libStack=[],libCurrent=null;
 function exLibList(){
   const q=LIB_Q.trim().toLowerCase();
   return Object.values(EX_LIB).filter(e=>(!LIB_BP||e.bp.includes(LIB_BP))&&(!q||e.n.toLowerCase().includes(q))).sort((a,b)=>a.n.localeCompare(b.n,'de'));
@@ -659,7 +662,13 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
 /* exercise info / library ACT handlers (defined after ACT exists) */
 ACT.exinfo=b=>{const i=+b.dataset.i,ex=S.active&&S.active.exs[i];if(!ex)return;openExInfo(ex.key,{mode:'workout',i});};
 ACT.edinfo=b=>{const i=+b.dataset.i;if(!ED||!ED.ex[i])return;openExInfo(exKey(ED.ex[i].name),{mode:'editor',i});};
-ACT.exlibitem=b=>openExInfo(b.dataset.key,{mode:'browse'});
+ACT.exlibitem=b=>{libStack.push(libCurrent);libCurrent=b.dataset.key;openExInfo(libCurrent,{mode:'browse'});};
+ACT.exlibback=()=>{
+  const prev=libStack.pop();
+  if(prev===undefined){closeSheet();return;}
+  libCurrent=prev;
+  if(libCurrent===null)showExLib();else openExInfo(libCurrent,{mode:'browse'});
+};
 ACT.backtoeditor=()=>{if(ED)showEditor();else closeSheet();};
 ACT.swaptoday=b=>{
   const i=+b.dataset.i,name=b.dataset.name,ex=S.active&&S.active.exs[i];
@@ -681,7 +690,7 @@ ACT.swappermanent=b=>{
     savePlan();closeSheet();renderWorkout();updateWk();toast('Dauerhaft ersetzt: '+name);
   }
 };
-ACT.exlib=()=>{LIB_Q='';LIB_BP='';showExLib();};
+ACT.exlib=()=>{LIB_Q='';LIB_BP='';libStack=[];libCurrent=null;showExLib();};
 ACT.exlibbp=b=>{LIB_BP=b.dataset.bp;exLibRefresh();};
 
 function toast(msg,gold){const t=$('#toast');t.textContent=msg;t.className='show'+(gold?' gold':'')+($('#rest').classList.contains('on')?' above-rest':'');clearTimeout(toast.t);toast.t=setTimeout(()=>t.className='',2600);}
