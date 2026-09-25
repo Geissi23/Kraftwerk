@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Kraftwerk">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#2B4BFF">
 <link rel="apple-touch-icon" id="touchicon" href="">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -130,6 +130,21 @@ svg.chart{width:100%;height:auto;display:block}
 .rec .big{font-family:var(--disp);font-size:30px;font-weight:700;text-align:right;line-height:1}
 .tag{display:inline-block;background:var(--gold-soft);color:var(--gold-ink);border-radius:8px;padding:1px 8px;font-size:12px;font-weight:600;margin-left:6px}
 
+/* exercise info / library */
+.exph{display:flex;gap:8px;margin-bottom:14px}
+.exph img,.exph .ph{width:50%;aspect-ratio:1;border-radius:12px;object-fit:cover;background:var(--bg);display:block}
+.exph .ph{display:grid;place-items:center;color:var(--muted);font-size:12px;text-align:center;padding:8px}
+.extips{margin:6px 0 0;padding-left:20px}
+.extips li{margin-bottom:4px}
+.exalt{padding:10px 0;border-top:1px solid var(--line)}
+.exalt:first-child{border-top:0}
+.exalt .t{font-weight:600;font-size:15px;margin-bottom:8px}
+.exalt .sw{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.exalt .sw button{min-height:44px;padding:0 6px;border-radius:9px;background:var(--soft);color:var(--accent);font-size:13px;font-weight:600}
+.exfilter{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-bottom:10px;-webkit-overflow-scrolling:touch}
+.exfilter button{flex:none;padding:0 16px;min-height:44px;border-radius:999px;background:var(--bg);color:var(--muted);font-size:14px;font-weight:500;white-space:nowrap}
+.exfilter button.on{background:var(--accent);color:var(--on-accent)}
+
 /* nav */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
 .nav button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;font-size:12px;font-weight:500;color:var(--muted);border-radius:12px}
@@ -164,6 +179,8 @@ svg.chart{width:100%;height:auto;display:block}
 .chk svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
 .row.done .chk{background:var(--good);border-color:var(--good);color:#fff}
 .prtag{grid-column:2 / 5;font-size:13px;font-weight:700;color:var(--gold-ink)}
+.sugg{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;padding:4px 6px 4px 12px;min-height:44px;background:var(--soft);border-radius:12px;font-size:13px;color:var(--ink)}
+.sugg button{min-height:44px;padding:0 16px;border-radius:9px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:600;flex:none}
 .addset{margin-top:8px;width:100%;min-height:40px;border-radius:11px;color:var(--accent);font-weight:600;font-size:15px}
 #rest{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:45;background:var(--ink);color:var(--bg);border-radius:18px;padding:12px 14px;display:none;box-shadow:0 8px 28px rgba(0,0,0,.3)}
 #rest.on{display:block}
@@ -202,8 +219,9 @@ textarea.ti{min-height:110px;padding:10px 12px;font-size:13px;font-family:ui-mon
 .sum{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 
 /* toast + confetti */
-#toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translate(-50%,-140%);z-index:80;background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;font-weight:600;max-width:90%;text-align:center;transition:transform .25s}
+#toast{position:fixed;left:50%;bottom:calc(64px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);z-index:95;background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;font-weight:600;max-width:90%;text-align:center;transition:transform .25s}
 #toast.show{transform:translate(-50%,0)}
+#toast.above-rest{bottom:calc(116px + env(safe-area-inset-bottom,0px))}
 #toast.gold{background:var(--gold);color:#241800}
 #fx{position:fixed;inset:0;z-index:90;pointer-events:none}
 @media (prefers-reduced-motion:reduce){#toast,.tog i{transition:none}}
@@ -400,6 +418,25 @@ function buildEx(e){
   return {key,name:e.name,sets:e.sets,repMin:e.repMin,repMax:e.repMax,rest:e.rest,ss:e.ss||'',rows,hint,go};
 }
 
+/* auto weight suggestion for the remaining open sets, based on the last checked set */
+function suggestNext(ex){
+  let lastDone=-1;
+  for(let j=0;j<ex.rows.length;j++)if(ex.rows[j].done)lastDone=j;
+  if(lastDone<0||!ex.rows.some(r=>!r.done))return null;
+  const last=ex.rows[lastDone],w=num(last.w),r=num(last.r);
+  if(!(w>0))return null;
+  const oneRM=e1(w,r);
+  if(!(oneRM>0))return null;
+  const target=Math.round((ex.repMin+ex.repMax)/2);
+  const raw=oneRM/(1+Math.min(target,12)/30);
+  const step=isLower(ex.name)?5:2.5;
+  const maxDelta=w*0.10;
+  const clamped=Math.max(-maxDelta,Math.min(maxDelta,raw-w));
+  const newW=Math.round((w+Math.round(clamped/step)*step)*10)/10;
+  if(newW===w||!(newW>0))return null;
+  return {rowIdx:lastDone,w:newW,delta:Math.round((newW-w)*10)/10};
+}
+
 /* PR check: compare a set with all earlier data */
 function prCheck(key,w,r,excludeRow){
   let maxW=-1,best=-1,maxR=-1,any=false;
@@ -461,12 +498,193 @@ const BADGES=[
 ];
 const QUOTES=['Heute zählt der erste Satz.','Konstanz schlägt Motivation.','Ein Kilo mehr als letztes Mal ist ein Sieg.','Wachstum passiert in der Pause. Schlaf gehört zum Plan.','Du musst nicht perfekt sein, nur da.','Jeder Satz ist eine Einzahlung.','Schwer wird leicht, wenn du wiederkommst.','Technik zuerst, dann Gewicht.','Kleine Steigerungen, jede Woche.','Sparring am Samstag: Beine heute schonen, Kopf frei.','Dein Training von letzter Woche ist heute dein Startpunkt.'];
 
+/* ---------- funny weight comparisons ---------- */
+const WEIGHT_OBJS=[
+  {kg:4,sg:'Hauskatze',pl:'Hauskatzen'},
+  {kg:6,sg:'Bowlingkugel',pl:'Bowlingkugeln'},
+  {kg:20,sg:'Wassermelonenkiste',pl:'Wassermelonenkisten'},
+  {kg:20,sg:'Kasten Bier',pl:'Kästen Bier'},
+  {kg:70,sg:'Waschmaschine',pl:'Waschmaschinen'},
+  {kg:300,sg:'Flügel',pl:'Flügeln'},
+  {kg:1200,sg:'Kleinwagen',pl:'Kleinwagen'},
+  {kg:2300,sg:'Nashorn',pl:'Nashörnern'},
+  {kg:5000,sg:'afrikanischer Elefant',pl:'afrikanischen Elefanten'},
+  {kg:14000,sg:'Doppeldeckerbus',pl:'Doppeldeckerbussen'},
+  {kg:40000,sg:'Sattelschlepper mit Ladung',pl:'Sattelschleppern mit Ladung'},
+  {kg:80000,sg:'Lokomotive',pl:'Lokomotiven'},
+  {kg:150000,sg:'Blauwal',pl:'Blauwalen'},
+  {kg:180000,sg:'Jumbojet',pl:'Jumbojets'}
+];
+function seedIndex(seed,n){
+  const s=String(seed??'');let h=0;
+  for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;
+  return Math.abs(h)%n;
+}
+function weightCompare(kg,seed){
+  if(!(kg>0))return null;
+  let idx=-1;
+  for(let i=0;i<WEIGHT_OBJS.length;i++)if(WEIGHT_OBJS[i].kg<=kg)idx=i;
+  if(idx<0)return null;
+  let lo=idx;while(lo>0&&WEIGHT_OBJS[lo-1].kg===WEIGHT_OBJS[idx].kg)lo--;
+  let hi=idx;while(hi<WEIGHT_OBJS.length-1&&WEIGHT_OBJS[hi+1].kg===WEIGHT_OBJS[idx].kg)hi++;
+  const alts=WEIGHT_OBJS.slice(lo,hi+1);
+  const obj=alts.length>1?alts[seedIndex(seed,alts.length)]:alts[0];
+  const n=Math.max(1,Math.round(kg/obj.kg));
+  return `Das entspricht etwa ${n.toLocaleString('de-CH')} ${n===1?obj.sg:obj.pl}.`;
+}
+
+/* ---------- exercise library (yuhonas/free-exercise-db, Unlicense) ---------- */
+const EX_IMG_BASE='https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
+const exImgUrl=(id,i)=>EX_IMG_BASE+id+'/'+i+'.jpg';
+const EX_LIB={
+ 'schrägbankdrücken (kurzhantel)':{n:'Schrägbankdrücken (Kurzhantel)',id:'Incline_Dumbbell_Press',m:'Obere Brust, Schultern, Trizeps',g:'Kurzhantel',bp:['Brust'],t:['Bank auf 15–30° stellen, Schulterblätter zusammenziehen und unten fixieren.','Kurzhanteln kontrolliert bis auf Brusthöhe absenken, Ellbogen leicht unter den Hanteln.','Oben die Ellbogen nicht ganz durchdrücken, Spannung in der Brust halten.'],x:'Zu steiler Bankwinkel verlagert die Arbeit auf die Schultern statt auf die obere Brust.',a:['Bankdrücken (Langhantel)','Chest Press (Maschine)','Chest Fly']},
+ 'lat pulldown (kabel)':{n:'Lat Pulldown (Kabel)',id:'Wide-Grip_Lat_Pulldown',m:'Latissimus, Bizeps',g:'Kabelzug',bp:['Rücken'],t:['Brust raus, leichte Rücklage, Stange Richtung obere Brust ziehen.','Ellbogen nach unten und hinten führen, nicht nur mit den Armen ziehen.','Stange oben kontrolliert wieder nach oben führen, nicht fallen lassen.'],x:'Mit Schwung nach hinten lehnen, statt den Latissimus aktiv zu ziehen.',a:['Klimmzüge','Lat Pulldown (enger Griff)','Seated Row (Kabel)']},
+ 'overhead press (langhantel)':{n:'Overhead Press (Langhantel)',id:'Standing_Military_Press',m:'Schultern, Trizeps',g:'Langhantel',bp:['Schultern'],t:['Rumpf anspannen, Gesäss leicht anspannen, kein starkes Hohlkreuz.','Stange nah am Gesicht vorbei nach oben drücken, Kopf leicht aus dem Weg nehmen.','Oben die Ellbogen fast durchstrecken, Schulterblätter leicht mitgehen lassen.'],x:'Übermässiges Hohlkreuz, um das Gewicht hochzudrücken, statt Rumpf und Beine stabil zu halten.',a:['Schulterdrücken (Kurzhantel)','Lateral Raise (Maschine)']},
+ 'seated row (kabel)':{n:'Seated Row (Kabel)',id:'Seated_Cable_Rows',m:'Mittlerer Rücken, Latissimus, Bizeps',g:'Kabelzug',bp:['Rücken'],t:['Aufrecht sitzen, Rücken neutral, Griff zum unteren Bauch ziehen.','Schulterblätter am Ende der Bewegung zusammenziehen, Brustkorb leicht öffnen.','Oberkörper beim Ziehen nicht stark vor- und zurückschaukeln.'],x:'Mit dem ganzen Oberkörper Schwung holen, statt mit dem Rücken zu ziehen.',a:['Rudern vorgebeugt (Langhantel)','Einarmiges Kurzhantelrudern','Lat Pulldown (Kabel)']},
+ 'triceps pushdown (kabel)':{n:'Triceps Pushdown (Kabel)',id:'Triceps_Pushdown',m:'Trizeps',g:'Kabelzug',bp:['Trizeps'],t:['Ellbogen eng am Körper fixiert, nur die Unterarme bewegen sich.','Stange oder Seil bis zur vollen Streckung nach unten drücken.','Kontrolliert zurückführen, oben nicht komplett entspannen.'],x:'Ellbogen wandern beim Drücken nach vorne, dadurch übernimmt die Schulter Arbeit.',a:['Triceps Extension (Kabel)','Dips','Skull Crusher (SZ-Stange)']},
+ 'preacher curl (langhantel)':{n:'Preacher Curl (Langhantel)',id:'Preacher_Curl',m:'Bizeps',g:'Langhantel',bp:['Bizeps'],t:['Oberarme fest auf der Polsterbank, Rücken nicht hohl machen.','Stange kontrolliert bis kurz vor die volle Streckung absenken.','Sauber bis zur Kontraktion curlen, oben nicht mit Schwung hochreissen.'],x:'Am unteren Ende ruckartig durchstrecken, das belastet den Ellbogen unnötig.',a:['Incline Curl (Kurzhantel)','Bizeps-Curl (Langhantel)','Hammer Curl (Kurzhantel)']},
+ 'squat (langhantel)':{n:'Squat (Langhantel)',id:'Barbell_Squat',m:'Quadrizeps, Gesäss, unterer Rücken',g:'Langhantel',bp:['Beine'],t:['Füsse schulterbreit, Rücken neutral, Blick leicht nach vorne.','Hüfte nach hinten unten führen, Knie zeigen in Fussrichtung.','Bis mindestens Oberschenkel parallel zum Boden absenken, dann kontrolliert hochdrücken.'],x:'Knie fallen beim Hochdrücken nach innen, das belastet die Kniegelenke.',a:['Leg Press','Bulgarian Split Squat','Goblet Squat']},
+ 'leg press':{n:'Leg Press',id:'Leg_Press',m:'Quadrizeps, Gesäss, hintere Oberschenkel',g:'Maschine',bp:['Beine'],t:['Füsse schulterbreit auf der Platte, unterer Rücken bleibt auf der Polsterung.','Knie in Fussrichtung absenken, oben nicht ganz durchstrecken.','Kontrolliert absenken, bis die Knie etwa 90° erreichen.'],x:'Den unteren Rücken beim Absenken von der Polsterung abheben lassen.',a:['Squat (Langhantel)','Bulgarian Split Squat','Hack Squat']},
+ 'seated leg curl (maschine)':{n:'Seated Leg Curl (Maschine)',id:'Seated_Leg_Curl',m:'Hintere Oberschenkel',g:'Maschine',bp:['Beine'],t:['Polster liegt oberhalb der Ferse an, Rücken an der Lehne.','Kontrolliert beugen, ohne das Becken mit hochzuziehen.','Am Ende kurz halten, dann langsam zurückführen.'],x:'Mit Schwung ziehen, statt die Bewegung durchgehend zu kontrollieren.',a:['Rumänisches Kreuzheben','Liegender Beinbeuger (Maschine)','Beinbeuger stehend (Maschine)']},
+ 'leg extension (maschine)':{n:'Leg Extension (Maschine)',id:'Leg_Extensions',m:'Quadrizeps',g:'Maschine',bp:['Beine'],t:['Rücken an der Lehne, Polster liegt am unteren Schienbein an.','Knie kontrolliert strecken, oben kurz halten.','Beim Absenken die Gewichte nicht aufschlagen lassen.'],x:'Zu schnelles, unkontrolliertes Tempo, das die Kniegelenke belastet.',a:['Squat (Langhantel)','Leg Press']},
+ 'wadenheben stehend':{n:'Wadenheben stehend',id:'Standing_Calf_Raises',m:'Waden',g:'Maschine',bp:['Waden'],t:['Ballen auf der Kante, Fersen frei nach unten sinken lassen.','So hoch wie möglich auf die Zehenspitzen drücken, oben kurz halten.','Volle Bewegungsamplitude nutzen statt kleiner Trippelschritte.'],x:'Nur mit kleinem Bewegungsausschlag arbeiten, ohne die Ferse tief abzusenken.',a:['Wadenheben sitzend','Wadenheben auf der Beinpresse']},
+ 'cable crunch':{n:'Cable Crunch',id:'Cable_Crunch',m:'Bauch',g:'Kabelzug',bp:['Bauch'],t:['Auf den Knien vor dem Kabelzug, Seil hinter dem Kopf halten.','Aus der Bauchmuskulatur einrollen, Hüfte bleibt möglichst ruhig.','Langsam zurück in die Ausgangsposition, Spannung nicht verlieren.'],x:'Mit den Hüften nach hinten drücken, statt den Oberkörper einzurollen.',a:['Hanging Leg Raises','Reverse Crunch','Plank']},
+ 'chest press (maschine)':{n:'Chest Press (Maschine)',id:'Leverage_Chest_Press',m:'Brust, Schultern, Trizeps',g:'Maschine',bp:['Brust'],t:['Griffe auf Brusthöhe, Rücken und Schultern an der Lehne.','Gleichmässig nach vorne drücken, Ellbogen nicht ganz durchstrecken.','Kontrolliert zurückführen, Brust bleibt unter Spannung.'],x:'Schultern heben sich beim Drücken von der Lehne ab.',a:['Schrägbankdrücken (Kurzhantel)','Bankdrücken (Langhantel)','Chest Fly']},
+ 'chest fly':{n:'Chest Fly',id:'Butterfly',m:'Brust',g:'Maschine',bp:['Brust'],t:['Rücken an der Lehne, Griffe auf Brusthöhe.','Arme in einer weiten Bogenbewegung vor der Brust zusammenführen.','Beim Zurückführen die Dehnung kontrollieren, nicht in die Endposition fallen lassen.'],x:'Zu weit zurückschwingen und die Schultergelenke überdehnen.',a:['Chest Press (Maschine)','Kurzhantel-Fliegende']},
+ 'lat pulldown (enger griff)':{n:'Lat Pulldown (enger Griff)',id:'Close-Grip_Front_Lat_Pulldown',m:'Latissimus, Bizeps',g:'Kabelzug',bp:['Rücken'],t:['Enger Griff, Ellbogen eng am Körper nach unten ziehen.','Stange Richtung obere Brust führen, Oberkörper aufrecht.','Oben kontrolliert wieder nach oben führen, nicht ruckartig loslassen.'],x:'Nur mit den Armen ziehen, ohne die Schulterblätter aktiv nach unten zu bringen.',a:['Lat Pulldown (Kabel)','Klimmzüge']},
+ 'lateral raise (maschine)':{n:'Lateral Raise (Maschine)',id:'Side_Lateral_Raise',m:'Schultern',g:'Maschine',bp:['Schultern'],t:['Leichte Beugung im Ellbogen, Arme seitlich bis Schulterhöhe heben.','Bewegung aus der Schulter starten, nicht mit Schwung aus dem Rücken.','Oben kurz halten, dann kontrolliert absenken.'],x:'Zu schwer wählen und die Wiederholungen mit Schwung ausführen.',a:['Face Pulls','Overhead Press (Langhantel)']},
+ 'face pulls':{n:'Face Pulls',id:'Face_Pull',m:'Schultern, mittlerer Rücken',g:'Kabelzug',bp:['Schultern'],t:['Seil auf Gesichtshöhe einstellen, mit beiden Händen fassen.','Zum Gesicht ziehen, Ellbogen hoch, Handrücken zeigen nach aussen.','Am Ende die Schulterblätter aktiv zusammenziehen.'],x:'Zu tief ziehen, statt auf Höhe des Gesichts mit hohen Ellbogen.',a:['Lateral Raise (Maschine)','Rudern vorgebeugt (Langhantel)']},
+ 'incline curl (kurzhantel)':{n:'Incline Curl (Kurzhantel)',id:'Alternate_Incline_Dumbbell_Curl',m:'Bizeps',g:'Kurzhantel',bp:['Bizeps'],t:['Auf der Schrägbank zurücklehnen, Arme hängen locker nach unten.','Abwechselnd curlen, der Oberarm bleibt während der Bewegung ruhig.','Unten die Dehnung spüren, ohne die Schulter mit hochzuziehen.'],x:'Mit dem Oberarm nach vorne schwingen, statt nur den Unterarm zu bewegen.',a:['Preacher Curl (Langhantel)','Hammer Curl (Kurzhantel)','Bizeps-Curl (Langhantel)']},
+ 'triceps extension (kabel)':{n:'Triceps Extension (Kabel)',id:'Cable_Rope_Overhead_Triceps_Extension',m:'Trizeps',g:'Kabelzug',bp:['Trizeps'],t:['Mit dem Rücken zum Kabelzug stehen, Seil über den Kopf halten.','Ellbogen zeigen nach vorne oben und bleiben fixiert.','Unterarme nach oben strecken, dann kontrolliert zurückführen.'],x:'Ellbogen weit auseinanderdriften lassen, statt sie eng zu führen.',a:['Triceps Pushdown (Kabel)','Skull Crusher (SZ-Stange)','Dips']},
+ 'bulgarian split squat':{n:'Bulgarian Split Squat',id:null,m:'Quadrizeps, Gesäss',g:'Kurzhantel',bp:['Beine'],t:['Hinteren Fuss erhöht ablegen, das vordere Bein trägt den Grossteil der Last.','Gerade nach unten absenken, vorderes Knie über dem Fuss.','Über die Ferse des vorderen Fusses nach oben drücken.'],x:'Zu grosser Schritt nach vorne, dadurch kippt der Oberkörper stark nach vorne.',a:['Squat (Langhantel)','Leg Press','Ausfallschritte (Kurzhantel)']},
+ 'rumänisches kreuzheben':{n:'Rumänisches Kreuzheben',id:'Romanian_Deadlift',m:'Hintere Oberschenkel, Gesäss, unterer Rücken',g:'Langhantel',bp:['Beine'],t:['Rücken während der ganzen Bewegung neutral halten, nicht runden.','Hüfte nach hinten schieben, Stange nah am Körper entlangführen.','Nur so tief absenken, wie der Rücken neutral bleibt, dann über die Hüfte hochkommen.'],x:'Den Rücken runden, um tiefer zu kommen, statt die Bewegung aus der Hüfte zu stoppen.',a:['Seated Leg Curl (Maschine)','Kreuzheben (Langhantel)']},
+ 'hip abductor (maschine)':{n:'Hip Abductor (Maschine)',id:'Thigh_Abductor',m:'Aussenseite Oberschenkel, Gesäss',g:'Maschine',bp:['Beine'],t:['Aufrecht sitzen, Rücken an der Lehne, Polster an den Aussenseiten der Knie.','Beine kontrolliert nach aussen drücken, oben kurz halten.','Langsam zurückführen, ohne die Gewichte durchsacken zu lassen.'],x:'Mit Schwung und Oberkörperbewegung statt reiner Beinbewegung arbeiten.',a:['Hip Adductor (Maschine)','Bulgarian Split Squat']},
+ 'hip adductor (maschine)':{n:'Hip Adductor (Maschine)',id:'Thigh_Adductor',m:'Innenseite Oberschenkel',g:'Maschine',bp:['Beine'],t:['Aufrecht sitzen, Polster an den Innenseiten der Knie.','Beine kontrolliert zusammenführen, ohne die Wirbelsäule mitzudrehen.','Am Ende kurz die Spannung halten, dann langsam öffnen lassen.'],x:'Die Bewegungsamplitude zu klein wählen, statt kontrolliert weit zu öffnen und zu schliessen.',a:['Hip Abductor (Maschine)','Goblet Squat']},
+ 'wadenheben sitzend':{n:'Wadenheben sitzend',id:'Seated_Calf_Raise',m:'Waden',g:'Maschine',bp:['Waden'],t:['Ballen auf der Kante, Knie unter dem Polster fixiert.','Fersen tief absenken, dann so hoch wie möglich auf die Zehenspitzen drücken.','Oben kurz halten, bevor du wieder kontrolliert absenkst.'],x:'Nur mit halber Bewegungsamplitude arbeiten und die Dehnung unten auslassen.',a:['Wadenheben stehend','Wadenheben auf der Beinpresse']},
+ 'hanging leg raises':{n:'Hanging Leg Raises',id:'Hanging_Leg_Raise',m:'Bauch, Hüftbeuger',g:'Körpergewicht',bp:['Bauch'],t:['An der Stange hängen, Schulterblätter leicht aktiv, kein Rundrücken oben.','Beine gestreckt oder angewinkelt kontrolliert nach oben heben.','Kontrolliert absenken, ohne ins Schwingen zu kommen.'],x:'Mit Schwung aus dem ganzen Körper arbeiten, statt die Bauchmuskeln aktiv anzuspannen.',a:['Cable Crunch','Reverse Crunch','Plank']},
+ 'bankdrücken (langhantel)':{n:'Bankdrücken (Langhantel)',id:'Barbell_Bench_Press_-_Medium_Grip',m:'Brust, Schultern, Trizeps',g:'Langhantel',bp:['Brust'],t:['Schulterblätter zusammenziehen und auf der Bank fixieren, leichtes Hohlkreuz ist normal.','Stange kontrolliert zur unteren Brust absenken, Ellbogen etwa 45° zum Körper.','Nach oben drücken, ohne das Gesäss von der Bank abzuheben.'],x:'Die Stange auf dem Brustkorb aufprallen lassen, statt sie kontrolliert abzusetzen.',a:['Schrägbankdrücken (Kurzhantel)','Chest Press (Maschine)','Enges Bankdrücken (Langhantel)']},
+ 'klimmzüge':{n:'Klimmzüge',id:'Pullups',m:'Latissimus, Bizeps',g:'Körpergewicht',bp:['Rücken'],t:['Schulterblätter aktiv nach unten ziehen, bevor die Zugbewegung beginnt.','Bis das Kinn über die Stange kommt, dann kontrolliert absenken.','Unten ganz durchhängen lassen, Schultern bleiben dabei stabil.'],x:'Mit Schwung aus den Beinen und dem Rumpf hochziehen, statt aus dem Rücken.',a:['Lat Pulldown (Kabel)','Lat Pulldown (enger Griff)']},
+ 'schulterdrücken (kurzhantel)':{n:'Schulterdrücken (Kurzhantel)',id:'Dumbbell_Shoulder_Press',m:'Schultern, Trizeps',g:'Kurzhantel',bp:['Schultern'],t:['Rumpf anspannen, Rücken bleibt an der Lehne oder neutral aufrecht.','Kurzhanteln auf Schulterhöhe starten, gerade nach oben drücken.','Oben die Hanteln nicht zusammenschlagen, Ellbogen fast durchstrecken.'],x:'Zu starkes Hohlkreuz, um das Gewicht über den Kopf zu bekommen.',a:['Overhead Press (Langhantel)','Lateral Raise (Maschine)']},
+ 'rudern vorgebeugt (langhantel)':{n:'Rudern vorgebeugt (Langhantel)',id:'Bent_Over_Barbell_Row',m:'Mittlerer Rücken, Latissimus, Bizeps',g:'Langhantel',bp:['Rücken'],t:['Oberkörper etwa 45° vorgebeugt, Rücken die ganze Zeit neutral.','Stange nah am Körper zum unteren Bauch ziehen.','Schulterblätter am Ende zusammenziehen, dann kontrolliert absenken.'],x:'Den Rücken runden, um mehr Gewicht bewegen zu können.',a:['Seated Row (Kabel)','Einarmiges Kurzhantelrudern','T-Bar Rudern']},
+ 'einarmiges kurzhantelrudern':{n:'Einarmiges Kurzhantelrudern',id:'One-Arm_Dumbbell_Row',m:'Mittlerer Rücken, Latissimus, Bizeps',g:'Kurzhantel',bp:['Rücken'],t:['Eine Hand und ein Knie auf der Bank abstützen, Rücken neutral.','Hantel nah am Körper nach oben ziehen, Ellbogen zeigt nach hinten.','Oben kurz halten, dann kontrolliert wieder ganz absenken.'],x:'Den Oberkörper mitdrehen, um das Gewicht hochzuschwingen.',a:['Seated Row (Kabel)','Rudern vorgebeugt (Langhantel)']},
+ 'dips':{n:'Dips',id:'Dips_-_Triceps_Version',m:'Trizeps, Brust',g:'Körpergewicht',bp:['Trizeps'],t:['Oberkörper eher aufrecht halten für mehr Trizeps-Betonung.','Kontrolliert absenken, bis die Oberarme etwa parallel zum Boden sind.','Ellbogen eng am Körper nach oben drücken.'],x:'Zu tief absenken und dabei die Schultern nach vorne überdehnen.',a:['Triceps Pushdown (Kabel)','Triceps Extension (Kabel)','Bankdrücken (Langhantel)']},
+ 'skull crusher (sz-stange)':{n:'Skull Crusher (SZ-Stange)',id:'EZ-Bar_Skullcrusher',m:'Trizeps',g:'SZ-Stange',bp:['Trizeps'],t:['Rückenlage, Oberarme senkrecht und während der Bewegung ruhig halten.','Stange kontrolliert Richtung Stirn absenken, nur der Unterarm bewegt sich.','Über die Streckung der Ellbogen wieder nach oben drücken.'],x:'Die Oberarme beim Absenken nach hinten wandern lassen, das entlastet den Trizeps.',a:['Triceps Pushdown (Kabel)','Triceps Extension (Kabel)','Dips']},
+ 'bizeps-curl (langhantel)':{n:'Bizeps-Curl (Langhantel)',id:'Barbell_Curl',m:'Bizeps',g:'Langhantel',bp:['Bizeps'],t:['Aufrecht stehen, Ellbogen eng am Oberkörper fixiert.','Stange ohne Schwung nach oben curlen, Oberarme bleiben ruhig.','Kontrolliert bis fast zur vollen Streckung absenken.'],x:'Mit dem Rücken schwingen, um das Gewicht hochzuwerfen.',a:['Preacher Curl (Langhantel)','Hammer Curl (Kurzhantel)','Konzentrationscurl']},
+ 'hammer curl (kurzhantel)':{n:'Hammer Curl (Kurzhantel)',id:'Hammer_Curls',m:'Bizeps, Unterarme',g:'Kurzhantel',bp:['Bizeps'],t:['Neutraler Griff, Handflächen zeigen während der ganzen Bewegung zueinander.','Ellbogen bleiben am Körper, nur die Unterarme bewegen sich.','Kontrolliert absenken, keinen Schwung aus den Schultern holen.'],x:'Die Ellbogen nach vorne schieben, um das Gewicht leichter hochzubekommen.',a:['Preacher Curl (Langhantel)','Incline Curl (Kurzhantel)','Bizeps-Curl (Langhantel)']},
+ 'goblet squat':{n:'Goblet Squat',id:'Goblet_Squat',m:'Quadrizeps, Gesäss',g:'Kurzhantel',bp:['Beine'],t:['Kurzhantel oder Kettlebell senkrecht vor der Brust halten.','Hüfte nach hinten unten führen, Ellbogen zwischen den Knien.','Aufrechten Oberkörper beibehalten, dann über die Fersen hochdrücken.'],x:'Die Fersen beim Absenken vom Boden abheben lassen.',a:['Squat (Langhantel)','Bulgarian Split Squat','Leg Press']},
+ 'hack squat':{n:'Hack Squat',id:'Hack_Squat',m:'Quadrizeps, Gesäss',g:'Maschine',bp:['Beine'],t:['Füsse schulterbreit auf der Plattform, Rücken flach an der Lehne.','Knie in Fussrichtung absenken, bis die Oberschenkel etwa parallel sind.','Über die ganze Fusssohle nach oben drücken, Knie oben nicht durchknallen.'],x:'Nur mit den Fersen abheben und das Gewicht auf die Zehen verlagern.',a:['Squat (Langhantel)','Leg Press']},
+ 'liegender beinbeuger (maschine)':{n:'Liegender Beinbeuger (Maschine)',id:'Lying_Leg_Curls',m:'Hintere Oberschenkel',g:'Maschine',bp:['Beine'],t:['Bauchlage, Polster liegt oberhalb der Fersen an.','Beine kontrolliert so weit wie möglich beugen, Hüfte bleibt auf der Bank.','Langsam zurückführen, die Gewichte nicht durchsacken lassen.'],x:'Die Hüfte beim Beugen anheben, um mehr Gewicht bewegen zu können.',a:['Seated Leg Curl (Maschine)','Rumänisches Kreuzheben']},
+ 'reverse crunch':{n:'Reverse Crunch',id:'Reverse_Crunch',m:'Bauch',g:'Körpergewicht',bp:['Bauch'],t:['Rückenlage, Beine angewinkelt, unterer Rücken bleibt am Boden.','Becken durch Anspannen der Bauchmuskeln Richtung Rippen einrollen.','Kontrolliert zurückführen, ohne die Füsse abzustellen.'],x:'Mit Schwung aus den Beinen arbeiten, statt aus der Bauchmuskulatur.',a:['Cable Crunch','Hanging Leg Raises','Plank']},
+ 'plank':{n:'Plank',id:'Plank',m:'Bauch, Rumpf',g:'Körpergewicht',bp:['Bauch'],t:['Unterarme und Zehenspitzen am Boden, Körper bildet eine gerade Linie.','Bauch und Gesäss aktiv anspannen, kein Hohlkreuz und kein Rundrücken.','Ruhig weiteratmen, Position so lange wie möglich sauber halten.'],x:'Das Becken absacken lassen, wodurch der untere Rücken belastet wird.',a:['Cable Crunch','Reverse Crunch','Russian Twist']},
+ 'kurzhantel-fliegende':{n:'Kurzhantel-Fliegende',id:'Dumbbell_Flyes',m:'Brust',g:'Kurzhantel',bp:['Brust'],t:['Rückenlage, Kurzhanteln über der Brust, leichte Beugung in den Ellbogen.','Arme in einem weiten Bogen seitlich absenken, Ellbogenwinkel bleibt gleich.','Bis auf Brusthöhe absenken, dann die Hanteln wieder zusammenführen.'],x:'Zu tief absenken und dabei die Schultergelenke überdehnen.',a:['Chest Fly','Chest Press (Maschine)']},
+ 'ausfallschritte (kurzhantel)':{n:'Ausfallschritte (Kurzhantel)',id:'Dumbbell_Lunges',m:'Quadrizeps, Gesäss',g:'Kurzhantel',bp:['Beine'],t:['Grossen Schritt nach vorne, Oberkörper aufrecht.','Beide Knie auf etwa 90° absenken, hinteres Knie schwebt knapp über dem Boden.','Über die vordere Ferse zurück in den Stand drücken.'],x:'Das vordere Knie weit über die Fussspitze nach vorne schieben lassen.',a:['Bulgarian Split Squat','Squat (Langhantel)','Goblet Squat']},
+ 'kreuzheben (langhantel)':{n:'Kreuzheben (Langhantel)',id:'Barbell_Deadlift',m:'Unterer Rücken, hintere Oberschenkel, Gesäss',g:'Langhantel',bp:['Rücken'],t:['Stange nah an den Schienbeinen, Rücken neutral, Brust hoch.','Über Beine und Hüfte gleichzeitig hochkommen, Stange bleibt körpernah.','Oben die Hüfte vollständig strecken, ohne sich nach hinten zu lehnen.'],x:'Den Rücken runden, um die Stange vom Boden zu bekommen.',a:['Rumänisches Kreuzheben','Squat (Langhantel)']},
+ 'enges bankdrücken (langhantel)':{n:'Enges Bankdrücken (Langhantel)',id:'Close-Grip_Barbell_Bench_Press',m:'Trizeps, Brust',g:'Langhantel',bp:['Trizeps'],t:['Griff etwa schulterbreit, enger als beim normalen Bankdrücken.','Ellbogen nah am Körper führen, Stange kontrolliert zur unteren Brust absenken.','Nach oben drücken, ohne die Ellbogen weit nach aussen zu öffnen.'],x:'Den Griff zu eng wählen, was die Handgelenke unnötig belastet.',a:['Triceps Pushdown (Kabel)','Bankdrücken (Langhantel)','Dips']},
+ 'sit-up':{n:'Sit-Up',id:'Sit-Up',m:'Bauch, Hüftbeuger',g:'Körpergewicht',bp:['Bauch'],t:['Füsse fixiert oder angewinkelt aufgestellt, Hände locker am Kopf oder vor der Brust.','Aus der Bauchspannung nach oben kommen, nicht mit den Armen ziehen.','Kontrolliert zurück in die Ausgangsposition absenken.'],x:'Mit Schwung aus dem Nacken hochreissen, statt aus dem Rumpf zu arbeiten.',a:['Cable Crunch','Reverse Crunch','Plank']},
+ 'russian twist':{n:'Russian Twist',id:'Russian_Twist',m:'Bauch, seitliche Bauchmuskeln',g:'Körpergewicht',bp:['Bauch'],t:['Sitzposition mit angewinkelten Beinen, Oberkörper leicht zurückgelehnt.','Rumpf gerade halten, Rotation kommt aus dem Oberkörper, nicht aus den Armen.','Kontrolliert von Seite zu Seite drehen, keinen Schwung einsetzen.'],x:'Einen runden Rücken machen, statt den Rumpf während der Drehung stabil zu halten.',a:['Plank','Cable Crunch']},
+ 'reverse flyes (kurzhantel)':{n:'Reverse Flyes (Kurzhantel)',id:'Reverse_Flyes',m:'Hintere Schulter, oberer Rücken',g:'Kurzhantel',bp:['Schultern'],t:['Leicht vorgebeugt, Rücken neutral, Kurzhanteln hängen locker.','Arme mit leicht gebeugten Ellbogen seitlich nach oben führen.','Bewegung kommt aus der hinteren Schulter, nicht aus dem Schwung des Rückens.'],x:'Den Oberkörper hochreissen, um mehr Gewicht bewegen zu können.',a:['Face Pulls','Lateral Raise (Maschine)']},
+ 't-bar rudern':{n:'T-Bar Rudern',id:'T-Bar_Row_with_Handle',m:'Mittlerer Rücken, Latissimus',g:'Langhantel',bp:['Rücken'],t:['Oberkörper vorgebeugt, Rücken neutral, Griff etwa hüftbreit fassen.','Stange zum unteren Bauch ziehen, Ellbogen nah am Körper.','Schulterblätter am Ende zusammenziehen, dann kontrolliert absenken.'],x:'Mit rundem Rücken und Schwung aus den Beinen ziehen.',a:['Rudern vorgebeugt (Langhantel)','Seated Row (Kabel)']},
+ 'konzentrationscurl':{n:'Konzentrationscurl',id:'Concentration_Curls',m:'Bizeps',g:'Kurzhantel',bp:['Bizeps'],t:['Sitzend, Ellbogen an der Innenseite des Oberschenkels abgestützt.','Ohne Schwung nach oben curlen, Blick auf den Bizeps.','Ganz kontrolliert bis zur fast vollen Streckung absenken.'],x:'Den Ellbogen vom Oberschenkel abheben, um mehr Gewicht zu bewegen.',a:['Preacher Curl (Langhantel)','Bizeps-Curl (Langhantel)','Hammer Curl (Kurzhantel)']},
+ 'frontkniebeuge (langhantel)':{n:'Frontkniebeuge (Langhantel)',id:'Front_Squat_Clean_Grip',m:'Quadrizeps, Bauch',g:'Langhantel',bp:['Beine'],t:['Stange auf den vorderen Schultern, Ellbogen hoch nach vorne.','Oberkörper möglichst aufrecht halten während der ganzen Bewegung.','Hüfte nach unten führen, bis die Oberschenkel etwa parallel zum Boden sind.'],x:'Die Ellbogen absacken lassen, wodurch die Stange nach vorne kippt.',a:['Squat (Langhantel)','Goblet Squat','Leg Press']},
+ 'beinbeuger stehend (maschine)':{n:'Beinbeuger stehend (Maschine)',id:'Standing_Leg_Curl',m:'Hintere Oberschenkel',g:'Maschine',bp:['Beine'],t:['Aufrecht stehen, Polster liegt oberhalb der Ferse an.','Ein Bein kontrolliert nach hinten oben beugen, Hüfte bleibt ruhig.','Langsam zurückführen, ohne das Gewicht durchsacken zu lassen.'],x:'Das Becken beim Beugen mitdrehen, statt es stabil zu halten.',a:['Seated Leg Curl (Maschine)','Liegender Beinbeuger (Maschine)']},
+ 'wadenheben auf der beinpresse':{n:'Wadenheben auf der Beinpresse',id:'Calf_Press_On_The_Leg_Press_Machine',m:'Waden',g:'Maschine',bp:['Waden'],t:['Nur Fussballen auf der Plattform, Beine fast gestreckt, Knie nicht blockieren.','Fersen so hoch wie möglich anheben, oben kurz halten.','Fersen kontrolliert tief absenken, um die Wade voll zu dehnen.'],x:'Die Knie während der Bewegung beugen und so die Wadenarbeit reduzieren.',a:['Wadenheben stehend','Wadenheben sitzend']}
+};
+const EX_BODYPARTS=['Brust','Rücken','Schultern','Bizeps','Trizeps','Beine','Bauch','Waden'];
+function imgFail(el){const d=document.createElement('div');d.className='ph';d.textContent='Bild nicht verfügbar';el.replaceWith(d);}
+function exInfoBody(e,ctx){
+  const imgs=e.id?`<div class="exph">
+      <img src="${exImgUrl(e.id,0)}" alt="${esc(e.n)}, Startposition" loading="lazy" referrerpolicy="no-referrer" onerror="imgFail(this)">
+      <img src="${exImgUrl(e.id,1)}" alt="${esc(e.n)}, Bewegungsende" loading="lazy" referrerpolicy="no-referrer" onerror="imgFail(this)">
+    </div>`:'<div class="empty small" style="margin-bottom:14px">Für diese Übung ist noch kein Foto hinterlegt.</div>';
+  const videoUrl='https://www.youtube.com/results?search_query='+encodeURIComponent(e.n+' Technik');
+  const altsHtml=e.a.map(altName=>{
+    const altKey=exKey(altName);
+    if(!ctx||ctx.mode==='browse'){
+      return `<button class="item" data-act="exlibitem" data-key="${altKey}"><div><div class="t">${esc(altName)}</div></div><span class="chev">›</span></button>`;
+    }
+    if(ctx.mode==='workout'){
+      return `<div class="exalt"><div class="t">${esc(altName)}</div><div class="sw">
+        <button data-act="swaptoday" data-i="${ctx.i}" data-name="${esc(altName)}">Nur heute tauschen</button>
+        <button data-act="swappermanent" data-ctx="workout" data-i="${ctx.i}" data-name="${esc(altName)}">Dauerhaft tauschen</button>
+      </div></div>`;
+    }
+    return `<div class="exalt"><div class="t">${esc(altName)}</div><div class="sw" style="grid-template-columns:1fr">
+      <button data-act="swappermanent" data-ctx="editor" data-i="${ctx.i}" data-name="${esc(altName)}">Dauerhaft tauschen</button>
+    </div></div>`;
+  }).join('');
+  return `${imgs}
+    <div class="small muted" style="margin-bottom:12px"><b style="color:var(--ink)">Muskeln:</b> ${esc(e.m)} · <b style="color:var(--ink)">Gerät:</b> ${esc(e.g)}</div>
+    <div style="margin-bottom:12px"><b>Technik</b><ul class="extips">${e.t.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>
+    <div style="margin-bottom:14px"><b style="color:var(--bad)">Häufiger Fehler</b><div class="small muted" style="margin-top:4px">${esc(e.x)}</div></div>
+    <a class="btn ghost full" style="margin-bottom:14px" href="${videoUrl}" target="_blank" rel="noopener">Video suchen</a>
+    ${altsHtml?`<div style="font-weight:600;margin-bottom:2px">Alternativen</div>${altsHtml}`:''}`;
+}
+function openExInfo(key,ctx){
+  const e=EX_LIB[key];if(!e)return;
+  openSheet(`<h2>${esc(e.n)}</h2>${exInfoBody(e,ctx)}
+    <div class="btnrow">${ctx&&ctx.mode==='editor'?'<button class="btn ghost" data-act="backtoeditor">Zurück</button>':'<button class="btn ghost" data-act="closesheet">Schliessen</button>'}</div>`);
+}
+
+/* exercise library tab */
+let LIB_Q='',LIB_BP='';
+function exLibList(){
+  const q=LIB_Q.trim().toLowerCase();
+  return Object.values(EX_LIB).filter(e=>(!LIB_BP||e.bp.includes(LIB_BP))&&(!q||e.n.toLowerCase().includes(q))).sort((a,b)=>a.n.localeCompare(b.n,'de'));
+}
+function exLibResultsHtml(){
+  const list=exLibList();
+  if(!list.length)return '<div class="empty small">Keine Übungen gefunden.</div>';
+  return list.map(e=>`<button class="item" data-act="exlibitem" data-key="${exKey(e.n)}"><div><div class="t">${esc(e.n)}</div><div class="s">${esc(e.g)} · ${esc(e.bp.join(', '))}</div></div><span class="chev">›</span></button>`).join('');
+}
+function exLibRefresh(){
+  const wrap=$('#exlibresults');if(wrap)wrap.innerHTML=exLibResultsHtml();
+  document.querySelectorAll('.exfilter button').forEach(b=>b.classList.toggle('on',b.dataset.bp===LIB_BP));
+}
+function showExLib(){
+  openSheet(`<h2>Übungsbibliothek</h2>
+    <input class="ti" id="exlibq" placeholder="Übung suchen…" aria-label="Übung suchen" value="${esc(LIB_Q)}" autocomplete="off" style="margin-bottom:10px">
+    <div class="exfilter" role="group" aria-label="Nach Körperteil filtern">
+      <button class="${LIB_BP?'':'on'}" data-act="exlibbp" data-bp="">Alle</button>
+      ${EX_BODYPARTS.map(bp=>`<button class="${LIB_BP===bp?'on':''}" data-act="exlibbp" data-bp="${bp}">${esc(bp)}</button>`).join('')}
+    </div>
+    <div id="exlibresults">${exLibResultsHtml()}</div>
+    <div class="btnrow"><button class="btn ghost" data-act="closesheet">Schliessen</button></div>`);
+}
+
 /* ---------- ui state ---------- */
 let TAB='today',PROG_KEY=null;
 const ACT={};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const f=ACT[b.dataset.act];if(f){e.preventDefault();f(b,e);}});
 
-function toast(msg,gold){const t=$('#toast');t.textContent=msg;t.className='show'+(gold?' gold':'');clearTimeout(toast.t);toast.t=setTimeout(()=>t.className='',2600);}
+/* exercise info / library ACT handlers (defined after ACT exists) */
+ACT.exinfo=b=>{const i=+b.dataset.i,ex=S.active&&S.active.exs[i];if(!ex)return;openExInfo(ex.key,{mode:'workout',i});};
+ACT.edinfo=b=>{const i=+b.dataset.i;if(!ED||!ED.ex[i])return;openExInfo(exKey(ED.ex[i].name),{mode:'editor',i});};
+ACT.exlibitem=b=>openExInfo(b.dataset.key,{mode:'browse'});
+ACT.backtoeditor=()=>{if(ED)showEditor();else closeSheet();};
+ACT.swaptoday=b=>{
+  const i=+b.dataset.i,name=b.dataset.name,ex=S.active&&S.active.exs[i];
+  if(!ex)return;
+  S.active.exs[i]=buildEx({name,sets:ex.sets,repMin:ex.repMin,repMax:ex.repMax,rest:ex.rest,ss:ex.ss});
+  persist();closeSheet();renderWorkout();updateWk();toast('Für heute ersetzt: '+name);
+};
+ACT.swappermanent=b=>{
+  const ctx=b.dataset.ctx,i=+b.dataset.i,name=b.dataset.name;
+  if(ctx==='editor'){
+    if(!ED||!ED.ex[i])return;
+    ED.ex[i].name=name;
+    showEditor();toast('Ersetzt: '+name+'. Nicht vergessen zu speichern.');
+  }else if(ctx==='workout'){
+    const ex=S.active&&S.active.exs[i];if(!ex)return;
+    const r=S.routines.find(x=>x.id===S.active.routineId);
+    if(r){const re=r.ex.find(x=>exKey(x.name)===ex.key);if(re)re.name=name;}
+    S.active.exs[i]=buildEx({name,sets:ex.sets,repMin:ex.repMin,repMax:ex.repMax,rest:ex.rest,ss:ex.ss});
+    savePlan();closeSheet();renderWorkout();updateWk();toast('Dauerhaft ersetzt: '+name);
+  }
+};
+ACT.exlib=()=>{LIB_Q='';LIB_BP='';showExLib();};
+ACT.exlibbp=b=>{LIB_BP=b.dataset.bp;exLibRefresh();};
+
+function toast(msg,gold){const t=$('#toast');t.textContent=msg;t.className='show'+(gold?' gold':'')+($('#rest').classList.contains('on')?' above-rest':'');clearTimeout(toast.t);toast.t=setTimeout(()=>t.className='',2600);}
 function openSheet(html){$('#sheetc').innerHTML=html;$('#sheetbg').classList.add('open');$('#sheet').scrollTop=0;}
 function closeSheet(){$('#sheetbg').classList.remove('open');}
 $('#sheetbg').addEventListener('click',e=>{if(e.target.id==='sheetbg')closeSheet();});
@@ -517,6 +735,7 @@ function viewToday(){
   const r=S.routines.find(x=>x.id===tid),fin=finished();
   const wkStart=monday(now).getTime(),thisWeek=fin.filter(w=>w.start>=wkStart);
   const gymWeek=thisWeek.filter(w=>w.kind!=='mma').length;
+  const weekVol=thisWeek.filter(w=>w.kind!=='mma').reduce((a,w)=>a+vol(w),0);
   const mmaToday=fin.some(w=>w.kind==='mma'&&ymd(w.start)===ymd(now));
   let hero='';
   if(S.active){
@@ -550,7 +769,8 @@ function viewToday(){
   const goal=S.goal,pct=Math.min(1,gymWeek/goal),C=2*Math.PI*30;
   const ring=`<div class="ring"><svg width="74" height="74" viewBox="0 0 74 74"><circle cx="37" cy="37" r="30" fill="none" stroke="var(--bg)" stroke-width="8"/><circle cx="37" cy="37" r="30" fill="none" stroke="${pct>=1?'var(--good)':'var(--accent)'}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-pct)).toFixed(1)}"/></svg><div class="c">${gymWeek}/${goal}</div></div>`;
   const st=streakInfo();
-  const weekCard=`<div class="card"><div class="row2"><div><h2>Diese Woche</h2><div class="muted">${gymWeek>=goal?'Wochenziel erreicht. Stark!':(goal-gymWeek)+' Training'+(goal-gymWeek===1?'':'s')+' bis zum Wochenziel.'}${st.streak?` Serie: ${st.streak} Woche${st.streak===1?'':'n'}.`:''}</div></div>${ring}</div><div class="week">${strip}</div></div>`;
+  const weekWc=weekVol>0?weightCompare(weekVol,ymd(monday(now))):null;
+  const weekCard=`<div class="card"><div class="row2"><div><h2>Diese Woche</h2><div class="muted">${gymWeek>=goal?'Wochenziel erreicht. Stark!':(goal-gymWeek)+' Training'+(goal-gymWeek===1?'':'s')+' bis zum Wochenziel.'}${st.streak?` Serie: ${st.streak} Woche${st.streak===1?'':'n'}.`:''}</div></div>${ring}</div><div class="week">${strip}</div>${weekVol>0?`<div class="muted small" style="margin-top:6px">Diese Woche: ${fmtKg(weekVol)} kg bewegt.${weekWc?' '+esc(weekWc):''}</div>`:''}</div>`;
   // last workout
   const g=gymOnly(),lastW=g[g.length-1];
   const lastCard=lastW?`<div class="card"><h2>Letztes Training</h2><button class="item" data-act="wdetail" data-id="${lastW.id}"><div><div class="t">${esc(lastW.name)}</div><div class="s">${fmtDate(lastW.start)} · ${fmtDur(lastW.end-lastW.start)} · ${doneCount(lastW)} Sätze</div></div><div class="num" style="font-size:26px">${fmtKg(vol(lastW))} kg</div></button></div>`:'';
@@ -570,6 +790,7 @@ function viewPlan(){
     <div class="sec">Meine Trainings</div>
     <div class="card">${S.routines.map(r=>`<button class="item" data-act="editroutine" data-id="${r.id}"><div><div class="t">${esc(r.name)}</div><div class="s">${r.ex.map(e=>esc(e.name.replace(/\s*\(.*\)/,''))).join(', ')}</div></div><span class="chev">›</span></button>`).join('')}
     <button class="btn soft full" style="margin-top:8px" data-act="newroutine">+ Neues Training</button></div>
+    <button class="btn ghost full" style="margin-bottom:10px" data-act="exlib">Übungsbibliothek</button>
     <button class="btn ghost full" data-act="settings">Einstellungen und Backup</button>`;
 }
 
@@ -578,7 +799,8 @@ function viewStats(){
   const g=gymOnly(),st=streakInfo();
   const lvl=`<div class="card"><div class="row2"><h2>Level ${l}: ${esc(titleOf(l))}</h2><span class="num" style="font-size:22px">${xp} XP</span></div>
     <div class="bar" aria-label="Fortschritt zum nächsten Level"><i style="width:${pct}%"></i></div><div class="muted small" style="margin-top:6px">Noch ${b-xp} XP bis Level ${l+1}. XP gibt es für Trainings, bewegtes Gewicht und Rekorde.</div></div>`;
-  const cars=t.total>=1200?`<div class="muted small" style="margin-top:10px">Das entspricht etwa ${fmtN(t.total/1200)} Kleinwagen, die du gestemmt hast.</div>`:'';
+  const totalWc=weightCompare(t.total,ymd(new Date()));
+  const cars=totalWc?`<div class="muted small" style="margin-top:10px">${esc(totalWc)}</div>`:'';
   const totalsCard=`<div class="card"><h2>Bilanz</h2><div class="grid2">
     <div class="stat"><div class="v">${t.n}</div><div class="l">Trainings</div></div>
     <div class="stat"><div class="v">${t.total>=10000?fmtN(t.total/1000)+' t':fmtKg(t.total)}</div><div class="l">Gesamt bewegt${t.total>=10000?'':' (kg)'}</div></div>
@@ -740,13 +962,13 @@ function renderWorkout(){
     return `<div class="ex"><div class="exh"><div><h3>${esc(ex.name)}${ex.ss?`<span class="ss">Supersatz ${esc(ex.ss)}</span>`:''}</h3>
       <div class="hint">${ex.sets} × ${ex.repMin===ex.repMax?ex.repMin:ex.repMin+'–'+ex.repMax} Wdh. · Pause ${fmtClock(ex.rest)} · ${dn}/${ex.rows.length} erledigt</div>
       ${hl[0]?`<div class="hint">${esc(hl[0])}</div>`:''}${hl[1]?`<div class="hint go">${esc(hl[1])}</div>`:''}</div>
-      <button class="icon" data-act="exmenu" data-i="${i}" aria-label="Übung-Optionen">⋯</button></div>
-      ${ex.rows.map((r,j)=>`<div class="row ${r.done?'done':''} ${r.pr&&r.pr!=='first'?'pr':''}">
+      <div style="display:flex;gap:6px;flex:none">${EX_LIB[ex.key]?`<button class="icon" data-act="exinfo" data-i="${i}" aria-label="Übungsinfo zu ${esc(ex.name)}">ⓘ</button>`:''}<button class="icon" data-act="exmenu" data-i="${i}" aria-label="Übung-Optionen">⋯</button></div></div>
+      ${(()=>{const sug=suggestNext(ex);return ex.rows.map((r,j)=>`<div class="row ${r.done?'done':''} ${r.pr&&r.pr!=='first'?'pr':''}">
         <span class="sn">${j+1}</span>
         <input class="inp" inputmode="decimal" data-i="${i}" data-j="${j}" data-f="w" value="${esc(r.w)}" placeholder="kg" aria-label="Gewicht in kg, Satz ${j+1}">
         <input class="inp" inputmode="numeric" data-i="${i}" data-j="${j}" data-f="r" value="${esc(r.r)}" placeholder="Wdh." aria-label="Wiederholungen, Satz ${j+1}">
         <button class="chk" data-act="check" data-i="${i}" data-j="${j}" aria-label="Satz ${j+1} abhaken">${checkSvg}</button>
-        ${r.pr&&r.pr!=='first'?`<div class="prtag">${r.pr==='weight'?'Gewichtsrekord!':r.pr==='reps'?'Wiederholungsrekord!':'Neue Bestleistung!'}</div>`:''}</div>`).join('')}
+        ${r.pr&&r.pr!=='first'?`<div class="prtag">${r.pr==='weight'?'Gewichtsrekord!':r.pr==='reps'?'Wiederholungsrekord!':'Neue Bestleistung!'}</div>`:''}</div>${sug&&sug.rowIdx===j?`<div class="sugg">Nächster Satz: ${fmtN(sug.w)} kg (${sug.delta>=0?'+':''}${fmtN(sug.delta)})<button data-act="applysuggest" data-i="${i}">Übernehmen</button></div>`:''}`).join('');})()}
       <button class="addset" data-act="addset" data-i="${i}">+ Satz</button></div>`;
   }).join('')+`<button class="btn soft full" data-act="addex">+ Übung hinzufügen</button>`;
   body.scrollTop=y;
@@ -761,6 +983,7 @@ document.addEventListener('input',e=>{
     if(t.dataset.ed==='name')ED.name=t.value;
     else{const ex=ED.ex[+t.dataset.i],f=t.dataset.f;ex[f]=['sets','repMin','repMax','rest'].includes(f)?num(t.value):t.value;}
   }
+  if(t.id==='exlibq'){LIB_Q=t.value;exLibRefresh();}
 });
 function input(){}
 function updateWk(){
@@ -787,6 +1010,11 @@ ACT.check=b=>{
   persist();renderWorkout();updateWk();
 };
 ACT.addset=b=>{const ex=S.active.exs[+b.dataset.i],l=ex.rows[ex.rows.length-1];ex.rows.push({w:l?l.w:'',r:l?l.r:ex.repMin,done:false});persist();renderWorkout();updateWk();};
+ACT.applysuggest=b=>{
+  const ex=S.active.exs[+b.dataset.i],sug=suggestNext(ex);if(!sug)return;
+  ex.rows.forEach(r=>{if(!r.done)r.w=sug.w;});
+  persist();renderWorkout();updateWk();
+};
 ACT.exmenu=b=>{
   const i=+b.dataset.i,ex=S.active.exs[i];
   openSheet(`<h2>${esc(ex.name)}</h2><div class="btnrow">
@@ -869,12 +1097,14 @@ ACT.finishok=()=>{
   const after=xpTotal(),lv=levelOf(after),v=vol(A);
   let cmp='';
   if(prevSame){const pv=vol(prevSame),d=pv?Math.round((v-pv)/pv*100):0;cmp=`<p style="margin:0 0 6px"><b>${d>=0?'+':''}${d} %</b> Gesamtgewicht gegenüber deinem letzten «${esc(A.name)}» (${fmtKg(pv)} kg).</p>`;}
+  const wc=weightCompare(v,A.id);
   render();
   openSheet(`<h2>Geschafft!</h2><div class="sum">
     <div class="stat"><div class="v">${fmtKg(v)}</div><div class="l">Gesamtgewicht kg</div></div>
     <div class="stat"><div class="v">${fmtDur(A.end-A.start).replace(' min','')}</div><div class="l">Minuten</div></div>
     <div class="stat"><div class="v">${doneCount(A)}</div><div class="l">Sätze</div></div>
     <div class="stat"><div class="v">+${after-before}</div><div class="l">XP</div></div></div>${cmp}
+    ${wc?`<p class="muted small" style="margin:0 0 6px">${esc(wc)}</p>`:''}
     ${prList.length?`<div class="card" style="background:var(--gold-soft);border-color:transparent;margin-top:8px"><b style="color:var(--gold-ink)">Neue Rekorde</b><div style="color:var(--gold-ink)">${prList.map(esc).join(', ')}</div></div>`:''}
     ${lv>lvBefore?`<div class="card" style="background:var(--soft);border-color:transparent"><b>Level ${lv} erreicht: ${esc(titleOf(lv))}</b></div>`:''}
     <div class="btnrow"><button class="btn" data-act="closesheet">Fertig</button></div>`);
@@ -885,7 +1115,8 @@ ACT.finishok=()=>{
 ACT.mma=()=>{const w={id:uid(),kind:'mma',name:'MMA',start:Date.now(),end:Date.now(),exs:[]};S.workouts.push(w);persist();pushWorkout(w);toast('MMA-Einheit geloggt. +40 XP');confetti(30);render();};
 ACT.wdetail=b=>{
   const w=S.workouts.find(x=>x.id===b.dataset.id);if(!w)return;
-  const body=w.kind==='mma'?'<p class="muted">MMA-Einheit (Technik und Sparring).</p>':`<div class="sum"><div class="stat"><div class="v">${fmtKg(vol(w))}</div><div class="l">Gesamtgewicht kg</div></div><div class="stat"><div class="v">${doneCount(w)}</div><div class="l">Sätze · ${fmtDur(w.end-w.start)}</div></div></div>`+
+  const wc=w.kind!=='mma'?weightCompare(vol(w),w.id):null;
+  const body=w.kind==='mma'?'<p class="muted">MMA-Einheit (Technik und Sparring).</p>':`<div class="sum"><div class="stat"><div class="v">${fmtKg(vol(w))}</div><div class="l">Gesamtgewicht kg</div></div><div class="stat"><div class="v">${doneCount(w)}</div><div class="l">Sätze · ${fmtDur(w.end-w.start)}</div></div></div>${wc?`<p class="muted small" style="margin:0 0 12px">${esc(wc)}</p>`:''}`+
     w.exs.map(ex=>`<div style="margin-bottom:10px"><div class="t" style="font-weight:600">${esc(ex.name)}</div><div class="small muted">${ex.rows.filter(r=>r.done).map(r=>fmtN(num(r.w))+' × '+num(r.r)+(r.pr&&r.pr!=='first'?' ★':'')).join(' · ')}</div></div>`).join('');
   openSheet(`<h2>${esc(w.name)}</h2><div class="muted" style="margin-bottom:10px">${fmtDateLong(w.start)}</div>${body}<div class="btnrow"><button class="btn danger" data-act="wdel" data-id="${w.id}">Eintrag löschen</button><button class="btn ghost" data-act="closesheet">Schliessen</button></div>`);
 };
@@ -922,7 +1153,7 @@ function edRow(e,i){
       <label>Pause (s)<input class="ti" inputmode="numeric" data-ed="ex" data-i="${i}" data-f="rest" value="${e.rest}"></label>
       <label>Super-satz<input class="ti" maxlength="1" data-ed="ex" data-i="${i}" data-f="ss" value="${esc(e.ss||'')}" placeholder="A"></label>
     </div>
-    <div class="edbtns"><button data-act="edup" data-i="${i}" aria-label="Nach oben">↑</button><button data-act="eddown" data-i="${i}" aria-label="Nach unten">↓</button><button class="rm" data-act="edrm" data-i="${i}">Entfernen</button></div></div>`;
+    <div class="edbtns">${EX_LIB[exKey(e.name)]?`<button data-act="edinfo" data-i="${i}" aria-label="Übungsinfo zu ${esc(e.name)}">ⓘ Info</button>`:''}<button data-act="edup" data-i="${i}" aria-label="Nach oben">↑</button><button data-act="eddown" data-i="${i}" aria-label="Nach unten">↓</button><button class="rm" data-act="edrm" data-i="${i}">Entfernen</button></div></div>`;
 }
 function showEditor(){
   openSheet(`<h2>${ED.isNew?'Neues Training':'Training bearbeiten'}</h2>
