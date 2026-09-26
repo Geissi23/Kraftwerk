@@ -264,7 +264,6 @@ textarea.ti{min-height:110px;padding:10px 12px;font-size:13px;font-family:ui-mon
 <div id="sheetbg"><div id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div id="sheetc"></div></div></div>
 <div id="toast" role="status"></div>
 <canvas id="fx"></canvas>
-<audio id="alarmaudio" preload="auto" style="display:none"></audio>
 <datalist id="exlib"></datalist>
 
 <script>
@@ -888,67 +887,6 @@ function beep(times=2){
     o.frequency.value=i===times-1?1046:784;g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.3,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+.18);
     o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.2);}}catch(e){}
 }
-/* rest alarm: WAV blob (silence + chime) so it plays through headphones and a locked screen */
-const ALARM_SR=8000,ALARM_MAX_SILENCE=1200;
-function wavFromSamples(samples,sr){
-  const n=samples.length,buf=new ArrayBuffer(44+n),v=new DataView(buf);
-  const ws=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
-  ws(0,'RIFF');v.setUint32(4,36+n,true);ws(8,'WAVE');
-  ws(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
-  v.setUint32(24,sr,true);v.setUint32(28,sr,true);v.setUint16(32,1,true);v.setUint16(34,8,true);
-  ws(36,'data');v.setUint32(40,n,true);
-  new Uint8Array(buf,44).set(samples);
-  return new Blob([buf],{type:'audio/wav'});
-}
-function buildAlarmWav(silenceSec){
-  const sr=ALARM_SR;
-  // driving "count-in then go" cue: 3 short rising taps building urgency, then one lower, punchier hit for the payoff — low-pitched and edgy on purpose, not a pretty chime
-  const pulseFreqs=[392,440,494],pulseDur=.07,pulseGap=.06,pulseFadeOut=.025,pulseSq=.15;
-  const goFreq=330,goDur=.4,preGoGap=.1,goFadeOut=.11,goSq=.5;
-  const fadeIn=.007,amp=112,blocks=2,phraseGap=.32;
-  const pulseN=Math.round(pulseDur*sr),pulseGapN=Math.round(pulseGap*sr);
-  const preGoGapN=Math.round(preGoGap*sr),goN=Math.round(goDur*sr),phraseGapN=Math.round(phraseGap*sr);
-  const phraseN=pulseFreqs.length*pulseN+(pulseFreqs.length-1)*pulseGapN+preGoGapN+goN;
-  const silN=Math.max(0,Math.round(Math.min(silenceSec,ALARM_MAX_SILENCE)*sr));
-  const total=silN+blocks*phraseN+(blocks-1)*phraseGapN;
-  const data=new Uint8Array(total).fill(128);
-  const tone=(off,n,freq,fadeOut,sq)=>{
-    const dur=n/sr;
-    for(let i=0;i<n;i++){
-      const t=i/sr;let env=1;
-      if(t<fadeIn)env=t/fadeIn;else if(t>dur-fadeOut)env=.5-.5*Math.cos(Math.PI*(dur-t)/fadeOut);
-      const sine=Math.sin(2*Math.PI*freq*t);
-      const s=sine*(1-sq)+Math.sign(sine)*sq;
-      data[off+i]=128+Math.round(s*env*amp);
-    }
-  };
-  let off=silN;
-  for(let bI=0;bI<blocks;bI++){
-    pulseFreqs.forEach((f,p)=>{
-      tone(off,pulseN,f,pulseFadeOut,pulseSq);
-      off+=pulseN;
-      if(p<pulseFreqs.length-1)off+=pulseGapN;
-    });
-    off+=preGoGapN;
-    tone(off,goN,goFreq,goFadeOut,goSq);
-    off+=goN;
-    if(bI<blocks-1)off+=phraseGapN;
-  }
-  return wavFromSamples(data,sr);
-}
-const alarmAudio=$('#alarmaudio');
-let alarmUrl=null,alarmFailed=false;
-function freeAlarmUrl(){if(alarmUrl){try{URL.revokeObjectURL(alarmUrl);}catch(e){}alarmUrl=null;}}
-function stopAlarmAudio(){try{alarmAudio&&alarmAudio.pause();}catch(e){}freeAlarmUrl();}
-function playAlarmFor(sec){
-  if(!alarmAudio)return;
-  freeAlarmUrl();
-  alarmFailed=false;
-  alarmUrl=URL.createObjectURL(buildAlarmWav(Math.max(0,sec)));
-  alarmAudio.src=alarmUrl;
-  try{if('mediaSession' in navigator&&window.MediaMetadata)navigator.mediaSession.metadata=new MediaMetadata({title:'Pause läuft'});}catch(e){}
-  try{const p=alarmAudio.play();if(p&&p.catch)p.catch(()=>{alarmFailed=true;});}catch(e){alarmFailed=true;}
-}
 async function wake(){try{if('wakeLock' in navigator)wl=await navigator.wakeLock.request('screen');}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.active&&$('#wk').classList.contains('open'))wake();});
 
@@ -1050,32 +988,21 @@ ACT.addexok=()=>{
 };
 
 /* rest timer */
-function startRest(sec,name){
-  restState={end:Date.now()+sec*1000,total:sec,label:name,fired:false};
-  $('#rest').className='on';
-  if(S.sound)playAlarmFor(sec);else stopAlarmAudio();
-  tickRest();
-}
-function stopRest(){restState=null;$('#rest').className='';stopAlarmAudio();}
+function startRest(sec,name){restState={end:Date.now()+sec*1000,total:sec,label:name,fired:false};$('#rest').className='on';tickRest();}
+function stopRest(){restState=null;$('#rest').className='';}
 function tickRest(){
   if(!restState)return;
   const left=(restState.end-Date.now())/1000;
   if(left<=0){
-    if(!restState.fired){restState.fired=true;if(alarmFailed)beep(3);if(navigator.vibrate)navigator.vibrate([200,100,200]);}
+    if(!restState.fired){restState.fired=true;beep(3);if(navigator.vibrate)navigator.vibrate([200,100,200]);}
     $('#rest').className='on go';$('#resttime').textContent='Los!';$('#restlbl').textContent='Nächster Satz';$('#restbar').style.width='0%';
     if(left<-6)stopRest();return;
   }
   $('#rest').className='on';$('#restlbl').textContent='Pause · '+restState.label;
   $('#resttime').textContent=fmtClock(left);$('#restbar').style.width=Math.min(100,left/restState.total*100)+'%';
 }
-function refreshAlarm(){
-  if(!restState)return;
-  const remain=(restState.end-Date.now())/1000;
-  if(S.sound&&remain>0.05)playAlarmFor(remain);
-  else{stopAlarmAudio();if(S.sound)alarmFailed=true;}
-}
-ACT.restm=()=>{if(restState){restState.end-=15000;restState.total=Math.max(restState.total,1);refreshAlarm();tickRest();}};
-ACT.restp=()=>{if(restState){restState.end+=15000;restState.total+=15;restState.fired=false;refreshAlarm();tickRest();}};
+ACT.restm=()=>{if(restState){restState.end-=15000;restState.total=Math.max(restState.total,1);tickRest();}};
+ACT.restp=()=>{if(restState){restState.end+=15000;restState.total+=15;restState.fired=false;tickRest();}};
 ACT.restskip=stopRest;
 setInterval(()=>{if($('#wk').classList.contains('open'))updateWk();tickRest();},500);
 
@@ -1198,8 +1125,9 @@ ACT.settings=()=>{
   openSheet(`<h2>Einstellungen</h2>
     <div class="row2" style="margin-bottom:16px"><div><div class="t" style="font-weight:600">Wochenziel</div><div class="small muted">Trainings pro Woche</div></div>
       <div class="stepper"><button data-act="goalm" aria-label="Weniger">−</button><b id="goalv">${S.goal}</b><button data-act="goalp" aria-label="Mehr">+</button></div></div>
-    <div class="row2" style="margin-bottom:16px"><div><div class="t" style="font-weight:600">Ton am Pausenende</div><div class="small muted">Signal, wenn die Pause vorbei ist</div></div>
+    <div class="row2" style="margin-bottom:8px"><div><div class="t" style="font-weight:600">Ton am Pausenende</div><div class="small muted">Signal, wenn die Pause vorbei ist</div></div>
       <button class="tog ${S.sound?'on':''}" data-act="sound" role="switch" aria-checked="${S.sound}" aria-label="Ton"><i></i></button></div>
+    <div class="small muted" style="margin-bottom:16px">Der Ton mischt sich in deine Musik ein und unterbricht sie nicht. Dafür funktioniert er nur, solange der Bildschirm an ist.</div>
     <button class="btn ghost full" style="margin-bottom:16px" data-act="testalarm">Weckton testen (Kopfhörer)</button>
     <div class="card" style="margin-bottom:12px"><div class="t" style="font-weight:600">Datensicherung</div><div class="small muted">${esc(Sync.status)}. Zusätzlich kannst du alles als Text sichern.</div></div>
     <div class="btnrow" style="margin-top:0"><button class="btn ghost" data-act="export">Backup anzeigen und kopieren</button><button class="btn ghost" data-act="import">Backup wiederherstellen</button>
@@ -1210,8 +1138,8 @@ ACT.settings=()=>{
 };
 ACT.goalm=()=>{S.goal=Math.max(1,S.goal-1);$('#goalv').textContent=S.goal;savePlan();};
 ACT.goalp=()=>{S.goal=Math.min(7,S.goal+1);$('#goalv').textContent=S.goal;savePlan();};
-ACT.sound=b=>{S.sound=!S.sound;b.classList.toggle('on',S.sound);b.setAttribute('aria-checked',S.sound);savePlan();if(S.sound){unlockAudio();beep(1);}else stopAlarmAudio();};
-ACT.testalarm=()=>{playAlarmFor(.2);};
+ACT.sound=b=>{S.sound=!S.sound;b.classList.toggle('on',S.sound);b.setAttribute('aria-checked',S.sound);savePlan();if(S.sound){unlockAudio();beep(1);}};
+ACT.testalarm=()=>{beep(3);};
 ACT.export=()=>{
   const data=JSON.stringify({app:'kraftwerk',v:1,data:Object.assign({},S,{active:null})});
   openSheet(`<h2>Backup</h2><p class="muted small">Kopiere diesen Text und bewahre ihn z. B. in einer Notiz auf.</p><textarea class="ti" id="bk" readonly>${esc(data)}</textarea>
