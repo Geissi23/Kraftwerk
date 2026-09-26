@@ -216,6 +216,7 @@ textarea.ti{min-height:110px;padding:10px 12px;font-size:13px;font-family:ui-mon
 .tog i{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;transition:transform .15s}
 .tog.on{background:var(--good)}
 .tog.on i{transform:translateX(20px)}
+input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--good);background:transparent}
 .sum{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 
 /* toast + confetti */
@@ -322,7 +323,7 @@ function defaultPlan(){
 }
 function baseState(){
   const p=defaultPlan();
-  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:4,sound:true,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null};
+  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:4,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null};
 }
 
 /* ---------- storage ---------- */
@@ -347,7 +348,7 @@ function savePlan(){S.pt=Date.now();persist();schedulePush();}
 
 /* ---------- optional cloud sync (db capability) ---------- */
 const Sync={db:null,base:null,status:'Nur auf diesem Gerät gespeichert',timer:null};
-const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer});
+const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer});
 function schedulePush(){clearTimeout(Sync.timer);Sync.timer=setTimeout(pushPlan,1500);}
 async function pushPlan(){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/plan').set({json:JSON.stringify(planPart()),t:Date.now()});}catch(e){}}
 async function pushWorkout(w){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/w_'+w.id).set({json:JSON.stringify(w),t:Date.now()});}catch(e){}}
@@ -367,7 +368,7 @@ async function syncInit(){
     if(rp){
       S.deleted=[...new Set([...(S.deleted||[]),...(rp.deleted||[])])];
       if((rp.pt||0)>(S.pt||0)){
-        ['routines','schedules','mode','goal','sound','bodyweight','bwTarget','pt','planVer'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});
+        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});
         changed=true;
       }else pushPlan();
     }else pushPlan();
@@ -876,6 +877,10 @@ document.addEventListener('change',e=>{
   if(t.dataset.sch!==undefined){S.schedules[S.mode][+t.dataset.sch]=t.value;savePlan();}
   if(t.dataset.prog!==undefined){PROG_KEY=t.value;render();}
 });
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset.vol!==undefined){S.soundVol=(+t.value)/100;$('#volv').textContent=t.value+'%';savePlan();}
+});
 ACT.mode=b=>{S.mode=b.dataset.m;savePlan();render();};
 
 /* ---------- workout ---------- */
@@ -883,8 +888,9 @@ let restState=null,wl=null,AC=null;
 function unlockAudio(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){}}
 function beep(times=2){
   if(!S.sound)return;
+  const peak=Math.max(.0001,.3*(S.soundVol??1));
   try{unlockAudio();for(let i=0;i<times;i++){const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+i*.22;
-    o.frequency.value=i===times-1?1046:784;g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.3,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+.18);
+    o.frequency.value=i===times-1?1046:784;g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(peak,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+.18);
     o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.2);}}catch(e){}
 }
 async function wake(){try{if('wakeLock' in navigator)wl=await navigator.wakeLock.request('screen');}catch(e){}}
@@ -1128,6 +1134,8 @@ ACT.settings=()=>{
     <div class="row2" style="margin-bottom:8px"><div><div class="t" style="font-weight:600">Ton am Pausenende</div><div class="small muted">Signal, wenn die Pause vorbei ist</div></div>
       <button class="tog ${S.sound?'on':''}" data-act="sound" role="switch" aria-checked="${S.sound}" aria-label="Ton"><i></i></button></div>
     <div class="small muted" style="margin-bottom:16px">Der Ton mischt sich in deine Musik ein und unterbricht sie nicht. Dafür funktioniert er nur, solange der Bildschirm an ist und dein iPhone nicht stummgeschaltet ist (Lautlos-Schalter).</div>
+    <div style="margin-bottom:16px"><div class="row2" style="margin-bottom:4px"><div class="t" style="font-weight:600">Lautstärke</div><b id="volv">${Math.round(S.soundVol*100)}%</b></div>
+      <input type="range" min="0" max="100" step="5" value="${Math.round(S.soundVol*100)}" data-vol aria-label="Lautstärke Weckton"></div>
     <button class="btn ghost full" style="margin-bottom:16px" data-act="testalarm">Weckton testen (Kopfhörer)</button>
     <div class="card" style="margin-bottom:12px"><div class="t" style="font-weight:600">Datensicherung</div><div class="small muted">${esc(Sync.status)}. Zusätzlich kannst du alles als Text sichern.</div></div>
     <div class="btnrow" style="margin-top:0"><button class="btn ghost" data-act="export">Backup anzeigen und kopieren</button><button class="btn ghost" data-act="import">Backup wiederherstellen</button>
