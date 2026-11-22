@@ -345,9 +345,11 @@ label.phpick b{font-size:26px;line-height:1;color:var(--accent)}
 input[type=range].phr{width:100%;margin:12px 0 4px}
 /* ===== redesign: icons, kompakte karten ===== */
 .ic{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-3px}
-.ic.lg{width:22px;height:22px}
+.ic.lg{width:24px;height:24px}
+.ic.xl{width:30px;height:30px;stroke-width:1.7}
+.hero .hbig{position:absolute;right:-8px;bottom:78px;width:96px;height:96px;opacity:.14;stroke:#fff;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 .hero{padding:18px 18px 16px;border-radius:24px;position:relative;overflow:hidden}
-.hero::after{content:'';position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none}
+
 .hero .hl{display:flex;align-items:center;gap:6px}
 .hero h1{font-size:46px;margin:4px 0 10px}
 .hchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
@@ -356,7 +358,7 @@ input[type=range].phr{width:100%;margin:12px 0 4px}
 .hscroll{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;margin:0 -2px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .hscroll::-webkit-scrollbar{display:none}
 .tcard{flex:0 0 46%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px;text-align:left;display:flex;flex-direction:column;gap:6px;min-height:104px}
-.tcard .dotc{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;color:#fff}
+.tcard .dotc{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--soft);color:var(--accent)}
 .tcard .tn{font-weight:600;line-height:1.2}
 .tcard .ts{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px}
 .h3{font-family:var(--disp);font-size:22px;font-weight:600;margin:18px 2px 10px}
@@ -365,7 +367,7 @@ input[type=range].phr{width:100%;margin:12px 0 4px}
 .wkline{font-size:13px;color:var(--muted);margin-top:10px;display:flex;align-items:center;gap:6px}
 .rc{border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;background:var(--surface)}
 .rc .rh{display:flex;align-items:center;gap:10px}
-.rc .ri{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none}
+.rc .ri{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--soft);color:var(--accent);flex:none}
 .rc .rn{font-family:var(--disp);font-size:22px;font-weight:600;line-height:1.1;flex:1;min-width:0}
 .rc .rm{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:var(--muted);margin-top:8px}
 .rc .rm span{display:inline-flex;align-items:center;gap:4px}
@@ -497,7 +499,12 @@ const ICONS={
  flame:'<path d="M12 21c4 0 7-3 7-7 0-3-2-5-3-7-1 2-2 3-4 3 0-3-1-5-3-7 0 4-4 6-4 11 0 4 3 7 7 7z"/>',
  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
  search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
- check:'<path d="M5 12.5l4.5 4.5L19 7"/>'
+ check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
+ b_upper:'<circle cx="12" cy="3.4" r="2"/><path d="M6.5 7.5h11l-2.2 9.5H8.7z"/><path d="M6.5 7.5L4.6 15M17.5 7.5l1.9 7.5"/><path d="M8.8 10.6c1 .7 2 1 3.2 1s2.2-.3 3.2-1"/>',
+ b_legs:'<path d="M7 3h10"/><path d="M7 3c-.6 3-1 6-.6 9.5L7.5 21h3l1-8.5h1l1 8.5h3l1.1-8.5c.4-3.5 0-6.5-.6-9.5"/><path d="M9.5 8.5c.8.6 1.6.9 2.5.9s1.7-.3 2.5-.9"/>',
+ b_full:'<circle cx="12" cy="3.4" r="2"/><path d="M8.2 7.3h7.6l-1.4 6.4H9.6z"/><path d="M8.2 7.3L5.2 12.5M15.8 7.3l3 5.2"/><path d="M9.6 13.7l-1 7.6M14.4 13.7l1 7.6"/>',
+ b_arm:'<path d="M3 19h12.4c2 0 3.6-1.6 3.6-3.6V7"/><path d="M3 13.6c2.2-.3 3.6-2.8 6.8-2.8 2 0 3.3.9 4.2 2V7"/><path d="M14 7c0-1.8 1.1-3.2 2.5-3.2S19 5.2 19 7"/><path d="M8.5 14.2c1.1-.6 2.3-.6 3.3 0"/>',
+ b_core:'<path d="M7 3.5c-1 3-1.5 6-1.5 9.5 0 3.5.8 6 1.5 8h10c.7-2 1.5-4.5 1.5-8 0-3.5-.5-6.5-1.5-9.5"/><path d="M12 6v13M9 8.5h6M8.8 12h6.4M9 15.5h6"/>'
 };
 const ic=(n,c='')=>`<svg class="ic${c?' '+c:''}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
 const checkSvg='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
@@ -975,6 +982,16 @@ function agoText(t){
   const d=Math.round((new Date().setHours(0,0,0,0)-new Date(t).setHours(0,0,0,0))/864e5);
   return d<=0?'Zuletzt heute':d===1?'Zuletzt gestern':'Zuletzt vor '+d+' Tagen';
 }
+function routineIcon(r){
+  const c={up:0,arm:0,low:0,core:0};
+  (r.ex||[]).forEach(e=>{const m=muscleOf(e.name);if(!m)return;const n=e.sets||1;
+    m.p.forEach(g=>{if(['Beine','Po','Waden'].includes(g))c.low+=n;else if(g==='Bauch')c.core+=n;else{c.up+=n;if(['Schultern','Bizeps','Trizeps'].includes(g))c.arm+=n;}});});
+  const tot=c.up+c.low+c.core;if(!tot)return 'b_full';
+  if(c.core/tot>=.6)return 'b_core';
+  if(c.low/tot>=.7)return 'b_legs';
+  if(c.up/tot>=.7)return c.arm/c.up>=.55?'b_arm':'b_upper';
+  return 'b_full';
+}
 const RCOLORS=['#2B4BFF','#0F8F68','#C98A00','#D6403A','#7A4DD8','#0E9AA7','#E0569B','#5C6572'];
 function routineColor(id){if(!id)return '#98A1AE';const i=S.routines.findIndex(r=>r.id===id);return i<0?'#8E96A3':RCOLORS[i%RCOLORS.length];}
 const wColor=w=>w.kind==='mma'?'#98A1AE':routineColor(w.routineId);
@@ -991,7 +1008,7 @@ function viewToday(){
       <button class="btn light" data-act="resume">${ic('play')} Weiter trainieren</button></section>`;
   }else if(r){
     const last=routineLast(r.id);
-    hero=`<section class="hero"><div class="hl">${today.length?ic('check')+' Heute erledigt · als Nächstes':ic('sparkle')+' Als Nächstes'}</div><h1>${esc(r.name)}</h1>
+    hero=`<section class="hero"><svg class="hbig" viewBox="0 0 24 24" aria-hidden="true">${ICONS[routineIcon(r)]}</svg><div class="hl">${today.length?ic('check')+' Heute erledigt · als Nächstes':ic('sparkle')+' Als Nächstes'}</div><h1>${esc(r.name)}</h1>
       <div class="hchips"><span>${ic('dumbbell')} ${r.ex.length} Übungen</span><span>${ic('clock')} ${estMin(r)} Min.</span><span>${ic('history')} ${esc(agoText(last.t).replace('Zuletzt ',''))}</span></div>
       <button class="btn light" data-act="start" data-id="${r.id}">${ic('play')} Training starten</button></section>`;
   }else{
@@ -1002,8 +1019,7 @@ function viewToday(){
   const strip=ORDER.map((d,i)=>{
     const dt=new Date(mon);dt.setDate(mon.getDate()+i);const key=ymd(dt);
     const day=fin.filter(w=>ymd(w.start)===key);
-    const col=day.length?wColor(day.find(w=>w.kind!=='mma')||day[0]):'';
-    return `<div class="day ${ymd(now)===key?'today':''}"><span>${DAYS[d]}</span><span class="dot ${day.length?'done':''}"${col?` style="background:${col};border-color:${col}"`:''}>${day.length?'✓':''}</span></div>`;
+    return `<div class="day ${ymd(now)===key?'today':''}"><span>${DAYS[d]}</span><span class="dot ${day.length?'done':''}">${day.length?'✓':''}</span></div>`;
   }).join('');
   const goal=S.goal,pct=Math.min(1,gymWeek/goal),C=2*Math.PI*30;
   const ring=`<div class="ring"><svg width="74" height="74" viewBox="0 0 74 74"><circle cx="37" cy="37" r="30" fill="none" stroke="var(--bg)" stroke-width="8"/><circle cx="37" cy="37" r="30" fill="none" stroke="${pct>=1?'var(--good)':'var(--accent)'}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-pct)).toFixed(1)}"/></svg><div class="c">${gymWeek}/${goal}</div></div>`;
@@ -1011,7 +1027,7 @@ function viewToday(){
   const weekCard=`<div class="card"><div class="wkrow">${ring}<div class="week">${strip}</div></div>
     <div class="wkline">${gymWeek>=goal?ic('trophy')+' Wochenziel erreicht':ic('flame')+' Noch '+(goal-gymWeek)+' bis zum Wochenziel'}${st.streak?` · ${st.streak} Wo. Serie`:''}${weekVol>0?` · ${fmtT(weekVol)}`:''}</div></div>`;
   const rest=S.routines.filter(x=>!r||x.id!==r.id);
-  const others=rest.length?`<div class="h3">Andere Trainings</div><div class="hscroll">${rest.map(x=>`<button class="tcard" data-act="start" data-id="${x.id}"><span class="dotc" style="background:${routineColor(x.id)}">${ic('dumbbell')}</span><span class="tn">${esc(x.name)}</span><span class="ts">${ic('clock')} ${estMin(x)} Min.</span></button>`).join('')}</div>`:'';
+  const others=rest.length?`<div class="h3">Andere Trainings</div><div class="hscroll">${rest.map(x=>`<button class="tcard" data-act="start" data-id="${x.id}"><span class="dotc">${ic(routineIcon(x),'lg')}</span><span class="tn">${esc(x.name)}</span><span class="ts">${ic('clock')} ${estMin(x)} Min.</span></button>`).join('')}</div>`:'';
   return viewTop()+hero+reviewTeaser()+weekCard+others;
 }
 
@@ -1019,7 +1035,7 @@ function viewPlan(){
   const cards=S.routines.map(r=>{
     const l=routineLast(r.id),sets=r.ex.reduce((a,e)=>a+e.sets,0),col=routineColor(r.id);
     const names=r.ex.map(e=>e.name.replace(/\s*\(.*\)/,''));
-    return `<div class="rc"><div class="rh"><span class="ri" style="background:${col}">${ic('dumbbell','lg')}</span><div class="rn">${esc(r.name)}</div>${r.rot?`<span class="chip rot">${ic('repeat')}Vorschlag</span>`:'<span class="chip">Extra</span>'}</div>
+    return `<div class="rc"><div class="rh"><span class="ri">${ic(routineIcon(r),'xl')}</span><div class="rn">${esc(r.name)}</div>${r.rot?`<span class="chip rot">${ic('repeat')}Vorschlag</span>`:'<span class="chip">Extra</span>'}</div>
       <div class="rm"><span>${ic('dumbbell')} ${r.ex.length}</span><span>${ic('layers')} ${sets} Sätze</span><span>${ic('clock')} ${estMin(r)} Min.</span><span>${ic('history')} ${esc(agoText(l.t).replace('Zuletzt ',''))}</span></div>
       <div class="rx">${esc(names.slice(0,4).join(' · '))}${names.length>4?` · +${names.length-4}`:''}</div>
       <div class="ra"><button class="go" data-act="start" data-id="${r.id}">${ic('play')} Starten</button><button class="icb" data-act="editroutine" data-id="${r.id}" aria-label="${esc(r.name)} bearbeiten">${ic('edit')}</button><button class="icb" data-act="duproutine" data-id="${r.id}" aria-label="${esc(r.name)} duplizieren">${ic('copy')}</button></div></div>`;
