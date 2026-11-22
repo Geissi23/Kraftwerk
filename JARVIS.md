@@ -95,6 +95,8 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 
 - [x] **P11 – Fortschrittsfotos** (nur auf dem iPhone, Vorher/Nachher-Vergleich mit Schieberegler, ohne KI) – genehmigt am 2026-11-22, **live** (PR #6)
 
+- [x] **P12 – Jarvis-Sync** (App speichert Trainingsdaten automatisch in ein privates Repo `Geissi23/kraftwerk-daten`, Jarvis wertet sie im Bericht aus) – Wunsch von Janis, genehmigt am 2026-11-22, in Arbeit
+
 ## Backlog
 
 - [x] Erste Bestandsaufnahme (2026-11-22) – Fixes **live** (PR #2 gemergt): Pausen-Leiste blockierte Tabs, iOS-Zoom
@@ -125,3 +127,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-22: Janis fand die App unübersichtlich. Redesign (Icons, Unter-Tabs, weniger Text) → PR #7, gemergt und live.
 - 2026-11-22: Körper-Icons statt bunter Hantel-Icons → PR #8, gemergt und live.
 - 2026-11-22: Janis: Läufe Mo/Mi/Fr mit Bericht bis 18:00, Jarvis darf getestete PRs selbst mergen, Bericht mit Testhinweisen, Rückgängig-Hinweis, In Arbeit, Problemen, Pitches und Trainingstipp.
+- 2026-11-22: P12 Jarvis-Sync (Variante B: privates GitHub-Repo) von Janis genehmigt.
