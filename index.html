@@ -573,7 +573,7 @@ const CORE_IDS=['r_k1','r_k2','r_k3'];
 function normRot(){(S.routines||[]).forEach(r=>{if(typeof r.rot!=='boolean')r.rot=CORE_IDS.includes(r.id);});}
 normRot();
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
-function savePlan(){S.pt=Date.now();persist();schedulePush();}
+function savePlan(){S.pt=Date.now();persist();schedulePush();ghSchedule();}
 
 /* ---------- optional cloud sync (db capability) ---------- */
 const Sync={db:null,base:null,status:'Nur auf diesem Gerät gespeichert',timer:null};
@@ -1734,6 +1734,75 @@ ACT.phdel=async b=>{
 };
 phLoad().then(()=>{if(TAB==='stats')render();});
 
+
+/* ---------- P12: Jarvis-Sync (Trainingsdaten -> privates GitHub-Repo) ----------
+   Eigener localStorage-Schlüssel, Token ist weder im Text-Backup noch im Claude-Sync.
+   Schreibt nur die Datei kraftwerk-daten.json; Fotos werden nie übertragen. */
+const GH_KEY='kraftwerk.ghsync',GH_FILE='kraftwerk-daten.json';
+const GH={repo:'Geissi23/kraftwerk-daten',token:'',last:0,err:'',busy:false,timer:null};
+try{const c=JSON.parse(localStorage.getItem(GH_KEY)||'{}');if(typeof c.repo==='string'&&c.repo)GH.repo=c.repo;if(typeof c.token==='string')GH.token=c.token;if(typeof c.last==='number')GH.last=c.last;if(typeof c.err==='string')GH.err=c.err;}catch(e){}
+const ghSave=()=>{try{localStorage.setItem(GH_KEY,JSON.stringify({repo:GH.repo,token:GH.token,last:GH.last,err:GH.err}));}catch(e){}};
+const ghOn=()=>!!(GH.token&&/^[\w.-]+\/[\w.-]+$/.test(GH.repo));
+function ghStatusText(){
+  if(!ghOn())return 'Nicht eingerichtet';
+  if(GH.err)return 'Fehler: '+GH.err;
+  if(!GH.last)return 'Eingerichtet, noch nicht synchronisiert';
+  const m=Math.round((Date.now()-GH.last)/60000);
+  return 'Synchronisiert '+(m<1?'gerade eben':m<60?'vor '+m+' Min.':m<1440?'vor '+Math.round(m/60)+' Std.':'am '+fmtDate(GH.last));
+}
+function ghB64(str){const bytes=new TextEncoder().encode(str);let bin='';for(let i=0;i<bytes.length;i+=0x8000)bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));return btoa(bin);}
+function ghFromB64(b){const bin=atob(b.replace(/\s/g,''));const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new TextDecoder().decode(u);}
+async function ghApi(path,opt={}){
+  const r=await fetch('https://api.github.com/repos/'+GH.repo+path,Object.assign({},opt,{headers:Object.assign({'Authorization':'Bearer '+GH.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},opt.body?{'Content-Type':'application/json'}:{})}));
+  if(r.status===401)throw new Error('Schlüssel ungültig oder abgelaufen');
+  if(r.status===403)throw new Error('Keine Berechtigung (Contents: Read and write?)');
+  if(r.status===404&&!opt.allow404)throw new Error('Repo nicht gefunden');
+  return r;
+}
+function ghPayload(){
+  const fin=finished(),g=gymOnly();
+  return JSON.stringify({app:'kraftwerk',v:1,exported:new Date().toISOString(),
+    summary:{trainings:g.length,lastTraining:g.length?ymd(g[g.length-1].start):null,goal:S.goal,level:levelOf(xpTotal())},
+    data:Object.assign({},S,{active:null,deleted:undefined})},null,1);
+}
+async function ghPush(manual){
+  if(!ghOn()||GH.busy)return false;GH.busy=true;
+  try{
+    let sha;const g=await ghApi('/contents/'+GH_FILE,{allow404:true});
+    if(g.ok){sha=(await g.json()).sha;}
+    const r=await ghApi('/contents/'+GH_FILE,{method:'PUT',body:JSON.stringify({message:'Kraftwerk-Sync '+new Date().toLocaleString('de-CH'),content:ghB64(ghPayload()),sha})});
+    if(!r.ok)throw new Error('Speichern fehlgeschlagen ('+r.status+')');
+    GH.last=Date.now();GH.err='';ghSave();if(manual)toast('Mit Jarvis synchronisiert');return true;
+  }catch(e){GH.err=(e&&e.message)||'Keine Verbindung';ghSave();if(manual)toast(GH.err);return false;}
+  finally{GH.busy=false;const el=$('#ghstat');if(el)el.textContent=ghStatusText();}
+}
+function ghSchedule(ms){try{if(!ghOn())return;clearTimeout(GH.timer);GH.timer=setTimeout(()=>ghPush(false),ms||4000);}catch(e){}}
+function ghSheet(){
+  openSheet(`<h2>Jarvis-Sync</h2>
+    <div class="muted small" style="margin-bottom:12px">Speichert deine Trainingsdaten automatisch in dein privates GitHub-Repo, damit Jarvis sie im Bericht auswerten kann. Fotos werden nie übertragen.</div>
+    <label class="fl">Repo<input class="ti" id="ghrepo" value="${esc(GH.repo)}" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+    <label class="fl">Zugangsschlüssel (Token)<input class="ti" id="ghtok" type="password" value="${esc(GH.token)}" placeholder="github_pat_…" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+    <div class="card" style="margin-bottom:0"><div class="small"><b>Status:</b> <span id="ghstat">${esc(ghStatusText())}</span></div></div>
+    <div class="btnrow"><button class="btn" data-act="ghconnect">${ic('repeat')} Speichern & jetzt synchronisieren</button>
+    ${ghOn()?`<button class="btn ghost" data-act="ghrestore">Aus GitHub wiederherstellen</button><button class="btn danger" data-act="ghoff">Sync ausschalten</button>`:''}
+    <button class="btn ghost" data-act="settings">Zurück</button></div>`);
+}
+ACT.ghsheet=()=>ghSheet();
+ACT.ghconnect=async b=>{
+  GH.repo=($('#ghrepo').value||'').trim().replace(/^https:\/\/github\.com\//,'').replace(/\/$/,'');GH.token=($('#ghtok').value||'').trim();GH.err='';ghSave();
+  if(!ghOn()){toast('Bitte Repo (Name/Repo) und Schlüssel eintragen.');return;}
+  b.disabled=true;b.textContent='Verbinde…';const ok=await ghPush(true);ghSheet();if(ok)toast('Verbunden. Jarvis sieht jetzt deine Trainings.',true);
+};
+ACT.ghoff=b=>{if(!arm(b,'Nochmals tippen zum Ausschalten'))return;GH.token='';GH.last=0;GH.err='';ghSave();ghSheet();toast('Jarvis-Sync ausgeschaltet');};
+ACT.ghrestore=async b=>{
+  if(!arm(b,'Ersetzt die Daten hier. Nochmals tippen'))return;
+  try{const r=await ghApi('/contents/'+GH_FILE);const j=await r.json();const o=JSON.parse(ghFromB64(j.content));const d=o.data;
+    if(o.app!=='kraftwerk'||!d||!Array.isArray(d.workouts)||!Array.isArray(d.routines))throw new Error('Datei ungültig');
+    S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();persist();pushPlan();S.workouts.forEach(pushWorkout);closeSheet();render();toast('Aus GitHub wiederhergestellt');
+  }catch(e){toast((e&&e.message)||'Wiederherstellen fehlgeschlagen');}
+};
+if(ghOn()&&Date.now()-GH.last>6*3600e3)ghSchedule(8000);
+
 /* rest timer */
 function startRest(sec,name){restState={end:Date.now()+sec*1000,total:sec,label:name,fired:false};$('#rest').className='on';tickRest();}
 function stopRest(){restState=null;$('#rest').className='';}
@@ -1774,7 +1843,7 @@ ACT.finishok=()=>{
   const prList=A.exs.filter(ex=>ex.rows.some(r=>r.pr&&r.pr!=='first')).map(ex=>ex.name);
   A.prs=prList.length;
   A.exs.forEach(ex=>{delete ex.hint;delete ex.go;});
-  S.workouts.push(A);S.active=null;persist();pushWorkout(A);
+  S.workouts.push(A);S.active=null;persist();pushWorkout(A);ghSchedule(500);
   stopRest();closeSheet();$('#wk').classList.remove('open');
   try{if(wl)wl.release();}catch(e){}
   const after=xpTotal(),lv=levelOf(after),v=vol(A);
@@ -1886,6 +1955,7 @@ ACT.settings=()=>{
     <div style="margin-bottom:16px"><div class="row2" style="margin-bottom:4px"><div class="t" style="font-weight:600">Lautstärke</div><b id="volv">${Math.round(S.soundVol*100)}%</b></div>
       <input type="range" min="0" max="100" step="5" value="${Math.round(S.soundVol*100)}" data-vol aria-label="Lautstärke Weckton"></div>
     <button class="btn ghost full" style="margin-bottom:16px" data-act="testalarm">Weckton testen (Kopfhörer)</button>
+    <button class="item" data-act="ghsheet" style="margin-bottom:12px;border:1px solid var(--line);border-radius:14px;padding:12px 14px"><div style="display:flex;gap:12px;align-items:center"><span class="ti2" style="width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--soft);color:var(--accent)">${ic('repeat')}</span><div><div class="t" style="font-weight:600">Jarvis-Sync</div><div class="small muted">${esc(ghStatusText())}</div></div></div><span class="chev">›</span></button>
     <div class="card" style="margin-bottom:12px"><div class="t" style="font-weight:600">Datensicherung</div><div class="small muted">${esc(Sync.status)}. Zusätzlich kannst du alles als Text sichern.</div></div>
     <div class="btnrow" style="margin-top:0"><button class="btn ghost" data-act="export">Backup anzeigen und kopieren</button><button class="btn ghost" data-act="import">Backup wiederherstellen</button>
     <button class="btn danger" data-act="resetplan">Standardplan wiederherstellen</button></div>
