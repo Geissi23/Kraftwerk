@@ -43,7 +43,7 @@ Kontext: Janis trainiert 4x pro Woche im Gym und macht MMA am Samstagmorgen, Zie
 So gibst du ein OK: Kästchen auf `[x]` setzen, oder im Chat des Jarvis-Laufs antworten («P1 ja», «P2 nein»).
 Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 
-- [x] **P1 – Jarvis spricht (Sprach-Briefing in der App)** – von Janis gewünscht, genehmigt am 2026-11-22
+- [x] **P1 – Jarvis spricht (Sprach-Briefing in der App)** – von Janis gewünscht, genehmigt am 2026-11-22 – **in PR #1** (wartet auf Merge)
   Jarvis legt bei jedem Lauf seine Pitches, Fragen und neuen PRs als kurzes, gesprochen formuliertes
   Briefing in `jarvis.json` (auf `main`) ab. Die App zeigt einen Jarvis-Button mit Hinweis auf
   Neues; beim Antippen liest das iPhone das Briefing mit einer deutschen Stimme vor
@@ -53,6 +53,20 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
   Briefing-Stil: wie ein persönlicher Assistent, locker und kurz (max. ca. 60 Sekunden),
   jeder Pitch mit Nummer, damit Janis mit «P2 ja» antworten kann.
 
+- [ ] **P2 – Aufwärmsätze auf Knopfdruck** – Aufwand: klein
+  Bei der ersten schweren Grundübung eines Trainings (z. B. Squat, Schrägbankdrücken) zeigt die App
+  einen kleinen Knopf «Aufwärmen». Er rechnet aus deinem heutigen Arbeitsgewicht eine kurze Rampe
+  (z. B. leere Stange × 10, 50 % × 6, 70 % × 3, 85 % × 1, auf 2,5 kg gerundet) und hakt sie
+  separat ab, ohne Volumen, Rekorde oder XP zu verfälschen.
+  Warum: schneller und sicherer zum ersten schweren Satz, ohne Kopfrechnen im Gym.
+
+- [ ] **P3 – Wochen-Sätze pro Muskelgruppe** – Aufwand: mittel
+  Neue Karte im Tab «Fortschritt»: Wie viele harte Sätze hast du diese Woche pro Muskelgruppe
+  (Brust, Rücken, Schultern, Bizeps, Trizeps, Beine, Po, Waden, Bauch) gemacht? Mit Ampel für den
+  Aufbau-Richtwert von etwa 10–20 Sätzen pro Woche. Die Zuordnung Übung → Muskelgruppe ist fest
+  in der App hinterlegt, deine Daten bleiben unverändert.
+  Warum: zeigt auf einen Blick, ob eine Muskelgruppe zu kurz kommt – der wichtigste Hebel für Muskelaufbau.
+
 ## Backlog
 
 - [ ] Erste Bestandsaufnahme: App auf Bugs, Layout-Probleme auf dem iPhone und Verbesserungspotenzial prüfen
@@ -60,3 +74,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 ## Log
 
 - 2026-11-22: Jarvis eingerichtet.
+- 2026-11-22: P1 umgesetzt (PR #1: Jarvis-Button, Vorlesen, Schalter Sprechen/Nur Text). Erstes `jarvis.json` angelegt. Neue Pitches P2 (Aufwärmsätze) und P3 (Sätze pro Muskelgruppe).

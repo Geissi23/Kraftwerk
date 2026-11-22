@@ -1,0 +1,23 @@
+{
+ "id": "2026-11-22-1",
+ "date": "2026-11-22",
+ "speech": "Hoi Janis, hier ist Jarvis, dein erstes Briefing. Wenn du mich hörst, ist das Sprach-Briefing live. Danke fürs Mergen!\n\nZwei neue Ideen für dich. P2: Aufwärmsätze auf Knopfdruck. Bei der ersten schweren Übung rechnet die App dir eine kurze Aufwärm-Rampe aus deinem Arbeitsgewicht aus, damit du ohne Kopfrechnen sicher zum ersten schweren Satz kommst. Kleiner Aufwand.\n\nP3: Wochen-Sätze pro Muskelgruppe. Eine Karte im Fortschritt zeigt, wie viele harte Sätze du diese Woche für Brust, Rücken, Beine und so weiter gemacht hast, mit Ampel für zehn bis zwanzig Sätze. So siehst du sofort, ob etwas zu kurz kommt. Mittlerer Aufwand.\n\nWenn dir etwas gefällt, sag einfach zum Beispiel P2 ja. Viel Erfolg im Training!",
+ "items": [
+  {
+   "n": "P2",
+   "title": "Aufwärmsätze auf Knopfdruck",
+   "text": "Kurze Aufwärm-Rampe aus dem Arbeitsgewicht der ersten schweren Übung, separat abhakbar, ohne Volumen oder Rekorde zu verfälschen. Aufwand: klein."
+  },
+  {
+   "n": "P3",
+   "title": "Wochen-Sätze pro Muskelgruppe",
+   "text": "Karte im Fortschritt mit harten Sätzen pro Muskelgruppe diese Woche und Ampel für 10–20 Sätze. Aufwand: mittel."
+  },
+  {
+   "n": "PR",
+   "title": "#1 Jarvis spricht (Sprach-Briefing)",
+   "text": "Wartet auf deinen Merge.",
+   "url": "https://github.com/Geissi23/Kraftwerk/pull/1"
+  }
+ ]
+}
