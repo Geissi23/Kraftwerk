@@ -105,7 +105,7 @@ h1,h2,h3{font-family:var(--disp);font-weight:600;margin:0;line-height:1.05;lette
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:12px}
 .seg button{padding:9px 4px;border-radius:9px;font-size:14px;font-weight:500;color:var(--muted)}
 .seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
-select,.ti{width:100%;min-height:44px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);padding:0 12px}
+select,.ti{width:100%;min-height:44px;font-size:16px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);padding:0 12px}
 .schrow{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:center;margin-bottom:8px}
 .schrow b{font-family:var(--disp);font-size:20px}
 
@@ -157,14 +157,15 @@ svg.chart{width:100%;height:auto;display:block}
 .wkh{background:var(--surface);border-bottom:1px solid var(--line);padding:10px 14px 12px}
 .wkh .r1{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .wkh h2{font-size:26px}
-.wkstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
-.wkstats div{background:var(--bg);border-radius:12px;padding:7px 10px}
+.wkstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.wkstats div{background:var(--bg);border-radius:12px;padding:7px 10px;min-width:0}
 .wkstats .v{font-family:var(--disp);font-size:26px;font-weight:700;line-height:1}
-.wkstats .l{font-size:12px;color:var(--muted)}
+.wkstats .l{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #wkbody{flex:1;overflow-y:auto;padding:14px 14px 190px;-webkit-overflow-scrolling:touch}
 .ex{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px}
 .exh{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.exh h3{font-size:24px}
+.exh h3{font-size:24px;overflow-wrap:break-word;-webkit-hyphens:auto;hyphens:auto}
+.exh>div:first-child{min-width:0}
 .ss{display:inline-block;background:var(--soft);color:var(--accent);border-radius:8px;padding:1px 8px;font-size:12px;font-weight:600;margin-left:6px;vertical-align:3px}
 .hint{font-size:13px;color:var(--muted);margin-top:3px}
 .hint.go{color:var(--accent);font-weight:600}
@@ -184,13 +185,17 @@ svg.chart{width:100%;height:auto;display:block}
 .addset{margin-top:8px;width:100%;min-height:40px;border-radius:11px;color:var(--accent);font-weight:600;font-size:15px}
 #rest{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:45;background:var(--ink);color:var(--bg);border-radius:18px;padding:12px 14px;display:none;box-shadow:0 8px 28px rgba(0,0,0,.3)}
 #rest.on{display:block}
+#wk:not(.open)~#rest{bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 #rest .r{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#rest .r>div:first-child{min-width:0;flex:1}
+#restlbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #rest .time{font-family:var(--disp);font-size:44px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
-#rest .rb{display:flex;gap:6px}
-#rest .rb button{min-height:40px;padding:0 12px;border-radius:10px;background:rgba(127,127,127,.25);font-weight:600;font-size:14px;color:inherit}
+#rest .rb{display:flex;gap:6px;flex:none}
+#rest .rb button{min-height:44px;padding:0 11px;border-radius:10px;background:rgba(127,127,127,.25);font-weight:600;font-size:14px;color:inherit}
 #rest .pb{height:5px;border-radius:9px;background:rgba(127,127,127,.3);margin-top:9px;overflow:hidden}
 #rest .pb i{display:block;height:100%;background:var(--accent);width:100%}
 #rest.go .time{color:var(--good)}
+@media (max-width:360px){#rest .time{font-size:36px}#rest .rb button{padding:0 9px}}
 
 /* sheet */
 #sheetbg{position:fixed;inset:0;z-index:60;background:rgba(8,10,14,.55);display:none;align-items:flex-end;justify-content:center}
@@ -202,9 +207,9 @@ svg.chart{width:100%;height:auto;display:block}
 .fl .ti{margin-top:4px;color:var(--ink)}
 .btnrow{display:grid;gap:10px;margin-top:14px}
 .edrow{border:1px solid var(--line);border-radius:14px;padding:10px;margin-bottom:10px}
-.edgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}
+.edgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:8px}
 .edgrid label{font-size:11px;color:var(--muted)}
-.edgrid .ti{min-height:40px;padding:0 6px;text-align:center;margin-top:2px}
+.edgrid .ti{min-height:40px;padding:0 4px;text-align:center;margin-top:2px;font-size:16px;min-width:0}
 .edbtns{display:flex;gap:6px;margin-top:8px}
 .edbtns button{min-height:36px;padding:0 12px;border-radius:9px;background:var(--bg);font-size:14px}
 .edbtns button.rm{margin-left:auto;color:var(--bad)}
@@ -247,7 +252,7 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--good);backg
     </div>
     <div class="wkstats">
       <div><div class="v" id="wktime">0:00</div><div class="l">Zeit</div></div>
-      <div><div class="v" id="wkvol">0</div><div class="l">Gesamtgewicht kg</div></div>
+      <div><div class="v" id="wkvol">0</div><div class="l">kg gesamt</div></div>
       <div><div class="v" id="wksets">0/0</div><div class="l">Sätze</div></div>
     </div>
   </div>
@@ -1022,7 +1027,7 @@ ACT.finish=()=>{
   const open=totalSets(A)-doneCount(A);
   openSheet(`<h2>Training beenden?</h2><p class="muted">${open?open+' Sätze sind noch offen und werden nicht gezählt.':'Alle Sätze sind abgehakt. Sauber!'}</p><div class="btnrow"><button class="btn" data-act="finishok">Ja, beenden</button><button class="btn ghost" data-act="closesheet">Weitermachen</button></div>`);
 };
-ACT.discard=()=>{S.active=null;persist();stopRest();closeSheet();$('#wk').classList.remove('open');render();};
+ACT.discard=()=>{S.active=null;persist();stopRest();closeSheet();try{if(wl)wl.release();}catch(e){}wl=null;$('#wk').classList.remove('open');render();};
 ACT.finishok=()=>{
   const A=S.active;if(!A)return;
   const before=xpTotal(),lvBefore=levelOf(before),prevSame=gymOnly().filter(w=>w.routineId===A.routineId).pop();
@@ -1093,7 +1098,7 @@ function edRow(e,i){
       <label>Wdh. von<input class="ti" inputmode="numeric" data-ed="ex" data-i="${i}" data-f="repMin" value="${e.repMin}"></label>
       <label>Wdh. bis<input class="ti" inputmode="numeric" data-ed="ex" data-i="${i}" data-f="repMax" value="${e.repMax}"></label>
       <label>Pause (s)<input class="ti" inputmode="numeric" data-ed="ex" data-i="${i}" data-f="rest" value="${e.rest}"></label>
-      <label>Super-satz<input class="ti" maxlength="1" data-ed="ex" data-i="${i}" data-f="ss" value="${esc(e.ss||'')}" placeholder="A"></label>
+      <label>Super-satz<input class="ti" maxlength="1" data-ed="ex" data-i="${i}" data-f="ss" value="${esc(e.ss||'')}" placeholder="–"></label>
     </div>
     <div class="edbtns">${EX_LIB[exKey(e.name)]?`<button data-act="edinfo" data-i="${i}" aria-label="Übungsinfo zu ${esc(e.name)}">ⓘ Info</button>`:''}<button data-act="edup" data-i="${i}" aria-label="Nach oben">↑</button><button data-act="eddown" data-i="${i}" aria-label="Nach unten">↓</button><button class="rm" data-act="edrm" data-i="${i}">Entfernen</button></div></div>`;
 }
