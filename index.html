@@ -328,39 +328,48 @@ const checkSvg='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>'
 
 /* ---------- default plan ---------- */
 const LIB=['Schrägbankdrücken (Kurzhantel)','Schrägbankdrücken (Langhantel)','Chest Press (Maschine)','Chest Fly','Triceps Pushdown (Kabel)','Triceps Extension (Kabel)','Triceps Extension (Langhantel)','Dips','Squat (Langhantel)','Leg Press','Bulgarian Split Squat','Seated Leg Curl (Maschine)','Leg Extension (Maschine)','Wadenheben stehend','Wadenheben sitzend','Hip Thrust','Rumänisches Kreuzheben','Hip Abductor (Maschine)','Hip Adductor (Maschine)','Lat Pulldown (Kabel)','Lat Pulldown (enger Griff)','Seated Row (Kabel)','Rudern vorgebeugt (Langhantel)','Klimmzüge','Einarmiges Kurzhantelrudern','Preacher Curl (Langhantel)','Incline Curl (Kurzhantel)','Hammer Curl (Kabel)','Hammer Curl (Kurzhantel)','Overhead Press (Langhantel)','Schulterdrücken (Kurzhantel)','Lateral Raise (Maschine)','Lateral Raise (Kurzhantel)','Face Pulls','Cable Crunch','Hanging Leg Raises','Pallof Press'];
-const PLAN_VER=2;
+const PLAN_VER=3;
+const OLD_DEFAULT_IDS=['r_ua','r_la','r_ub','r_lb'];
 function defaultPlan(){
   const ex=(name,sets,a,b,rest,ss='')=>({id:uid(),name,sets,repMin:a,repMax:b,rest,ss});
   const routines=[
-    {id:'r_ua',name:'Oberkörper A',ex:[
-      ex('Schrägbankdrücken (Kurzhantel)',4,6,8,120),ex('Lat Pulldown (Kabel)',3,8,10,90),
-      ex('Overhead Press (Langhantel)',3,6,8,120),ex('Seated Row (Kabel)',3,8,10,60,'A'),
-      ex('Triceps Pushdown (Kabel)',3,10,12,60,'A'),ex('Preacher Curl (Langhantel)',2,8,10,60)]},
-    {id:'r_la',name:'Unterkörper A',ex:[
+    {id:'r_k1',name:'Oberkörper',ex:[
+      ex('Bankdrücken (Langhantel)',4,6,8,120),ex('Lat Pulldown (Kabel)',3,8,10,90),
+      ex('Schrägbankdrücken (Maschine)',3,8,10,90),ex('Seated Row (Kabel)',3,10,12,60,'A'),
+      ex('Lateral Raise (Maschine)',3,12,15,60,'A'),ex('Bizeps-Curl (Langhantel)',2,8,10,60,'B'),
+      ex('Triceps Extension (Kabel)',2,10,12,60,'B')]},
+    {id:'r_k2',name:'Unterkörper',ex:[
       ex('Squat (Langhantel)',4,5,7,120),ex('Leg Press',3,10,12,90),
-      ex('Seated Leg Curl (Maschine)',3,10,12,60,'A'),ex('Leg Extension (Maschine)',3,12,15,60,'A'),
-      ex('Wadenheben stehend',4,10,12,45),ex('Cable Crunch',3,10,12,45)]},
-    {id:'r_ub',name:'Oberkörper B',ex:[
-      ex('Chest Press (Maschine)',3,8,12,90),ex('Seated Row (Kabel)',3,8,10,90),
-      ex('Chest Fly',3,12,15,60,'A'),ex('Lat Pulldown (enger Griff)',3,10,12,60,'A'),
-      ex('Lateral Raise (Maschine)',4,12,15,60,'B'),ex('Face Pulls',2,15,15,60,'B'),
-      ex('Incline Curl (Kurzhantel)',2,10,12,60,'C'),ex('Triceps Extension (Kabel)',2,12,12,60,'C')]},
-    {id:'r_lb',name:'Unterkörper B',ex:[
-      ex('Bulgarian Split Squat',3,8,10,90),ex('Rumänisches Kreuzheben',3,8,10,90),
-      ex('Seated Leg Curl (Maschine)',3,12,15,60,'A'),ex('Leg Extension (Maschine)',2,12,15,60,'A'),
-      ex('Hip Abductor (Maschine)',2,15,15,45,'B'),ex('Hip Adductor (Maschine)',2,15,15,45,'B'),
-      ex('Wadenheben sitzend',3,15,15,45),ex('Hanging Leg Raises',3,10,15,45)]}
+      ex('Seated Leg Curl (Maschine)',4,10,12,60,'A'),ex('Leg Extension (Maschine)',3,12,15,60,'A'),
+      ex('Wadenheben sitzend',4,10,15,45),ex('Reverse Crunch',3,12,15,45)]},
+    {id:'r_k3',name:'Ganzkörper',ex:[
+      ex('Leg Press',3,10,12,90),ex('Chest Press (Maschine)',3,8,12,90),
+      ex('Lat Pulldown (enger Griff)',3,10,12,90),ex('Chest Fly',2,12,15,60,'A'),
+      ex('Seated Row (Kabel)',3,10,12,60,'A'),ex('Sit-up',3,12,15,45,'B'),
+      ex('Russian Twist',3,15,15,45,'B')]},
+    {id:'r_bonus',name:'Bonus: Schultern & Arme',ex:[
+      ex('Schrägbankdrücken (Maschine)',3,10,12,90),ex('Lateral Raise (Maschine)',3,12,15,60,'A'),
+      ex('Face Pulls',3,15,15,60,'A'),ex('Bizeps-Curl (Langhantel)',3,10,12,60,'B'),
+      ex('Triceps Extension (Kabel)',3,10,12,60,'B'),ex('Wadenheben sitzend',3,12,15,45)]}
   ];
-  const schedules={
-    normal:{1:'r_ua',2:'r_la',3:'',4:'r_ub',5:'r_lb',6:'mma',0:''},
-    mmaMon:{1:'mma',2:'r_ua',3:'r_la',4:'',5:'r_ub',6:'r_lb',0:''},
-    mmaWed:{1:'r_ua',2:'r_la',3:'mma',4:'r_ub',5:'r_lb',6:'',0:''}
-  };
+  const schedules={normal:{1:'r_k1',2:'',3:'r_k2',4:'',5:'r_k3',6:'r_bonus',0:''}};
   return {routines,schedules};
 }
 function baseState(){
   const p=defaultPlan();
-  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:4,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null};
+  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null};
+}
+
+/* ---------- plan migration ---------- */
+/* Ersetzt nur die Standard-Trainings und den Wochenplan. Trainingsverlauf, Körpergewicht
+   und selbst angelegte Trainings bleiben erhalten. */
+function migratePlan(st,fromVer){
+  const p=defaultPlan();
+  const custom=(st.routines||[]).filter(r=>!OLD_DEFAULT_IDS.includes(r.id)&&!p.routines.some(x=>x.id===r.id));
+  st.routines=[...p.routines,...custom];
+  st.schedules=p.schedules;st.mode='normal';
+  if((fromVer||0)>=1&&fromVer<3&&st.goal===4)st.goal=3;
+  st.planVer=PLAN_VER;st.pt=Date.now();
 }
 
 /* ---------- storage ---------- */
@@ -370,10 +379,7 @@ function loadState(){
     const s=localStorage.getItem(KEY);
     if(s){
       const raw=JSON.parse(s),st=Object.assign(baseState(),raw);
-      if(!(raw.planVer>=PLAN_VER)){
-        const p=defaultPlan();
-        st.routines=p.routines;st.schedules=p.schedules;st.planVer=PLAN_VER;st.pt=Date.now();
-      }
+      if(!(raw.planVer>=PLAN_VER))migratePlan(st,raw.planVer);
       return st;
     }
   }catch(e){}
@@ -406,6 +412,7 @@ async function syncInit(){
       S.deleted=[...new Set([...(S.deleted||[]),...(rp.deleted||[])])];
       if((rp.pt||0)>(S.pt||0)){
         ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});
+        if(!(S.planVer>=PLAN_VER)){migratePlan(S,S.planVer);pushPlan();}
         changed=true;
       }else pushPlan();
     }else pushPlan();
@@ -509,14 +516,14 @@ function streakInfo(){
 function xpTotal(list=finished()){
   return list.reduce((a,w)=>a+(w.kind==='mma'?40:50+Math.floor(vol(w)/100)+75*(w.prs||0)),0);
 }
-const TITLES=['Rookie','Sparringspartner','Eisenlehrling','Hantelheld','Stahlarbeiter','Kraftpaket','Titan','Legende'];
+const TITLES=['Rookie','Trainingspartner','Eisenlehrling','Hantelheld','Stahlarbeiter','Kraftpaket','Titan','Legende'];
 const levelOf=xp=>1+Math.floor(Math.sqrt(xp/150));
 const xpAt=l=>150*(l-1)*(l-1);
 const titleOf=l=>TITLES[Math.min(l-1,TITLES.length-1)];
 function totals(){
   const g=gymOnly(),fin=finished();
   const st=streakInfo();
-  return {n:g.length,mma:fin.length-g.length,prs:g.reduce((a,w)=>a+(w.prs||0),0),
+  return {n:g.length,mma:fin.length-g.length,bonus:g.filter(w=>w.routineId==='r_bonus').length,prs:g.reduce((a,w)=>a+(w.prs||0),0),
     total:g.reduce((a,w)=>a+vol(w),0),maxVol:g.reduce((a,w)=>Math.max(a,vol(w)),0),
     sets:g.reduce((a,w)=>a+doneCount(w),0),streak:st.streak,weeksMet:st.weeksMet,
     avgDur:g.length?g.reduce((a,w)=>a+(w.end-w.start),0)/g.length:0};
@@ -530,10 +537,11 @@ const BADGES=[
   {t:'Fünf Tonnen',d:'5 000 kg in einem Training',ok:s=>s.maxVol>=5000},
   {t:'Tonnen-Club',d:'100 000 kg insgesamt',ok:s=>s.total>=100000},
   {t:'Wochenziel',d:'Ein Wochenziel erreicht',ok:s=>s.weeksMet>=1},
+  {t:'Bonus-Jäger',d:'5 Bonus-Trainings gemacht',ok:s=>s.bonus>=5},
   {t:'Vier in Serie',d:'4 Wochen in Folge Ziel erreicht',ok:s=>s.streak>=4},
-  {t:'Kämpfer',d:'5 MMA-Einheiten geloggt',ok:s=>s.mma>=5}
+
 ];
-const QUOTES=['Heute zählt der erste Satz.','Konstanz schlägt Motivation.','Ein Kilo mehr als letztes Mal ist ein Sieg.','Wachstum passiert in der Pause. Schlaf gehört zum Plan.','Du musst nicht perfekt sein, nur da.','Jeder Satz ist eine Einzahlung.','Schwer wird leicht, wenn du wiederkommst.','Technik zuerst, dann Gewicht.','Kleine Steigerungen, jede Woche.','Sparring am Samstag: Beine heute schonen, Kopf frei.','Dein Training von letzter Woche ist heute dein Startpunkt.'];
+const QUOTES=['Heute zählt der erste Satz.','Konstanz schlägt Motivation.','Ein Kilo mehr als letztes Mal ist ein Sieg.','Wachstum passiert in der Pause. Schlaf gehört zum Plan.','Du musst nicht perfekt sein, nur da.','Jeder Satz ist eine Einzahlung.','Schwer wird leicht, wenn du wiederkommst.','Technik zuerst, dann Gewicht.','Kleine Steigerungen, jede Woche.','Drei Kern-Trainings sind die Pflicht, der Bonus ist die Kür.','Dein Training von letzter Woche ist heute dein Startpunkt.'];
 
 /* ---------- funny weight comparisons ---------- */
 const WEIGHT_OBJS=[
@@ -575,6 +583,7 @@ const EX_IMG_BASE='https://raw.githubusercontent.com/yuhonas/free-exercise-db/ma
 const exImgUrl=(id,i)=>EX_IMG_BASE+id+'/'+i+'.jpg';
 const EX_LIB={
  'schrägbankdrücken (kurzhantel)':{n:'Schrägbankdrücken (Kurzhantel)',id:'Incline_Dumbbell_Press',m:'Obere Brust, Schultern, Trizeps',g:'Kurzhantel',bp:['Brust'],t:['Bank auf 15–30° stellen, Schulterblätter zusammenziehen und unten fixieren.','Kurzhanteln kontrolliert bis auf Brusthöhe absenken, Ellbogen leicht unter den Hanteln.','Oben die Ellbogen nicht ganz durchdrücken, Spannung in der Brust halten.'],x:'Zu steiler Bankwinkel verlagert die Arbeit auf die Schultern statt auf die obere Brust.',a:['Bankdrücken (Langhantel)','Chest Press (Maschine)','Chest Fly']},
+ 'schrägbankdrücken (maschine)':{n:'Schrägbankdrücken (Maschine)',id:null,m:'Obere Brust, Schultern, Trizeps',g:'Maschine',bp:['Brust'],t:['Sitz so einstellen, dass die Griffe etwa auf Höhe der oberen Brust sind.','Schulterblätter nach hinten unten ziehen und an der Lehne lassen.','Kontrolliert nach vorne oben drücken, Ellbogen nicht ganz durchstrecken.'],x:'Schultern beim Drücken nach vorne rollen, dadurch übernimmt die vordere Schulter statt der Brust.',a:['Schrägbankdrücken (Kurzhantel)','Chest Press (Maschine)','Bankdrücken (Langhantel)']},
  'lat pulldown (kabel)':{n:'Lat Pulldown (Kabel)',id:'Wide-Grip_Lat_Pulldown',m:'Latissimus, Bizeps',g:'Kabelzug',bp:['Rücken'],t:['Brust raus, leichte Rücklage, Stange Richtung obere Brust ziehen.','Ellbogen nach unten und hinten führen, nicht nur mit den Armen ziehen.','Stange oben kontrolliert wieder nach oben führen, nicht fallen lassen.'],x:'Mit Schwung nach hinten lehnen, statt den Latissimus aktiv zu ziehen.',a:['Klimmzüge','Lat Pulldown (enger Griff)','Seated Row (Kabel)']},
  'overhead press (langhantel)':{n:'Overhead Press (Langhantel)',id:'Standing_Military_Press',m:'Schultern, Trizeps',g:'Langhantel',bp:['Schultern'],t:['Rumpf anspannen, Gesäss leicht anspannen, kein starkes Hohlkreuz.','Stange nah am Gesicht vorbei nach oben drücken, Kopf leicht aus dem Weg nehmen.','Oben die Ellbogen fast durchstrecken, Schulterblätter leicht mitgehen lassen.'],x:'Übermässiges Hohlkreuz, um das Gewicht hochzudrücken, statt Rumpf und Beine stabil zu halten.',a:['Schulterdrücken (Kurzhantel)','Lateral Raise (Maschine)']},
  'seated row (kabel)':{n:'Seated Row (Kabel)',id:'Seated_Cable_Rows',m:'Mittlerer Rücken, Latissimus, Bizeps',g:'Kabelzug',bp:['Rücken'],t:['Aufrecht sitzen, Rücken neutral, Griff zum unteren Bauch ziehen.','Schulterblätter am Ende der Bewegung zusammenziehen, Brustkorb leicht öffnen.','Oberkörper beim Ziehen nicht stark vor- und zurückschaukeln.'],x:'Mit dem ganzen Oberkörper Schwung holen, statt mit dem Rücken zu ziehen.',a:['Rudern vorgebeugt (Langhantel)','Einarmiges Kurzhantelrudern','Lat Pulldown (Kabel)']},
@@ -782,7 +791,6 @@ function viewToday(){
   const wkStart=monday(now).getTime(),thisWeek=fin.filter(w=>w.start>=wkStart);
   const gymWeek=thisWeek.filter(w=>w.kind!=='mma').length;
   const weekVol=thisWeek.filter(w=>w.kind!=='mma').reduce((a,w)=>a+vol(w),0);
-  const mmaToday=fin.some(w=>w.kind==='mma'&&ymd(w.start)===ymd(now));
   let hero='';
   if(S.active){
     hero=`<section class="hero"><div class="hl">Dein Training läuft</div><h1>${esc(S.active.name)}</h1>
@@ -792,25 +800,20 @@ function viewToday(){
     const m=estMin(r);
     hero=`<section class="hero"><div class="hl">${fmtDateLong(now)}</div><h1>${esc(r.name)}</h1>
       <div class="meta"><span>${r.ex.length} Übungen</span><span>${r.ex.reduce((a,e)=>a+e.sets,0)} Sätze</span><span>ca. ${m} Min.</span></div>
-      ${m>45?'<p class="small">Über 45 Minuten: Streiche im Zweifel die letzte Übung.</p>':''}
+      ${r.id==='r_bonus'?'<p class="small">Bonus-Training: bringt Extra-Volumen für Schultern und Arme. Passt es diese Woche nicht rein, ist das kein Problem.</p>':''}${m>60?'<p class="small">Über 60 Minuten: Streiche im Zweifel die letzte Übung.</p>':''}
       <button class="btn light" data-act="start" data-id="${r.id}">Training starten</button></section>`;
-  }else if(tid==='mma'){
-    hero=`<section class="hero"><div class="hl">${fmtDateLong(now)}</div><h1>MMA heute</h1>
-      <p>Technik und Sparring. Iss vorher Kohlenhydrate und schone Nacken und Rippen.</p>
-      ${mmaToday?'<p><b>Heute schon geloggt. Stark!</b></p>':'<button class="btn light" data-act="mma">MMA-Einheit loggen</button>'}</section>`;
   }else{
     hero=`<section class="hero"><div class="hl">${fmtDateLong(now)}</div><h1>Ruhetag</h1>
-      <p>Muskeln wachsen in der Erholung. Schlaf, Protein und ein lockerer Spaziergang zählen heute.</p>
-      ${mmaToday?'':'<button class="btn light" data-act="mma">MMA heute gehabt? Loggen</button>'}</section>`;
+      <p>Muskeln wachsen in der Erholung. Schlaf, Protein und ein lockerer Spaziergang zählen heute.</p></section>`;
   }
   // week strip
   const mon=monday(now);
   const strip=ORDER.map((d,i)=>{
     const dt=new Date(mon);dt.setDate(mon.getDate()+i);const key=ymd(dt);
     const day=fin.filter(w=>ymd(w.start)===key);
-    const planned=sch[d];const isMma=day.some(w=>w.kind==='mma')||(!day.length&&planned==='mma');
+    const planned=sch[d]&&sch[d]!=='mma'?sch[d]:'';const isMma=day.some(w=>w.kind==='mma');
     const cls=day.length?'done':(planned?'plan':'');
-    return `<div class="day ${ymd(now)===key?'today':''}"><span>${DAYS[d]}</span><span class="dot ${cls} ${isMma?'mma':''}">${day.length?'✓':(planned==='mma'?'M':(planned?'':''))}</span></div>`;
+    return `<div class="day ${ymd(now)===key?'today':''}"><span>${DAYS[d]}</span><span class="dot ${cls} ${isMma?'mma':''}">${day.length?'✓':(planned==='r_bonus'?'+':'')}</span></div>`;
   }).join('');
   const goal=S.goal,pct=Math.min(1,gymWeek/goal),C=2*Math.PI*30;
   const ring=`<div class="ring"><svg width="74" height="74" viewBox="0 0 74 74"><circle cx="37" cy="37" r="30" fill="none" stroke="var(--bg)" stroke-width="8"/><circle cx="37" cy="37" r="30" fill="none" stroke="${pct>=1?'var(--good)':'var(--accent)'}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-pct)).toFixed(1)}"/></svg><div class="c">${gymWeek}/${goal}</div></div>`;
@@ -826,13 +829,11 @@ function viewToday(){
 }
 
 function viewPlan(){
-  const modes=[['normal','Normalwoche'],['mmaMon','MMA am Montag'],['mmaWed','MMA am Mittwoch']];
-  const sch=S.schedules[S.mode];
-  const opts=cur=>`<option value=""${cur===''?' selected':''}>Frei</option><option value="mma"${cur==='mma'?' selected':''}>MMA</option>`+S.routines.map(r=>`<option value="${r.id}"${cur===r.id?' selected':''}>${esc(r.name)}</option>`).join('');
+  const sch=S.schedules[S.mode]||(S.schedules[S.mode]={});
+  const opts=cur=>`<option value=""${cur===''||cur==='mma'?' selected':''}>Frei</option>`+S.routines.map(r=>`<option value="${r.id}"${cur===r.id?' selected':''}>${esc(r.name)}</option>`).join('');
   return viewTop()+`<div class="card"><h2>Wochenplan</h2>
-    <div class="seg" role="group" aria-label="Wochenvariante">${modes.map(m=>`<button class="${S.mode===m[0]?'on':''}" data-act="mode" data-m="${m[0]}">${m[1]}</button>`).join('')}</div>
     ${ORDER.map(d=>`<div class="schrow"><b>${DAYS[d]}</b><select data-sch="${d}" aria-label="Training am ${DAYS[d]}">${opts(sch[d]||'')}</select></div>`).join('')}
-    <div class="muted small">Fällt MMA auf einen anderen Tag, wähle oben die passende Variante.</div></div>
+    <div class="muted small">Oberkörper, Unterkörper und Ganzkörper sind der Kern. Das Bonus-Training ist ein Extra für Schultern und Arme.</div></div>
     <div class="sec">Meine Trainings</div>
     <div class="card">${S.routines.map(r=>`<button class="item" data-act="editroutine" data-id="${r.id}"><div><div class="t">${esc(r.name)}</div><div class="s">${r.ex.map(e=>esc(e.name.replace(/\s*\(.*\)/,''))).join(', ')}</div></div><span class="chev">›</span></button>`).join('')}
     <button class="btn soft full" style="margin-top:8px" data-act="newroutine">+ Neues Training</button></div>
@@ -1140,7 +1141,7 @@ function plateauHtml(ex,i){
   }
   const lib=EX_LIB[ex.key];
   if(p.streak>=5&&lib&&lib.a&&lib.a.length)ideas.push(`Für 4–6 Wochen tauschen, z. B. auf «${esc(lib.a[0])}». Über ⓘ geht das mit einem Tipp.`);
-  ideas.push('Und die Basics checken: genug Schlaf, Protein und nicht zu viel Volumen um den MMA-Tag herum.');
+  ideas.push('Und die Basics checken: genug Schlaf, Protein und mindestens ein Ruhetag zwischen schweren Einheiten.');
   return `<div class="plat"><button class="ph" data-act="plttoggle" data-k="${esc(ex.key)}" aria-expanded="${open}"><span>Plateau: seit ${p.streak} Trainings kein neuer Bestwert</span><span>${open?'▴':'▾'}</span></button>${open?`<ul>${ideas.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}</div>`;
 }
 ACT.plttoggle=b=>{const k=b.dataset.k;PLT_OPEN[k]=!PLT_OPEN[k];renderWorkout();};
@@ -1267,8 +1268,7 @@ ACT.finishok=()=>{
   confetti(prList.length||lv>lvBefore?120:60);
 };
 
-/* MMA + workout detail */
-ACT.mma=()=>{const w={id:uid(),kind:'mma',name:'MMA',start:Date.now(),end:Date.now(),exs:[]};S.workouts.push(w);persist();pushWorkout(w);toast('MMA-Einheit geloggt. +40 XP');confetti(30);render();};
+/* workout detail (alte MMA-Einträge werden weiterhin angezeigt) */
 ACT.wdetail=b=>{
   const w=S.workouts.find(x=>x.id===b.dataset.id);if(!w)return;
   const wc=w.kind!=='mma'?weightCompare(vol(w),w.id):null;
