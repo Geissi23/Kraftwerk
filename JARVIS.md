@@ -77,11 +77,11 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
   (Stange 20 kg, Scheiben 25/20/15/10/5/2,5/1,25 – anpassbar), als kleine farbige Grafik.
   Warum: kein Kopfrechnen zwischen den Sätzen, besonders bei Squat, Kreuzheben und Overhead Press.
 
-- [x] **P6 – Plan-Tab als Trainingsübersicht** (statt Wochenplan; «Heute» schlägt das nächste fällige Kern-Training vor) – Wunsch von Janis, genehmigt am 2026-11-22, in Arbeit
-- [x] **P7 – Trainingskalender** (Monatsansicht + Jahresraster) – Wunsch von Janis, genehmigt am 2026-11-22, in Arbeit
-- [x] **P8 – Statistik-Zentrale** (Woche/Monat/Jahr/Gesamt, Muskelgruppen, Vergleich Vorzeitraum) – Wunsch von Janis, genehmigt am 2026-11-22, in Arbeit
-- [x] **P9 – Monats-Rückblick** (Story-Stil, als Bild teilbar) – genehmigt am 2026-11-22, in Arbeit
-- [x] **P10 – Übungs-Detailseite** (Kraftkurve, Rekord, letzte 10 Trainings) – genehmigt am 2026-11-22, in Arbeit
+- [x] **P6 – Plan-Tab als Trainingsübersicht** (statt Wochenplan; «Heute» schlägt das nächste fällige Kern-Training vor) – Wunsch von Janis, genehmigt am 2026-11-22, **in PR #5**
+- [x] **P7 – Trainingskalender** (Monatsansicht + Jahresraster) – Wunsch von Janis, genehmigt am 2026-11-22, **in PR #5**
+- [x] **P8 – Statistik-Zentrale** (Woche/Monat/Jahr/Gesamt, Muskelgruppen, Vergleich Vorzeitraum) – Wunsch von Janis, genehmigt am 2026-11-22, **in PR #5**
+- [x] **P9 – Monats-Rückblick** (Story-Stil, als Bild teilbar) – genehmigt am 2026-11-22, **in PR #5**
+- [x] **P10 – Übungs-Detailseite** (Kraftkurve, Rekord, letzte 10 Trainings) – genehmigt am 2026-11-22, **in PR #5**
 
 ## Backlog
 
@@ -106,3 +106,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-22: Janis hat im Chat das Mergen von PR #2 und #3 freigegeben, beide sind live.
 - 2026-11-22: Neuer Plan nach Janis' Lieblingsübungen (3 Kern + Bonus, ohne Hip Thrust/Kreuzheben), MMA aus der App entfernt → PR #4, gemergt und live.
 - 2026-11-22: Janis will statt Wochenplan eine Trainingsübersicht, Kalender und Statistiken. P6–P10 gepitcht und genehmigt.
+- 2026-11-22: P6–P10 umgesetzt → PR #5.
