@@ -35,23 +35,19 @@ Kontext: Janis trainiert 4x pro Woche im Gym und macht MMA am Samstagmorgen, Zie
 3. Sonst: eine Aufgabe aus «Backlog» erledigen.
 4. Wenn weniger als 3 offene Pitches existieren: 1–2 neue eigene Ideen pitchen
    (Was, Warum es Janis hilft, Aufwand klein/mittel/gross).
-5. Log-Eintrag schreiben, diese Datei und `jarvis.json` (Sprach-Briefing, sobald P1 live ist) auf `main` committen – nur diese zwei Dateien.
-6. Push-Nachricht nur, wenn es neue Pitches, einen neuen PR oder eine Frage gibt.
+5. Log-Eintrag schreiben und diese Datei auf `main` committen – nur diese Datei.
+6. **Briefing im Claude-Chat** (wie ein Mitarbeiter, der seinem Chef rapportiert): Was erledigt wurde
+   (PRs mit Link), neue Pitches nummeriert mit Was / Warum / Aufwand, offene Fragen. Danach wartet Jarvis
+   auf Janis' Antwort im Chat («P2 ja», «P3 nein») und arbeitet erst mit OK an neuen Features weiter.
+   Push-Nachricht nur, wenn es neue Pitches, einen neuen PR oder eine Frage gibt.
 
 ## Pitches
 
-So gibst du ein OK: Kästchen auf `[x]` setzen, oder im Chat des Jarvis-Laufs antworten («P1 ja», «P2 nein»).
+So gibst du ein OK: im Chat des Jarvis-Laufs antworten («P2 ja», «P3 nein») oder Kästchen hier auf `[x]` setzen.
 Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 
-- [x] **P1 – Jarvis spricht (Sprach-Briefing in der App)** – von Janis gewünscht, genehmigt am 2026-11-22 – **in PR #1** (wartet auf Merge)
-  Jarvis legt bei jedem Lauf seine Pitches, Fragen und neuen PRs als kurzes, gesprochen formuliertes
-  Briefing in `jarvis.json` (auf `main`) ab. Die App zeigt einen Jarvis-Button mit Hinweis auf
-  Neues; beim Antippen liest das iPhone das Briefing mit einer deutschen Stimme vor
-  (Web Speech API, `speechSynthesis`, ohne externe Dienste oder Kosten).
-  In den Einstellungen gibt es einen Schalter «Jarvis: Sprechen / Nur Text»; bei «Nur Text»
-  wird das Briefing nur angezeigt. Standard: Sprechen.
-  Briefing-Stil: wie ein persönlicher Assistent, locker und kurz (max. ca. 60 Sekunden),
-  jeder Pitch mit Nummer, damit Janis mit «P2 ja» antworten kann.
+- ~~P1 – Jarvis spricht (Sprach-Briefing in der App)~~ – **verworfen am 2026-11-22**: Janis will das Briefing
+  im Claude-Chat statt in der App. PR #1 geschlossen, Branch `jarvis/sprach-briefing` bleibt als Reserve.
 
 - [ ] **P2 – Aufwärmsätze auf Knopfdruck** – Aufwand: klein
   Bei der ersten schweren Grundübung eines Trainings (z. B. Squat, Schrägbankdrücken) zeigt die App
@@ -93,3 +89,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-22: Jarvis eingerichtet.
 - 2026-11-22: P1 umgesetzt (PR #1: Jarvis-Button, Vorlesen, Schalter Sprechen/Nur Text). Erstes `jarvis.json` angelegt. Neue Pitches P2 (Aufwärmsätze) und P3 (Sätze pro Muskelgruppe).
 - 2026-11-22 (2. Lauf): Erste Bestandsaufnahme gemacht, 7 iPhone-Fixes in PR #2. PR #1 noch offen, kein Feedback. Neue Pitches P4 (Plateau-Melder) und P5 (Scheibenrechner). Frage zu Supersatz-Pausen im Backlog.
+- 2026-11-22: Janis will das Briefing im Claude-Chat, nicht in der App. P1 verworfen, PR #1 geschlossen, `jarvis.json` entfernt.
