@@ -83,7 +83,7 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - [x] **P9 – Monats-Rückblick** (Story-Stil, als Bild teilbar) – genehmigt am 2026-11-22, **live** (PR #5)
 - [x] **P10 – Übungs-Detailseite** (Kraftkurve, Rekord, letzte 10 Trainings) – genehmigt am 2026-11-22, **live** (PR #5)
 
-- [x] **P11 – Fortschrittsfotos** (nur auf dem iPhone, Vorher/Nachher-Vergleich mit Schieberegler, ohne KI) – genehmigt am 2026-11-22, **in PR #6**
+- [x] **P11 – Fortschrittsfotos** (nur auf dem iPhone, Vorher/Nachher-Vergleich mit Schieberegler, ohne KI) – genehmigt am 2026-11-22, **live** (PR #6)
 
 ## Backlog
 
@@ -111,3 +111,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-22: P6–P10 umgesetzt → PR #5.
 - 2026-11-22: PR #5 gemergt (live). P11 Fortschrittsfotos genehmigt.
 - 2026-11-22: P11 Fortschrittsfotos umgesetzt → PR #6.
+- 2026-11-22: PR #6 gemergt, alles live. Keine offenen PRs.
