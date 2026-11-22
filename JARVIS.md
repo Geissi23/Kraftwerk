@@ -67,11 +67,29 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
   in der App hinterlegt, deine Daten bleiben unverändert.
   Warum: zeigt auf einen Blick, ob eine Muskelgruppe zu kurz kommt – der wichtigste Hebel für Muskelaufbau.
 
+- [ ] **P4 – Plateau-Melder** – Aufwand: mittel
+  Wenn eine Übung drei Trainings in Folge beim geschätzten Maximalgewicht nicht vorankommt,
+  zeigt die App im Training einen dezenten Hinweis mit 1–2 konkreten Auswegen
+  (z. B. «Gewicht 10 % runter und neu aufbauen», «Wdh.-Bereich wechseln» oder eine Alternative
+  aus der Übungsbibliothek mit einem Tipp). Rein berechnet aus vorhandenen Daten, nichts wird gespeichert.
+  Warum: Stillstand fällt sonst oft erst nach Wochen auf. Gegensteuern bringt mehr Muskelaufbau.
+
+- [ ] **P5 – Scheibenrechner** – Aufwand: klein
+  Tipp auf das Gewicht eines Langhantel-Satzes zeigt, welche Scheiben pro Seite drauf müssen
+  (Stange 20 kg, Scheiben 25/20/15/10/5/2,5/1,25 – anpassbar), als kleine farbige Grafik.
+  Warum: kein Kopfrechnen zwischen den Sätzen, besonders bei Squat, Kreuzheben und Overhead Press.
+
 ## Backlog
 
-- [ ] Erste Bestandsaufnahme: App auf Bugs, Layout-Probleme auf dem iPhone und Verbesserungspotenzial prüfen
+- [x] Erste Bestandsaufnahme (2026-11-22) – Fixes in **PR #2**: Pausen-Leiste blockierte Tabs, iOS-Zoom
+  in Eingabefeldern, abgeschnittene Kacheln/Knöpfe auf kleinen iPhones, Bildschirmsperre beim Verwerfen.
+- [ ] **Frage an Janis – Supersätze:** Nach dem ersten Satz eines Supersatzes (z. B. A1 Seated Row) startet
+  sofort die volle Pause, obwohl als Nächstes A2 (Triceps Pushdown) ohne Pause folgen sollte.
+  Soll Jarvis das so ändern, dass die Pause erst nach dem letzten Satz der Runde startet?
+- [ ] Gewichte im Training einheitlich mit Komma anzeigen (Eingabefelder zeigen nach dem Abhaken «22.5», sonst überall «22,5»)
 
 ## Log
 
 - 2026-11-22: Jarvis eingerichtet.
 - 2026-11-22: P1 umgesetzt (PR #1: Jarvis-Button, Vorlesen, Schalter Sprechen/Nur Text). Erstes `jarvis.json` angelegt. Neue Pitches P2 (Aufwärmsätze) und P3 (Sätze pro Muskelgruppe).
+- 2026-11-22 (2. Lauf): Erste Bestandsaufnahme gemacht, 7 iPhone-Fixes in PR #2. PR #1 noch offen, kein Feedback. Neue Pitches P4 (Plateau-Melder) und P5 (Scheibenrechner). Frage zu Supersatz-Pausen im Backlog.

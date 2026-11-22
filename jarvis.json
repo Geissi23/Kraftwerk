@@ -1,21 +1,42 @@
 {
- "id": "2026-11-22-1",
+ "id": "2026-11-22-2",
  "date": "2026-11-22",
- "speech": "Hoi Janis, hier ist Jarvis, dein erstes Briefing. Wenn du mich hörst, ist das Sprach-Briefing live. Danke fürs Mergen!\n\nZwei neue Ideen für dich. P2: Aufwärmsätze auf Knopfdruck. Bei der ersten schweren Übung rechnet die App dir eine kurze Aufwärm-Rampe aus deinem Arbeitsgewicht aus, damit du ohne Kopfrechnen sicher zum ersten schweren Satz kommst. Kleiner Aufwand.\n\nP3: Wochen-Sätze pro Muskelgruppe. Eine Karte im Fortschritt zeigt, wie viele harte Sätze du diese Woche für Brust, Rücken, Beine und so weiter gemacht hast, mit Ampel für zehn bis zwanzig Sätze. So siehst du sofort, ob etwas zu kurz kommt. Mittlerer Aufwand.\n\nWenn dir etwas gefällt, sag einfach zum Beispiel P2 ja. Viel Erfolg im Training!",
+ "speech": "Hoi Janis, Jarvis hier. Ich habe die App einmal gründlich durchgecheckt und einige Ärgernisse gefunden. Das grösste: Wenn du während einer Pause aus dem Training zurückgehst, blockiert die Pausen-Leiste die Tabs unten. Ausserdem zoomt das iPhone beim Bearbeiten deiner Trainings ungefragt hinein. Das und ein paar abgeschnittene Knöpfe habe ich in PR zwei behoben. PR eins mit meiner Stimme wartet auch noch auf dich.\n\nZwei neue Ideen. P4, der Plateau-Melder: Wenn eine Übung drei Trainings lang stagniert, schlägt dir die App einen konkreten Ausweg vor. P5, der Scheibenrechner: Ein Tipp aufs Gewicht zeigt, welche Scheiben pro Seite auf die Stange gehören.\n\nUnd eine Frage: Soll bei Supersätzen die Pause erst nach der ganzen Runde starten statt nach jeder Übung? Sag einfach ja oder nein. P2 und P3 sind übrigens auch noch offen. Bis bald!",
  "items": [
+  {
+   "n": "P4",
+   "title": "Plateau-Melder",
+   "text": "Hinweis mit konkretem Ausweg, wenn eine Übung drei Trainings lang stagniert. Aufwand: mittel."
+  },
+  {
+   "n": "P5",
+   "title": "Scheibenrechner",
+   "text": "Tipp aufs Gewicht zeigt die Scheiben pro Seite der Stange. Aufwand: klein."
+  },
   {
    "n": "P2",
    "title": "Aufwärmsätze auf Knopfdruck",
-   "text": "Kurze Aufwärm-Rampe aus dem Arbeitsgewicht der ersten schweren Übung, separat abhakbar, ohne Volumen oder Rekorde zu verfälschen. Aufwand: klein."
+   "text": "Noch offen. Aufwand: klein."
   },
   {
    "n": "P3",
    "title": "Wochen-Sätze pro Muskelgruppe",
-   "text": "Karte im Fortschritt mit harten Sätzen pro Muskelgruppe diese Woche und Ampel für 10–20 Sätze. Aufwand: mittel."
+   "text": "Noch offen. Aufwand: mittel."
+  },
+  {
+   "n": "?",
+   "title": "Supersätze: Pause erst nach der Runde?",
+   "text": "Antwort ja oder nein im Chat oder in JARVIS.md."
   },
   {
    "n": "PR",
-   "title": "#1 Jarvis spricht (Sprach-Briefing)",
+   "title": "#2 iPhone-Fixes",
+   "text": "Pausen-Leiste, Zoom in Feldern, abgeschnittene Knöpfe.",
+   "url": "https://github.com/Geissi23/Kraftwerk/pull/2"
+  },
+  {
+   "n": "PR",
+   "title": "#1 Jarvis spricht",
    "text": "Wartet auf deinen Merge.",
    "url": "https://github.com/Geissi23/Kraftwerk/pull/1"
   }
