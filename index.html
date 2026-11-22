@@ -321,6 +321,28 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--good);backg
 .exsess .d{font-size:13px;color:var(--muted)}
 .linkbtn{color:inherit;text-align:left;font-weight:600;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 button.rec{width:100%;text-align:left;color:inherit}
+/* fortschrittsfotos */
+.phrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.phth{position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center}
+.phth img{width:100%;height:100%;object-fit:cover;display:block}
+.phth span.pl{position:absolute;left:6px;bottom:6px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:600;border-radius:6px;padding:1px 6px}
+label.phpick{cursor:pointer;flex-direction:column;gap:4px;border:1.5px dashed var(--line)}
+label.phpick b{font-size:26px;line-height:1;color:var(--accent)}
+.phpick input{position:absolute;width:1px;height:1px;opacity:0}
+.phcmp{position:relative;width:100%;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#000;touch-action:pan-y}
+.phcmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.phcmp .tagl,.phcmp .tagr{position:absolute;top:8px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:600;border-radius:8px;padding:2px 8px}
+.phcmp .tagl{left:8px}.phcmp .tagr{right:8px}
+.phcmp .ln{position:absolute;top:0;bottom:0;width:3px;margin-left:-1.5px;background:#fff;box-shadow:0 0 6px rgba(0,0,0,.5);pointer-events:none}
+.phside{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.phside .phcmp{aspect-ratio:3/4}
+.phsel{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.phsel label{font-size:13px;color:var(--muted)}
+.phsess{padding:10px 0;border-top:1px solid var(--line)}
+.phsess .phrow{margin:6px 0 0}
+.phsess button.phth{padding:0}
+.phbig img{width:100%;border-radius:14px;display:block}
+input[type=range].phr{width:100%;margin:12px 0 4px}
 @media (prefers-reduced-motion:reduce){#toast,.tog i{transition:none}}
 </style>
 </head>
@@ -958,7 +980,7 @@ function viewStats(){
     ?`<button class="item" data-act="wdetail" data-id="${w.id}"><div><div class="t">MMA</div><div class="s">${fmtDate(w.start)}</div></div><span class="chev">›</span></button>`
     :`<button class="item" data-act="wdetail" data-id="${w.id}"><div><div class="t">${esc(w.name)}${w.prs?`<span class="tag">${w.prs} Rekord${w.prs>1?'e':''}</span>`:''}</div><div class="s">${fmtDate(w.start)} · ${fmtDur(w.end-w.start)} · ${doneCount(w)} Sätze</div></div><div class="num" style="font-size:24px">${fmtKg(vol(w))} kg</div></button>`).join(''):'<div class="empty">Dein erstes Training erscheint hier.</div>'}</div>`;
   const badges=`<div class="card"><h2>Abzeichen</h2><div class="badges">${BADGES.map(bd=>{const on=bd.ok(t);return `<div class="badge ${on?'on':''}"><div class="bt">${esc(bd.t)}</div><div class="small muted">${esc(bd.d)}</div></div>`;}).join('')}</div></div>`;
-  return viewTop()+lvl+periodCard()+muscleCard()+calendarCard()+reviewCard()+volCard+weekCard+progCard+bwCard+badges+histCard;
+  return viewTop()+lvl+periodCard()+muscleCard()+calendarCard()+reviewCard()+volCard+weekCard+progCard+bwCard+photoCard()+badges+histCard;
 }
 
 function viewRecords(){
@@ -1492,6 +1514,123 @@ ACT.storyshare=async()=>{
   },'image/png');
 };
 document.addEventListener('keydown',e=>{if(!STORY)return;if(e.key==='ArrowRight')ACT.storynext();else if(e.key==='ArrowLeft')ACT.storyprev();else if(e.key==='Escape')ACT.storyx();});
+
+
+/* ---------- P11: fortschrittsfotos (nur lokal in IndexedDB, nicht im Backup/Sync) ---------- */
+const PH={db:null,list:[],ready:false,urls:{},cmp:{pose:'v',a:null,b:null,mode:'slide',x:50},addD:null};
+const POSES=[['v','Vorne'],['s','Seite'],['h','Hinten']];
+function phOpen(){return new Promise((res,rej)=>{if(PH.db)return res(PH.db);if(!('indexedDB' in window))return rej(new Error('no idb'));
+  const r=indexedDB.open('kraftwerk-photos',1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains('photos'))db.createObjectStore('photos',{keyPath:'id'});};
+  r.onsuccess=()=>{PH.db=r.result;res(PH.db);};r.onerror=()=>rej(r.error);});}
+function phTx(mode,fn){return phOpen().then(db=>new Promise((res,rej)=>{const tx=db.transaction('photos',mode),st=tx.objectStore('photos');const out=fn(st);tx.oncomplete=()=>res(out&&out.result!==undefined?out.result:out);tx.onerror=()=>rej(tx.error);}));}
+async function phLoad(){
+  try{const all=await phTx('readonly',st=>st.getAll());PH.list=(all||[]).sort((a,b)=>a.d.localeCompare(b.d)||a.t-b.t);}catch(e){PH.list=[];PH.err=true;}
+  PH.ready=true;
+}
+const phUrl=p=>PH.urls[p.id]||(PH.urls[p.id]=URL.createObjectURL(p.blob));
+const phDates=()=>[...new Set(PH.list.map(p=>p.d))].sort();
+const phGet=(d,pose)=>PH.list.filter(p=>p.d===d&&p.pose===pose).pop();
+const fmtD=d=>new Date(d+'T12:00:00').toLocaleDateString('de-CH',{day:'numeric',month:'short',year:'numeric'});
+function bwAt(d){const bw=[...S.bodyweight].sort((a,b)=>a.d.localeCompare(b.d));let best=null;bw.forEach(x=>{if(Math.abs(new Date(x.d)-new Date(d))<=7*864e5&&(!best||Math.abs(new Date(x.d)-new Date(d))<Math.abs(new Date(best.d)-new Date(d))))best=x;});return best;}
+function photoCard(){
+  if(!PH.ready)return `<div class="card"><h2>Fortschrittsfotos</h2><div class="muted small">Lädt…</div></div>`;
+  if(PH.err)return `<div class="card"><h2>Fortschrittsfotos</h2><div class="muted small">Fotos werden in diesem Browser nicht unterstützt.</div></div>`;
+  const ds=phDates(),last=ds[ds.length-1];
+  const ago=last?Math.round((new Date().setHours(12,0,0,0)-new Date(last+'T12:00:00'))/864e5):null;
+  const thumbs=last?`<div class="phrow">${POSES.map(([k,l])=>{const p=phGet(last,k);return `<div class="phth">${p?`<img src="${phUrl(p)}" alt="${l}, ${fmtD(last)}">`:'–'}<span class="pl">${l}</span></div>`;}).join('')}</div>`:'';
+  return `<div class="card"><div class="row2"><h2>Fortschrittsfotos</h2><button class="btn sm soft" data-act="phadd">+ Fotos</button></div>
+    ${last?`<div class="muted small">Zuletzt am ${fmtD(last)}${ago>0?` (vor ${ago} Tag${ago===1?'':'en'})`:''} · ${ds.length} Termin${ds.length===1?'':'e'}</div>${thumbs}
+      ${ago>=28?'<div class="small" style="color:var(--accent);font-weight:600;margin-bottom:8px">Zeit für neue Fotos. Alle 2–4 Wochen ist ideal.</div>':''}
+      <div class="btnrow" style="grid-template-columns:1fr 1fr;margin-top:4px"><button class="btn" data-act="phcmp" ${ds.length<2?'disabled style="opacity:.5"':''}>Vergleichen</button><button class="btn ghost" data-act="phgal">Alle Fotos</button></div>`
+     :'<div class="muted" style="margin:6px 0 4px">Mach alle 2–4 Wochen Fotos von vorne, seitlich und hinten. Mit dem Vorher/Nachher-Schieber siehst du, was sich verändert hat, auch wenn der Spiegel es nicht zeigt.</div>'}
+    <div class="muted small" style="margin-top:8px">Fotos bleiben nur auf diesem iPhone. Sie sind nicht im Backup und nicht im Sync.</div></div>`;
+}
+function phAddSheet(){
+  const d=PH.addD||ymd(new Date());
+  openSheet(`<h2>Fortschrittsfotos</h2>
+    <label class="fl">Datum<input class="ti" type="date" id="phd" value="${d}" max="${ymd(new Date())}"></label>
+    <div class="phrow">${POSES.map(([k,l])=>{const p=phGet(d,k);return p
+      ?`<button class="phth" data-act="phview" data-id="${p.id}" aria-label="${l} ansehen"><img src="${phUrl(p)}" alt=""><span class="pl">${l} ✓</span></button>`
+      :`<label class="phth phpick"><b>+</b>${l}<input type="file" accept="image/*" data-phpose="${k}" aria-label="Foto ${l}"></label>`;}).join('')}</div>
+    <div class="muted small">Tipps: gleiches Licht, gleicher Abstand, morgens vor dem Essen, entspannt stehen. Am einfachsten mit Selbstauslöser oder vor dem Spiegel.</div>
+    <div class="btnrow"><button class="btn" data-act="closesheet">Fertig</button></div>`);
+}
+ACT.phadd=()=>{PH.addD=ymd(new Date());phAddSheet();};
+document.addEventListener('change',async e=>{
+  const t=e.target;
+  if(t.id==='phd'){PH.addD=t.value||ymd(new Date());phAddSheet();return;}
+  if(t.dataset&&t.dataset.phpose&&t.files&&t.files[0]){
+    const f=t.files[0],pose=t.dataset.phpose,d=PH.addD||ymd(new Date());
+    toast('Foto wird gespeichert…');
+    try{
+      const blob=await phShrink(f);
+      const rec={id:uid(),d,pose,t:Date.now(),blob};
+      await phTx('readwrite',st=>st.put(rec));
+      PH.list.push(rec);PH.list.sort((a,b)=>a.d.localeCompare(b.d)||a.t-b.t);
+      phAddSheet();render();toast('Gespeichert');
+    }catch(err){toast('Foto konnte nicht gespeichert werden.');}
+  }
+  if(t.id==='pha'||t.id==='phb'){PH.cmp[t.id==='pha'?'a':'b']=t.value;phCmpSheet();}
+});
+function phShrink(file){return new Promise((res,rej)=>{
+  const url=URL.createObjectURL(file),img=new Image();
+  img.onload=()=>{const M=1400,sc=Math.min(1,M/Math.max(img.naturalWidth,img.naturalHeight));const c=document.createElement('canvas');c.width=Math.round(img.naturalWidth*sc);c.height=Math.round(img.naturalHeight*sc);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);c.toBlob(b=>b?res(b):rej(new Error('blob')),'image/jpeg',.85);};
+  img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('img'));};img.src=url;});}
+function phCmpSheet(){
+  const C=PH.cmp,ds=phDates().filter(d=>phGet(d,C.pose));
+  if(ds.length<2){openSheet(`<h2>Vergleichen</h2><div class="seg" role="group" aria-label="Ansicht">${POSES.map(([k,l])=>`<button class="${C.pose===k?'on':''}" data-act="phpose" data-p="${k}">${l}</button>`).join('')}</div><div class="empty">Für diese Ansicht brauchst du Fotos von mindestens zwei Terminen.</div><div class="btnrow"><button class="btn ghost" data-act="closesheet">Schliessen</button></div>`);return;}
+  if(!ds.includes(C.a))C.a=ds[0];if(!ds.includes(C.b)||C.b===C.a)C.b=ds[ds.length-1];
+  const A=phGet(C.a,C.pose),B=phGet(C.b,C.pose);
+  const days=Math.round((new Date(C.b)-new Date(C.a))/864e5);
+  const wa=bwAt(C.a),wb=bwAt(C.b);
+  const opt=sel=>ds.map(d=>`<option value="${d}"${d===sel?' selected':''}>${fmtD(d)}</option>`).join('');
+  const view=C.mode==='slide'
+    ?`<div class="phcmp" id="phbox"><img src="${phUrl(B)}" alt="Nachher ${fmtD(C.b)}"><img id="phtop" src="${phUrl(A)}" alt="Vorher ${fmtD(C.a)}" style="clip-path:inset(0 ${100-C.x}% 0 0)"><div class="ln" id="phln" style="left:${C.x}%"></div><span class="tagl">Vorher</span><span class="tagr">Nachher</span></div>
+      <input type="range" class="phr" id="phx" min="0" max="100" value="${C.x}" aria-label="Vorher/Nachher-Schieber">`
+    :`<div class="phside"><div class="phcmp"><img src="${phUrl(A)}" alt="Vorher"><span class="tagl">Vorher</span></div><div class="phcmp"><img src="${phUrl(B)}" alt="Nachher"><span class="tagl">Nachher</span></div></div>`;
+  openSheet(`<h2>Vergleichen</h2>
+    <div class="seg" role="group" aria-label="Ansicht">${POSES.map(([k,l])=>`<button class="${C.pose===k?'on':''}" data-act="phpose" data-p="${k}">${l}</button>`).join('')}</div>
+    <div class="phsel"><label>Vorher<select id="pha">${opt(C.a)}</select></label><label>Nachher<select id="phb">${opt(C.b)}</select></label></div>
+    ${view}
+    <div class="muted small" style="margin:8px 0">${days} Tage dazwischen${wa&&wb?` · Körpergewicht ${fmtN(wa.kg)} → ${fmtN(wb.kg)} kg (${wb.kg-wa.kg>=0?'+':''}${fmtN(wb.kg-wa.kg)})`:''}.</div>
+    <div class="seg two" role="group" aria-label="Darstellung"><button class="${C.mode==='slide'?'on':''}" data-act="phmode" data-m="slide">Schieber</button><button class="${C.mode==='side'?'on':''}" data-act="phmode" data-m="side">Nebeneinander</button></div>
+    <div class="btnrow" style="margin-top:4px"><button class="btn ghost" data-act="closesheet">Schliessen</button></div>`);
+}
+document.addEventListener('input',e=>{if(e.target.id==='phx'){const x=+e.target.value;PH.cmp.x=x;const t=$('#phtop'),l=$('#phln');if(t)t.style.clipPath=`inset(0 ${100-x}% 0 0)`;if(l)l.style.left=x+'%';}});
+function phSetX(x){x=Math.max(0,Math.min(100,x));PH.cmp.x=x;const t=$('#phtop'),l=$('#phln'),r=$('#phx');if(t)t.style.clipPath=`inset(0 ${100-x}% 0 0)`;if(l)l.style.left=x+'%';if(r)r.value=Math.round(x);}
+let phDrag=false;
+document.addEventListener('pointerdown',e=>{const bx=e.target.closest&&e.target.closest('#phbox');if(!bx)return;phDrag=true;const r=bx.getBoundingClientRect();phSetX((e.clientX-r.left)/r.width*100);});
+document.addEventListener('pointermove',e=>{if(!phDrag)return;const bx=$('#phbox');if(!bx)return;const r=bx.getBoundingClientRect();phSetX((e.clientX-r.left)/r.width*100);});
+document.addEventListener('pointerup',()=>{phDrag=false;});document.addEventListener('pointercancel',()=>{phDrag=false;});
+ACT.phcmp=()=>{PH.cmp.a=null;PH.cmp.b=null;PH.cmp.x=50;phCmpSheet();};
+ACT.phpose=b=>{PH.cmp.pose=b.dataset.p;phCmpSheet();};
+ACT.phmode=b=>{PH.cmp.mode=b.dataset.m;phCmpSheet();};
+ACT.phgal=()=>{
+  const ds=phDates().reverse();
+  openSheet(`<h2>Alle Fotos</h2>${ds.map(d=>`<div class="phsess"><div class="t" style="font-weight:600">${fmtD(d)}${bwAt(d)?` <span class="muted small">· ${fmtN(bwAt(d).kg)} kg</span>`:''}</div><div class="phrow">${POSES.map(([k,l])=>{const p=phGet(d,k);return p?`<button class="phth" data-act="phview" data-id="${p.id}" aria-label="${l} ${fmtD(d)}"><img src="${phUrl(p)}" alt=""><span class="pl">${l}</span></button>`:`<div class="phth">–</div>`;}).join('')}</div></div>`).join('')||'<div class="empty">Noch keine Fotos.</div>'}
+    <div class="btnrow"><button class="btn ghost" data-act="closesheet">Schliessen</button></div>`);
+};
+ACT.phview=b=>{
+  const p=PH.list.find(x=>x.id===b.dataset.id);if(!p)return;
+  const l=(POSES.find(x=>x[0]===p.pose)||[])[1]||'';
+  openSheet(`<h2>${esc(l)} · ${fmtD(p.d)}</h2><div class="phbig"><img src="${phUrl(p)}" alt="${esc(l)}, ${fmtD(p.d)}"></div>
+    <div class="btnrow"><button class="btn" data-act="phshare" data-id="${p.id}">In Fotos sichern / teilen</button><button class="btn danger" data-act="phdel" data-id="${p.id}">Foto löschen</button><button class="btn ghost" data-act="phgal">Alle Fotos</button></div>`);
+};
+ACT.phshare=async b=>{
+  const p=PH.list.find(x=>x.id===b.dataset.id);if(!p)return;
+  const file=new File([p.blob],`kraftwerk-${p.d}-${p.pose}.jpg`,{type:'image/jpeg'});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return;}}catch(e){if(e&&e.name==='AbortError')return;}
+  const a=document.createElement('a');a.href=phUrl(p);a.download=file.name;document.body.appendChild(a);a.click();a.remove();
+};
+ACT.phdel=async b=>{
+  if(!arm(b,'Nochmals tippen zum Löschen'))return;
+  const id=b.dataset.id;
+  try{await phTx('readwrite',st=>st.delete(id));}catch(e){toast('Löschen fehlgeschlagen');return;}
+  if(PH.urls[id]){URL.revokeObjectURL(PH.urls[id]);delete PH.urls[id];}
+  PH.list=PH.list.filter(x=>x.id!==id);ACT.phgal();render();toast('Foto gelöscht');
+};
+phLoad().then(()=>{if(TAB==='stats')render();});
 
 /* rest timer */
 function startRest(sec,name){restState={end:Date.now()+sec*1000,total:sec,label:name,fired:false};$('#rest').className='on';tickRest();}
