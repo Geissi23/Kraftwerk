@@ -9,7 +9,9 @@ Janis kann sie jederzeit bearbeiten (auch in der GitHub-App auf dem iPhone).
 Eine gut funktionierende Kraftwerk-App mit coolen Features, die sehr ansprechend aussieht
 und sich gut anfühlt – auf dem iPhone als Web-App vom Home-Bildschirm.
 
-Kontext: Janis trainiert 4x pro Woche im Gym und macht MMA am Samstagmorgen, Ziel Muskelaufbau.
+Kontext: Janis trainiert meist 3x pro Woche im Gym, ausnahmsweise 4x. Ziel Muskelaufbau. **Kein MMA mehr** (seit 22.11.2026).
+Plan: 3 Kern-Trainings (Oberkörper, Unterkörper, Ganzkörper) + optionales Bonus-Training (Schultern & Arme).
+Nicht gewünscht: Hip Thrust, Kreuzheben (auch rumänisches).
 
 ## Regeln für Jarvis
 
@@ -90,3 +92,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-22: Janis will das Briefing im Claude-Chat, nicht in der App. P1 verworfen, PR #1 geschlossen, `jarvis.json` entfernt.
 - 2026-11-22: Janis hat im Chat P2, P3, P4 und P5 genehmigt, alle vier in PR #3 umgesetzt. Supersatz-Pausen bleiben wie bisher.
 - 2026-11-22: Janis hat im Chat das Mergen von PR #2 und #3 freigegeben, beide sind live.
+- 2026-11-22: Neuer Plan nach Janis' Lieblingsübungen (3 Kern + Bonus, ohne Hip Thrust/Kreuzheben), MMA aus der App entfernt → PR #4.
