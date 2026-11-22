@@ -225,7 +225,26 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--good);backg
 #toast.above-rest{bottom:calc(116px + env(safe-area-inset-bottom,0px))}
 #toast.gold{background:var(--gold);color:#241800}
 #fx{position:fixed;inset:0;z-index:90;pointer-events:none}
-@media (prefers-reduced-motion:reduce){#toast,.tog i{transition:none}}
+/* jarvis */
+.topr{display:flex;align-items:center;gap:8px}
+.jv{position:relative;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);color:var(--accent)}
+.jv svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.jv .jdot{position:absolute;top:-1px;right:-1px;width:12px;height:12px;border-radius:50%;background:var(--bad);border:2px solid var(--bg);display:none}
+.jv.new .jdot{display:block}
+.jv.new{animation:jvpulse 2.4s ease-in-out infinite}
+@keyframes jvpulse{0%,100%{box-shadow:0 0 0 0 rgba(43,75,255,0)}50%{box-shadow:0 0 0 6px rgba(43,75,255,.18)}}
+.jvhead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.jvhead h2{margin:0!important}
+.jvorb{width:46px;height:46px;border-radius:50%;flex:none;background:radial-gradient(circle at 35% 30%,#9FB0FF,var(--accent) 60%,#1B2FB8);box-shadow:0 0 0 0 rgba(43,75,255,.35)}
+.jvorb.talk{animation:jvtalk 1.1s ease-in-out infinite}
+@keyframes jvtalk{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(43,75,255,.35)}50%{transform:scale(1.07);box-shadow:0 0 0 10px rgba(43,75,255,0)}}
+.jvtext p{margin:0 0 10px}
+.jvitem{border-top:1px solid var(--line);padding:10px 0}
+.jvitem .t{font-weight:600}
+.jvitem a{color:var(--accent);font-weight:600}
+.jvn{display:inline-block;min-width:34px;text-align:center;background:var(--soft);color:var(--accent);border-radius:8px;padding:1px 6px;font-family:var(--disp);font-weight:700;margin-right:6px}
+.seg.two{grid-template-columns:1fr 1fr}
+@media (prefers-reduced-motion:reduce){#toast,.tog i{transition:none}.jv.new,.jvorb.talk{animation:none}}
 </style>
 </head>
 <body>
@@ -695,7 +714,7 @@ ACT.exlibbp=b=>{LIB_BP=b.dataset.bp;exLibRefresh();};
 
 function toast(msg,gold){const t=$('#toast');t.textContent=msg;t.className='show'+(gold?' gold':'')+($('#rest').classList.contains('on')?' above-rest':'');clearTimeout(toast.t);toast.t=setTimeout(()=>t.className='',2600);}
 function openSheet(html){$('#sheetc').innerHTML=html;$('#sheetbg').classList.add('open');$('#sheet').scrollTop=0;}
-function closeSheet(){$('#sheetbg').classList.remove('open');}
+function closeSheet(){$('#sheetbg').classList.remove('open');jvStop();}
 $('#sheetbg').addEventListener('click',e=>{if(e.target.id==='sheetbg')closeSheet();});
 function arm(b,label){if(b.dataset.armed)return true;b.dataset.armed=1;const o=b.textContent;b.textContent=label;setTimeout(()=>{delete b.dataset.armed;b.textContent=o;},3000);return false;}
 
@@ -737,7 +756,7 @@ function barChart(items,unit){
 function estMin(r){return Math.round(r.ex.reduce((a,e)=>a+e.sets*(40+e.rest),0)/60+5);}
 function viewTop(){
   const xp=xpTotal(),l=levelOf(xp);
-  return `<div class="top"><div class="brand">Kraftwerk</div><div class="lvl" title="${xp} XP"><b>${l}</b>${esc(titleOf(l))}</div></div>`;
+  return `<div class="top"><div class="brand">Kraftwerk</div><div class="topr">${jvButton()}<div class="lvl" title="${xp} XP"><b>${l}</b>${esc(titleOf(l))}</div></div></div>`;
 }
 function viewToday(){
   const now=new Date(),dow=now.getDay(),sch=S.schedules[S.mode]||{},tid=sch[dow];
@@ -1137,6 +1156,8 @@ ACT.settings=()=>{
     <div style="margin-bottom:16px"><div class="row2" style="margin-bottom:4px"><div class="t" style="font-weight:600">Lautstärke</div><b id="volv">${Math.round(S.soundVol*100)}%</b></div>
       <input type="range" min="0" max="100" step="5" value="${Math.round(S.soundVol*100)}" data-vol aria-label="Lautstärke Weckton"></div>
     <button class="btn ghost full" style="margin-bottom:16px" data-act="testalarm">Weckton testen (Kopfhörer)</button>
+    <div class="t" style="font-weight:600">Jarvis-Briefing</div><div class="small muted" style="margin-bottom:8px">Soll Jarvis sein Briefing vorlesen oder nur anzeigen?</div>
+    <div class="seg two" role="group" aria-label="Jarvis-Briefing" style="margin-bottom:16px"><button class="${JV.cfg.voice?'on':''}" data-act="jvvoice" data-v="1">Sprechen</button><button class="${JV.cfg.voice?'':'on'}" data-act="jvvoice" data-v="0">Nur Text</button></div>
     <div class="card" style="margin-bottom:12px"><div class="t" style="font-weight:600">Datensicherung</div><div class="small muted">${esc(Sync.status)}. Zusätzlich kannst du alles als Text sichern.</div></div>
     <div class="btnrow" style="margin-top:0"><button class="btn ghost" data-act="export">Backup anzeigen und kopieren</button><button class="btn ghost" data-act="import">Backup wiederherstellen</button>
     <button class="btn danger" data-act="resetplan">Standardplan wiederherstellen</button></div>
@@ -1169,6 +1190,102 @@ ACT.resetplan=b=>{
   const p=defaultPlan();S.routines=p.routines;S.schedules=p.schedules;S.mode='normal';savePlan();closeSheet();render();toast('Standardplan geladen');
 };
 
+/* ---------- jarvis: sprach-briefing ---------- */
+/* Eigener localStorage-Schlüssel, berührt Trainingsdaten, Sync und Backup nicht. */
+const JV_KEY='kraftwerk.jarvis';
+const JV_URLS=['jarvis.json','https://raw.githubusercontent.com/Geissi23/kraftwerk/main/jarvis.json'];
+const JV={cfg:{voice:true,seen:''},data:null,speaking:false,voices:[]};
+try{const c=JSON.parse(localStorage.getItem(JV_KEY)||'{}');if(c&&typeof c==='object'){if(typeof c.voice==='boolean')JV.cfg.voice=c.voice;if(typeof c.seen==='string')JV.cfg.seen=c.seen;if(c.data&&typeof c.data==='object')JV.data=c.data;}}catch(e){}
+function jvSave(){try{localStorage.setItem(JV_KEY,JSON.stringify({voice:JV.cfg.voice,seen:JV.cfg.seen,data:JV.data}));}catch(e){}}
+const jvIsNew=()=>!!(JV.data&&JV.data.id&&JV.data.id!==JV.cfg.seen);
+function jvButton(){
+  const n=jvIsNew();
+  return `<button class="jv${n?' new':''}" data-act="jarvis" aria-label="Jarvis-Briefing${n?' (neu)':''}"><svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span class="jdot"></span></button>`;
+}
+function jvRefreshBtn(){const n=jvIsNew();document.querySelectorAll('.jv').forEach(b=>{b.classList.toggle('new',n);b.setAttribute('aria-label','Jarvis-Briefing'+(n?' (neu)':''));});}
+function jvValid(d){return d&&typeof d==='object'&&typeof d.id==='string'&&typeof d.speech==='string';}
+async function jvFetch(){
+  for(const u of JV_URLS){
+    try{
+      const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'});
+      if(!r.ok)continue;
+      const d=await r.json();
+      if(!jvValid(d))continue;
+      const changed=!JV.data||JV.data.id!==d.id||JV.data.speech!==d.speech;
+      JV.data=d;jvSave();jvRefreshBtn();
+      if(changed&&$('#sheetbg').classList.contains('open')&&$('#jvsheet'))jvRenderSheet();
+      return true;
+    }catch(e){}
+  }
+  return false;
+}
+/* Stimmen: bevorzugt Schweizer, dann deutsche «Enhanced/Premium»-Stimmen */
+function jvLoadVoices(){try{JV.voices=speechSynthesis.getVoices()||[];}catch(e){JV.voices=[];}}
+function jvVoice(){
+  if(!JV.voices.length)jvLoadVoices();
+  const de=JV.voices.filter(v=>/^de([-_]|$)/i.test(v.lang));
+  if(!de.length)return null;
+  const score=v=>(/ch/i.test(v.lang)?4:0)+(/premium|enhanced|erweitert/i.test(v.name)?3:0)+(/de[-_]de/i.test(v.lang)?1:0)+(v.localService?1:0);
+  return de.sort((a,b)=>score(b)-score(a))[0];
+}
+const jvCanSpeak=()=>'speechSynthesis' in window&&typeof SpeechSynthesisUtterance!=='undefined';
+function jvStop(){if(!JV.speaking)return;JV.speaking=false;try{speechSynthesis.cancel();}catch(e){}jvUi();}
+function jvSpeak(){
+  if(!jvCanSpeak()||!JV.data)return;
+  try{if(speechSynthesis.speaking||speechSynthesis.pending)speechSynthesis.cancel();}catch(e){}
+  const v=jvVoice();
+  /* In kurze Stücke teilen: lange Äusserungen brechen auf manchen Geräten ab */
+  const parts=String(JV.data.speech).replace(/\s+/g,' ').match(/[^.!?]+[.!?]*\s*/g)||[];
+  const chunks=[];let cur='';
+  parts.forEach(p=>{if((cur+p).length>220&&cur){chunks.push(cur.trim());cur='';}cur+=p;});
+  if(cur.trim())chunks.push(cur.trim());
+  if(!chunks.length)return;
+  JV.speaking=true;jvUi();
+  chunks.forEach((c,i)=>{
+    const u=new SpeechSynthesisUtterance(c);
+    if(v){u.voice=v;u.lang=v.lang;}else u.lang='de-DE';
+    u.rate=1.02;u.pitch=1;
+    if(i===chunks.length-1){u.onend=()=>{JV.speaking=false;jvUi();};}
+    u.onerror=()=>{JV.speaking=false;jvUi();};
+    speechSynthesis.speak(u);
+  });
+}
+function jvUi(){
+  const o=$('#jvorb'),b=$('#jvplay');
+  if(o)o.classList.toggle('talk',JV.speaking);
+  if(b)b.textContent=JV.speaking?'Stopp':'Vorlesen';
+}
+function jvRenderSheet(){
+  const d=JV.data;
+  if(!d){
+    openSheet(`<div id="jvsheet"><div class="jvhead"><div class="jvorb" id="jvorb"></div><h2>Jarvis</h2></div>
+      <div class="empty">Noch kein Briefing da. Jarvis meldet sich nach seinem nächsten Lauf.</div>
+      <div class="btnrow"><button class="btn ghost" data-act="jvreload">Neu laden</button><button class="btn" data-act="closesheet">Schliessen</button></div></div>`);
+    return;
+  }
+  const paras=String(d.speech).split(/\n\s*\n/).map(p=>`<p>${esc(p.trim())}</p>`).join('');
+  const items=Array.isArray(d.items)?d.items.filter(x=>x&&typeof x==='object'):[];
+  const safeUrl=u=>/^https:\/\/github\.com\//.test(String(u||''))?String(u):'';
+  const list=items.map(x=>{const url=safeUrl(x.url);return `<div class="jvitem"><div class="t">${x.n?`<span class="jvn">${esc(x.n)}</span>`:''}${esc(x.title||'')}</div>${x.text?`<div class="small muted" style="margin-top:2px">${esc(x.text)}</div>`:''}${url?`<div class="small" style="margin-top:4px"><a href="${esc(url)}" target="_blank" rel="noopener">Auf GitHub ansehen</a></div>`:''}</div>`;}).join('');
+  const when=d.date?new Date(d.date+'T12:00:00'):null;
+  openSheet(`<div id="jvsheet"><div class="jvhead"><div class="jvorb" id="jvorb"></div><div><h2>Jarvis</h2>${when&&!isNaN(when)?`<div class="small muted">Briefing vom ${esc(fmtDateLong(when))}</div>`:''}</div></div>
+    <div class="jvtext">${paras}</div>${list?`<div style="margin-top:6px">${list}</div>`:''}
+    <div class="small muted" style="margin-top:10px">Antworten wie «P2 ja» gibst du im Chat des Jarvis-Laufs oder direkt in JARVIS.md.</div>
+    <div class="btnrow">${jvCanSpeak()?`<button class="btn" id="jvplay" data-act="jvplay">${JV.speaking?'Stopp':'Vorlesen'}</button>`:''}<button class="btn ghost" data-act="closesheet">Schliessen</button></div></div>`);
+  jvUi();
+}
+ACT.jarvis=()=>{
+  jvRenderSheet();
+  if(JV.data){JV.cfg.seen=JV.data.id;jvSave();jvRefreshBtn();}
+  if(JV.cfg.voice&&JV.data)jvSpeak(); /* direkt in der Tipp-Geste, sonst blockiert iOS die Sprache */
+  jvFetch();
+};
+ACT.jvplay=()=>{if(JV.speaking)jvStop();else jvSpeak();};
+ACT.jvreload=async()=>{const ok=await jvFetch();if(!ok)toast('Briefing gerade nicht erreichbar.');else jvRenderSheet();};
+ACT.jvvoice=b=>{JV.cfg.voice=b.dataset.v==='1';jvSave();b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));if(!JV.cfg.voice)jvStop();};
+if(jvCanSpeak()){jvLoadVoices();try{speechSynthesis.addEventListener('voiceschanged',jvLoadVoices);}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)jvStop();else jvFetch();});
+
 /* ---------- confetti ---------- */
 function confetti(n){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -1189,6 +1306,7 @@ function confetti(n){
 render();
 if(S.active&&Date.now()-S.active.start<12*3600e3)toast('Dein Training läuft noch. Tippe auf «Weiter trainieren».');
 syncInit();
+jvFetch();
 </script>
 </body>
 </html>
