@@ -34,6 +34,13 @@ Nicht gewünscht: Hip Thrust, Kreuzheben (auch rumänisches).
 - Daten löschen, Backup- oder Sync-Logik ohne Migrationspfad ändern
 - Neue externe Dienste, Konten oder Kosten einführen
 
+## Trainingsdaten (Jarvis-Sync)
+
+Die App speichert Janis' Trainingsdaten automatisch als `kraftwerk-daten.json` im **privaten** Repo `Geissi23/kraftwerk-daten`
+(Format wie das Text-Backup: `{app, v, exported, summary, data:{workouts, routines, bodyweight, goal, …}}`).
+Jarvis liest diese Datei bei jedem Lauf **nur** (nie schreiben, nie Inhalte in das öffentliche Kraftwerk-Repo kopieren)
+und wertet sie im Bericht aus. Ist die Datei nicht erreichbar oder veraltet, steht das unter «Bekannte Probleme».
+
 ## Ablauf eines Laufs (Mo, Mi, Fr – Bericht bis ca. 18:00 Uhr)
 
 1. Diese Datei lesen, offene Pull Requests und Kommentare von Janis prüfen und umsetzen.
@@ -48,7 +55,9 @@ Nicht gewünscht: Hip Thrust, Kreuzheben (auch rumänisches).
    - **In Arbeit & als Nächstes:** Stand genehmigter, noch nicht fertiger Ideen und was beim nächsten Lauf drankommt
    - **Bekannte Probleme:** gefundene Bugs, Risiken oder bewusst offen gelassene Punkte
    - **Neue Pitches:** alle neuen Ideen nummeriert (P12, P13 …), je 2–3 Sätze: Was / Warum / Aufwand
-   - **Trainingstipp:** ein kurzer Tipp passend zu Janis' Plan (Technik, Progression oder Erholung)
+   - **Deine Trainings:** Auswertung aus `kraftwerk-daten.json` seit dem letzten Bericht: Anzahl Trainings, neue Rekorde,
+     Plateaus, Muskelgruppen-Balance der letzten 2 Wochen, Körpergewicht-Trend
+   - **Trainingstipp:** ein kurzer Tipp passend zu Janis' Plan und seinen echten Zahlen (Technik, Progression oder Erholung)
    - **Offene Fragen**
    Janis antwortet mit «P12 ja / nein» oder Verbesserungswünschen; Jarvis setzt Antworten im selben Chat direkt um.
    Push-Nachricht nach jedem Lauf mit neuen Pitches oder Merges.
@@ -95,7 +104,7 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 
 - [x] **P11 – Fortschrittsfotos** (nur auf dem iPhone, Vorher/Nachher-Vergleich mit Schieberegler, ohne KI) – genehmigt am 2026-11-22, **live** (PR #6)
 
-- [x] **P12 – Jarvis-Sync** (App speichert Trainingsdaten automatisch in ein privates Repo `Geissi23/kraftwerk-daten`, Jarvis wertet sie im Bericht aus) – Wunsch von Janis, genehmigt am 2026-11-22, in Arbeit
+- [x] **P12 – Jarvis-Sync** (App speichert Trainingsdaten automatisch in ein privates Repo `Geissi23/kraftwerk-daten`, Jarvis wertet sie im Bericht aus) – Wunsch von Janis, genehmigt am 2026-11-22, **live** (PR #9)
 
 ## Backlog
 
@@ -128,3 +137,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-22: Körper-Icons statt bunter Hantel-Icons → PR #8, gemergt und live.
 - 2026-11-22: Janis: Läufe Mo/Mi/Fr mit Bericht bis 18:00, Jarvis darf getestete PRs selbst mergen, Bericht mit Testhinweisen, Rückgängig-Hinweis, In Arbeit, Problemen, Pitches und Trainingstipp.
 - 2026-11-22: P12 Jarvis-Sync (Variante B: privates GitHub-Repo) von Janis genehmigt.
+- 2026-11-22: P12 Jarvis-Sync live (PR #9). Wartet auf Einrichtung durch Janis (privates Repo + Token).
