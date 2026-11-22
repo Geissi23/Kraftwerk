@@ -35,7 +35,7 @@ Kontext: Janis trainiert 4x pro Woche im Gym und macht MMA am Samstagmorgen, Zie
 3. Sonst: eine Aufgabe aus «Backlog» erledigen.
 4. Wenn weniger als 3 offene Pitches existieren: 1–2 neue eigene Ideen pitchen
    (Was, Warum es Janis hilft, Aufwand klein/mittel/gross).
-5. Log-Eintrag schreiben, Datei auf `main` committen (nur diese Datei).
+5. Log-Eintrag schreiben, diese Datei und `jarvis.json` (Sprach-Briefing, sobald P1 live ist) auf `main` committen – nur diese zwei Dateien.
 6. Push-Nachricht nur, wenn es neue Pitches, einen neuen PR oder eine Frage gibt.
 
 ## Pitches
@@ -43,7 +43,15 @@ Kontext: Janis trainiert 4x pro Woche im Gym und macht MMA am Samstagmorgen, Zie
 So gibst du ein OK: Kästchen auf `[x]` setzen, oder im Chat des Jarvis-Laufs antworten («P1 ja», «P2 nein»).
 Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 
-_(noch keine)_
+- [x] **P1 – Jarvis spricht (Sprach-Briefing in der App)** – von Janis gewünscht, genehmigt am 2026-11-22
+  Jarvis legt bei jedem Lauf seine Pitches, Fragen und neuen PRs als kurzes, gesprochen formuliertes
+  Briefing in `jarvis.json` (auf `main`) ab. Die App zeigt einen Jarvis-Button mit Hinweis auf
+  Neues; beim Antippen liest das iPhone das Briefing mit einer deutschen Stimme vor
+  (Web Speech API, `speechSynthesis`, ohne externe Dienste oder Kosten).
+  In den Einstellungen gibt es einen Schalter «Jarvis: Sprechen / Nur Text»; bei «Nur Text»
+  wird das Briefing nur angezeigt. Standard: Sprechen.
+  Briefing-Stil: wie ein persönlicher Assistent, locker und kurz (max. ca. 60 Sekunden),
+  jeder Pitch mit Nummer, damit Janis mit «P2 ja» antworten kann.
 
 ## Backlog
 
