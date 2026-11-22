@@ -104,6 +104,7 @@ h1,h2,h3{font-family:var(--disp);font-weight:600;margin:0;line-height:1.05;lette
 /* segmented */
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:12px}
 .seg button{padding:9px 4px;border-radius:9px;font-size:14px;font-weight:500;color:var(--muted)}
+.seg.two{grid-template-columns:1fr 1fr}
 .seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 select,.ti{width:100%;min-height:44px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);padding:0 12px}
 .schrow{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:center;margin-bottom:8px}
@@ -225,6 +226,37 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--good);backg
 #toast.above-rest{bottom:calc(116px + env(safe-area-inset-bottom,0px))}
 #toast.gold{background:var(--gold);color:#241800}
 #fx{position:fixed;inset:0;z-index:90;pointer-events:none}
+/* werkzeuge im training: aufwärmen, scheiben, plateau */
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.pill{min-height:38px;padding:0 13px;border-radius:99px;background:var(--soft);color:var(--accent);font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.pill.on{background:var(--accent);color:var(--on-accent)}
+.wu{margin-top:8px;padding:10px;border-radius:14px;background:var(--bg)}
+.wu .wuh{font-size:13px;color:var(--muted);margin-bottom:4px}
+.wuset{display:grid;grid-template-columns:1fr auto 44px;align-items:center;gap:8px;min-height:44px;padding:2px 0}
+.wuset b{font-family:var(--disp);font-size:22px;font-weight:600}
+.wuset .chk{height:40px;background:var(--surface)}
+.wuset.done b,.wuset.done span{opacity:.5;text-decoration:line-through}
+.wuset.done .chk{background:var(--good);border-color:var(--good);color:#fff}
+.plat{margin-top:8px;border-radius:14px;background:var(--gold-soft);color:var(--gold-ink);padding:10px 12px;font-size:14px}
+.plat button.ph{display:flex;width:100%;justify-content:space-between;align-items:center;font-weight:600;color:inherit;min-height:28px;text-align:left}
+.plat ul{margin:8px 0 0;padding-left:18px}
+.plat li{margin-bottom:6px}
+.plat .pa{margin-top:2px;min-height:38px;padding:0 12px;border-radius:9px;background:var(--gold);color:#241800;font-weight:600;font-size:14px}
+.pbar{position:relative;height:130px;margin:6px 0 10px;display:flex;align-items:center}
+.pbar .sl{position:absolute;left:0;right:0;top:50%;height:12px;margin-top:-6px;border-radius:4px;background:linear-gradient(#C9CED6,#8E96A3)}
+.pbar .col{position:relative;width:10px;height:44px;border-radius:3px;background:#8E96A3;margin-left:1px;flex:none}
+.pbar .pl{position:relative;flex:none;border-radius:4px;margin-right:3px;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.pbar .pl span{transform:rotate(-90deg);font-size:11px;font-weight:700;white-space:nowrap}
+.plchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.plchips button{min-height:40px;padding:0 12px;border-radius:10px;background:var(--bg);font-weight:600;font-size:14px}
+.plchips button.on{background:var(--accent);color:var(--on-accent)}
+.mgrow{display:grid;grid-template-columns:86px 1fr 44px;align-items:center;gap:10px;padding:5px 0;font-size:14px}
+.mgrow .mb{height:12px;border-radius:99px;background:var(--bg);position:relative;overflow:hidden}
+.mgrow .mb i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+.mgrow .mb s{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--muted);opacity:.35}
+.mgrow b{font-family:var(--disp);font-size:20px;text-align:right}
+.mglegend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--muted);margin-top:8px}
+.mglegend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 @media (prefers-reduced-motion:reduce){#toast,.tog i{transition:none}}
 </style>
 </head>
@@ -848,7 +880,7 @@ function viewStats(){
     ?`<button class="item" data-act="wdetail" data-id="${w.id}"><div><div class="t">MMA</div><div class="s">${fmtDate(w.start)}</div></div><span class="chev">›</span></button>`
     :`<button class="item" data-act="wdetail" data-id="${w.id}"><div><div class="t">${esc(w.name)}${w.prs?`<span class="tag">${w.prs} Rekord${w.prs>1?'e':''}</span>`:''}</div><div class="s">${fmtDate(w.start)} · ${fmtDur(w.end-w.start)} · ${doneCount(w)} Sätze</div></div><div class="num" style="font-size:24px">${fmtKg(vol(w))} kg</div></button>`).join(''):'<div class="empty">Dein erstes Training erscheint hier.</div>'}</div>`;
   const badges=`<div class="card"><h2>Abzeichen</h2><div class="badges">${BADGES.map(bd=>{const on=bd.ok(t);return `<div class="badge ${on?'on':''}"><div class="bt">${esc(bd.t)}</div><div class="small muted">${esc(bd.d)}</div></div>`;}).join('')}</div></div>`;
-  return viewTop()+lvl+totalsCard+volCard+weekCard+progCard+bwCard+badges+histCard;
+  return viewTop()+lvl+totalsCard+volCard+weekCard+muscleCard()+progCard+bwCard+badges+histCard;
 }
 
 function viewRecords(){
@@ -915,7 +947,7 @@ function renderWorkout(){
     return `<div class="ex"><div class="exh"><div><h3>${esc(ex.name)}${ex.ss?`<span class="ss">Supersatz ${esc(ex.ss)}</span>`:''}</h3>
       <div class="hint">${ex.sets} × ${ex.repMin===ex.repMax?ex.repMin:ex.repMin+'–'+ex.repMax} Wdh. · Pause ${fmtClock(ex.rest)} · ${dn}/${ex.rows.length} erledigt</div>
       ${hl[0]?`<div class="hint">${esc(hl[0])}</div>`:''}${hl[1]?`<div class="hint go">${esc(hl[1])}</div>`:''}</div>
-      <div style="display:flex;gap:6px;flex:none">${EX_LIB[ex.key]?`<button class="icon" data-act="exinfo" data-i="${i}" aria-label="Übungsinfo zu ${esc(ex.name)}">ⓘ</button>`:''}<button class="icon" data-act="exmenu" data-i="${i}" aria-label="Übung-Optionen">⋯</button></div></div>
+      <div style="display:flex;gap:6px;flex:none">${EX_LIB[ex.key]?`<button class="icon" data-act="exinfo" data-i="${i}" aria-label="Übungsinfo zu ${esc(ex.name)}">ⓘ</button>`:''}<button class="icon" data-act="exmenu" data-i="${i}" aria-label="Übung-Optionen">⋯</button></div></div>${exExtras(ex,i)}
       ${(()=>{const sug=suggestNext(ex);return ex.rows.map((r,j)=>`<div class="row ${r.done?'done':''} ${r.pr&&r.pr!=='first'?'pr':''}">
         <span class="sn">${j+1}</span>
         <input class="inp" inputmode="decimal" data-i="${i}" data-j="${j}" data-f="w" value="${esc(r.w)}" placeholder="kg" aria-label="Gewicht in kg, Satz ${j+1}">
@@ -972,6 +1004,8 @@ ACT.exmenu=b=>{
   const i=+b.dataset.i,ex=S.active.exs[i];
   openSheet(`<h2>${esc(ex.name)}</h2><div class="btnrow">
     <button class="btn ghost" data-act="exrmset" data-i="${i}">Letzten Satz entfernen</button>
+    <button class="btn ghost" data-act="wutoggle" data-i="${i}">Aufwärmsätze anzeigen</button>
+    <button class="btn ghost" data-act="plates" data-i="${i}">Scheibenrechner</button>
     <button class="btn ghost" data-act="exup" data-i="${i}">Nach oben schieben</button>
     <button class="btn danger" data-act="exrm" data-i="${i}">Übung aus diesem Training entfernen</button>
     <button class="btn ghost" data-act="closesheet">Schliessen</button></div>`);
@@ -992,6 +1026,181 @@ ACT.addexok=()=>{
   persist();closeSheet();renderWorkout();updateWk();
   const b=$('#wkbody');b.scrollTop=b.scrollHeight;
 };
+
+/* ---------- trainings-werkzeuge (P2 aufwärmen, P4 plateau, P5 scheiben) ---------- */
+/* Nichts davon verändert gespeicherte Trainings: Aufwärm-Häkchen leben nur im Speicher,
+   die Scheiben-Einstellungen in einem eigenen localStorage-Schlüssel. */
+const gearOf=ex=>{const l=EX_LIB[ex.key];if(l)return l.g;const n=ex.name;
+  return /langhantel|sz-stange|barbell/i.test(n)?'Langhantel':/kurzhantel|dumbbell/i.test(n)?'Kurzhantel':/kabel|cable/i.test(n)?'Kabelzug':/maschine|machine|leg press/i.test(n)?'Maschine':'';};
+const isBarbell=ex=>gearOf(ex)==='Langhantel';
+const isCompound=ex=>gearOf(ex)!=='Körpergewicht'&&/squat|kniebeuge|kreuzheben|deadlift|bankdrücken|bench|press|drücken|rudern|row|pulldown|hip thrust|leg press|beinpresse/i.test(ex.name)&&!/fly|fliegende|curl|extension|raise|pushdown/i.test(ex.name);
+const topW=ex=>Math.max(0,...ex.rows.map(r=>num(r.w)));
+const rnd=(w,step)=>Math.round(w/step)*step;
+
+/* P5 – Scheiben */
+const fmtP=n=>String(Math.round(n*100)/100).replace('.',',');
+const PL_KEY='kraftwerk.plates',PL_ALL=[25,20,15,10,5,2.5,1.25];
+const PL={bar:20,plates:PL_ALL.slice()};
+try{const c=JSON.parse(localStorage.getItem(PL_KEY)||'{}');if([20,15,10].includes(c.bar))PL.bar=c.bar;if(Array.isArray(c.plates)){const p=c.plates.filter(x=>PL_ALL.includes(x));if(p.length)PL.plates=p;}}catch(e){}
+const plSave=()=>{try{localStorage.setItem(PL_KEY,JSON.stringify(PL));}catch(e){}};
+function plateCalc(total){
+  let side=(total-PL.bar)/2;const out=[];
+  if(!(side>0))return {out,rest:Math.max(0,side),under:total<PL.bar};
+  [...PL.plates].sort((a,b)=>b-a).forEach(p=>{while(side>=p-1e-9){out.push(p);side-=p;}});
+  return {out,rest:Math.round(side*1000)/1000,under:false};
+}
+const PL_STYLE={25:['#D6403A',100,'#fff'],20:['#2B4BFF',96,'#fff'],15:['#F2B705',86,'#241800'],10:['#0F8F68',74,'#fff'],5:['#F4F5F7',56,'#12161C'],2.5:['#D6403A',44,'#fff'],1.25:['#B8BFC9',36,'#12161C']};
+const PL_W={25:18,20:17,15:15,10:13,5:10,2.5:8,1.25:7};
+let PL_CUR={w:0,i:-1};
+function platesHtml(){
+  const w=PL_CUR.w,r=plateCalc(w);
+  const viz=`<div class="pbar" aria-hidden="true"><div class="sl"></div>${r.out.slice().reverse().map(p=>{const st=PL_STYLE[p];return `<div class="pl" style="width:${PL_W[p]}px;height:${st[1]}%;background:${st[0]};color:${st[2]}">${p>=10?`<span>${fmtP(p)}</span>`:''}</div>`;}).join('')}<div class="col"></div></div>`;
+  let txt;
+  if(!(w>0))txt='Gib ein Gewicht ein.';
+  else if(r.under)txt=`Weniger als die Stange (${PL.bar} kg).`;
+  else if(!r.out.length)txt=`Nur die Stange (${PL.bar} kg).`;
+  else txt=`Pro Seite: <b>${r.out.map(fmtP).join(' + ')} kg</b>`+(r.rest>0?`<div class="small" style="color:var(--bad);margin-top:4px">Rest ${fmtP(r.rest)} kg pro Seite geht mit deinen Scheiben nicht auf.</div>`:'');
+  return viz+`<div style="margin-bottom:14px">${txt}</div>`;
+}
+function openPlates(){
+  const ex=S.active&&S.active.exs[PL_CUR.i];
+  const ws=ex?[...new Set(ex.rows.map(r=>num(r.w)).filter(x=>x>0))]:[];
+  openSheet(`<h2>Scheibenrechner</h2>${ex?`<div class="muted small" style="margin-bottom:8px">${esc(ex.name)}</div>`:''}
+    <label class="fl">Gesamtgewicht in kg<input class="ti" id="plw" inputmode="decimal" value="${PL_CUR.w>0?fmtN(PL_CUR.w):''}" style="font-size:20px"></label>
+    ${ws.length>1?`<div class="plchips" role="group" aria-label="Gewichte aus diesem Training">${ws.map(x=>`<button data-act="plpick" data-w="${x}" class="${x===PL_CUR.w?'on':''}">${fmtN(x)} kg</button>`).join('')}</div>`:''}
+    <div id="plout">${platesHtml()}</div>
+    <div class="t" style="font-weight:600;margin-bottom:6px">Stange</div>
+    <div class="seg" role="group" aria-label="Stangengewicht">${[20,15,10].map(b=>`<button class="${PL.bar===b?'on':''}" data-act="plbar" data-b="${b}">${b} kg</button>`).join('')}</div>
+    <div class="t" style="font-weight:600;margin-bottom:6px">Vorhandene Scheiben</div>
+    <div class="plchips" role="group" aria-label="Vorhandene Scheiben">${PL_ALL.map(p=>`<button class="${PL.plates.includes(p)?'on':''}" data-act="plplate" data-p="${p}" aria-pressed="${PL.plates.includes(p)}">${fmtP(p)}</button>`).join('')}</div>
+    <div class="btnrow"><button class="btn" data-act="closesheet">Fertig</button></div>`);
+}
+const plRefresh=()=>{const o=$('#plout');if(o)o.innerHTML=platesHtml();document.querySelectorAll('[data-act=plpick]').forEach(b=>b.classList.toggle('on',+b.dataset.w===PL_CUR.w));};
+ACT.plates=b=>{const i=+b.dataset.i,ex=S.active&&S.active.exs[i];PL_CUR={w:ex?topW(ex):0,i};openPlates();};
+ACT.plpick=b=>{PL_CUR.w=+b.dataset.w;const inp=$('#plw');if(inp)inp.value=fmtN(PL_CUR.w);plRefresh();};
+ACT.plbar=b=>{PL.bar=+b.dataset.b;plSave();b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));plRefresh();};
+ACT.plplate=b=>{const p=+b.dataset.p,has=PL.plates.includes(p);if(has&&PL.plates.length===1)return;PL.plates=has?PL.plates.filter(x=>x!==p):[...PL.plates,p];plSave();b.classList.toggle('on',!has);b.setAttribute('aria-pressed',!has);plRefresh();};
+document.addEventListener('input',e=>{if(e.target.id==='plw'){PL_CUR.w=num(e.target.value);plRefresh();}});
+
+/* P2 – Aufwärmsätze */
+const WU={};
+const wuKey=ex=>(S.active?S.active.id:'')+'|'+ex.key;
+function warmupSets(ex){
+  const W=topW(ex);if(!(W>0))return [];
+  const out=[];let prev=0;
+  if(isBarbell(ex)){
+    const bar=PL.bar;if(W<=bar)return [];
+    out.push({w:bar,r:10,t:'Leere Stange'});prev=bar;
+    [[.5,6],[.7,3],[.85,1]].forEach(([p,r])=>{const w=rnd(W*p,2.5);if(w>prev&&w<W){out.push({w,r,t:Math.round(p*100)+' %'});prev=w;}});
+  }else{
+    const step=gearOf(ex)==='Kurzhantel'?2:2.5;
+    [[.5,8],[.7,4],[.85,1]].forEach(([p,r])=>{const w=rnd(W*p,step);if(w>0&&w>prev&&w<W){out.push({w,r,t:Math.round(p*100)+' %'});prev=w;}});
+  }
+  return out;
+}
+const firstHeavy=()=>S.active?S.active.exs.findIndex(isCompound):-1;
+ACT.wutoggle=b=>{const ex=S.active&&S.active.exs[+b.dataset.i];if(!ex)return;if(!warmupSets(ex).length){if(b.closest('#sheet'))closeSheet();toast('Trag zuerst dein Arbeitsgewicht ein.');return;}const k=wuKey(ex);WU[k]=WU[k]||{done:[]};WU[k].open=!WU[k].open;if(b.closest('#sheet'))closeSheet();renderWorkout();};
+ACT.wucheck=b=>{const ex=S.active&&S.active.exs[+b.dataset.i];if(!ex)return;const k=wuKey(ex),j=+b.dataset.j,st=WU[k]=WU[k]||{open:true,done:[]};
+  st.done=st.done.includes(j)?st.done.filter(x=>x!==j):[...st.done,j];
+  const n=warmupSets(ex).length;if(st.done.length>=n&&n){st.open=false;toast('Aufgewärmt. Jetzt zählt\'s!');}
+  renderWorkout();};
+
+/* P4 – Plateau */
+const PLT_OPEN={};
+function plateauInfo(ex){
+  const ses=[];
+  gymOnly().forEach(w=>{const x=w.exs.find(e=>e.key===ex.key);if(!x)return;const rows=x.rows.filter(r=>r.done);if(!rows.length)return;
+    const anyW=rows.some(r=>num(r.w)>0);
+    ses.push({bw:!anyW,best:anyW?Math.max(...rows.map(r=>e1(num(r.w),num(r.r)))):Math.max(...rows.map(r=>num(r.r))),top:Math.max(...rows.map(r=>num(r.w))),t:w.start});});
+  if(ses.length<4)return null;
+  if(Date.now()-ses[ses.length-1].t>56*864e5)return null;
+  let bi=0;ses.forEach((s,i)=>{if(s.best>ses[bi].best+0.01)bi=i;});
+  const streak=ses.length-1-bi;
+  if(streak<3)return null;
+  const last=ses[ses.length-1];
+  return {streak,best:ses[bi].best,bw:last.bw,top:last.top};
+}
+function plateauHtml(ex,i){
+  const p=plateauInfo(ex);if(!p)return '';
+  const open=!!PLT_OPEN[ex.key];
+  let ideas;
+  if(p.bw){
+    ideas=[`Langsamer absenken (3 Sekunden) und unten kurz pausieren, das macht dieselben Wdh. deutlich härter.`,`Zusatzgewicht nehmen (z. B. Gewichtsgürtel oder Kurzhantel) und im Bereich ${ex.repMin}–${ex.repMax} Wdh. neu aufbauen.`];
+  }else{
+    const step=isLower(ex.name)?5:2.5,dl=Math.max(step,rnd(p.top*.9,step));
+    const lowRange=ex.repMax<=8;
+    ideas=[`Deload: Gewicht 10 % runter auf ${fmtN(dl)} kg und in 2–3 Wochen sauber wieder hocharbeiten.<br><button class="pa" data-act="pltdl" data-i="${i}" data-w="${dl}">${fmtN(dl)} kg für heute übernehmen</button>`,
+      lowRange?`Wdh.-Bereich wechseln: ein paar Wochen 10–12 Wdh. mit ca. 15 % weniger Gewicht, danach zurück zu ${ex.repMin}–${ex.repMax}.`
+              :`Wdh.-Bereich wechseln: ein paar Wochen 6–8 Wdh. mit etwas mehr Gewicht, danach zurück zu ${ex.repMin}–${ex.repMax}.`];
+  }
+  const lib=EX_LIB[ex.key];
+  if(p.streak>=5&&lib&&lib.a&&lib.a.length)ideas.push(`Für 4–6 Wochen tauschen, z. B. auf «${esc(lib.a[0])}». Über ⓘ geht das mit einem Tipp.`);
+  ideas.push('Und die Basics checken: genug Schlaf, Protein und nicht zu viel Volumen um den MMA-Tag herum.');
+  return `<div class="plat"><button class="ph" data-act="plttoggle" data-k="${esc(ex.key)}" aria-expanded="${open}"><span>Plateau: seit ${p.streak} Trainings kein neuer Bestwert</span><span>${open?'▴':'▾'}</span></button>${open?`<ul>${ideas.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}</div>`;
+}
+ACT.plttoggle=b=>{const k=b.dataset.k;PLT_OPEN[k]=!PLT_OPEN[k];renderWorkout();};
+ACT.pltdl=b=>{const ex=S.active&&S.active.exs[+b.dataset.i];if(!ex)return;const w=num(b.dataset.w);ex.rows.forEach(r=>{if(!r.done)r.w=w;});persist();renderWorkout();updateWk();toast('Offene Sätze auf '+fmtN(w)+' kg gesetzt');};
+
+/* Zusatzzeile pro Übung im Training */
+function exExtras(ex,i){
+  const pills=[],k=wuKey(ex),st=WU[k];
+  const wus=warmupSets(ex);
+  const heavy=i===firstHeavy();
+  const showWu=wus.length&&(heavy||(st&&st.open));
+  if(showWu){const d=st?st.done.length:0;pills.push(`<button class="pill${st&&st.open?' on':''}" data-act="wutoggle" data-i="${i}" aria-expanded="${!!(st&&st.open)}">Aufwärmen${d?` ${Math.min(d,wus.length)}/${wus.length}`:` · ${wus.length} Sätze`}</button>`);}
+  if(isBarbell(ex)&&topW(ex)>0)pills.push(`<button class="pill" data-act="plates" data-i="${i}">Scheiben</button>`);
+  let wuBox='';
+  if(showWu&&st&&st.open){
+    wuBox=`<div class="wu"><div class="wuh">Aufwärmsätze zählen nicht fürs Volumen, keine Pause nötig.</div>${wus.map((x,j)=>{const dn=st.done.includes(j);return `<div class="wuset${dn?' done':''}"><span class="small muted">${esc(x.t)}</span><b>${fmtN(x.w)} kg × ${x.r}</b><button class="chk" data-act="wucheck" data-i="${i}" data-j="${j}" aria-label="Aufwärmsatz ${j+1} abhaken" aria-pressed="${dn}">${checkSvg}</button></div>`;}).join('')}</div>`;
+  }
+  return (pills.length?`<div class="pills">${pills.join('')}</div>`:'')+wuBox+plateauHtml(ex,i);
+}
+
+/* ---------- P3: sätze pro muskelgruppe ---------- */
+const MG=['Brust','Rücken','Schultern','Bizeps','Trizeps','Beine','Po','Waden','Bauch'];
+const MG_RULES=[
+  [/wadenheben|calf/i,['Waden'],[]],
+  [/hip thrust|glute|abductor|abduktor/i,['Po'],['Beine']],
+  [/adductor|adduktor/i,['Beine'],[]],
+  [/rumänisch|romanian|rdl|kreuzheben|deadlift/i,['Beine','Po'],['Rücken']],
+  [/leg curl|beinbeuger|leg extension|beinstrecker/i,['Beine'],[]],
+  [/squat|kniebeuge|leg press|beinpresse|ausfallschritt|lunge|split/i,['Beine'],['Po']],
+  [/enges bankdrücken|close.?grip|dips/i,['Trizeps'],['Brust']],
+  [/triceps|trizeps|pushdown|skull|french/i,['Trizeps'],[]],
+  [/bankdrücken|bench|chest press|brustpresse/i,['Brust'],['Trizeps','Schultern']],
+  [/fly|fliegende|butterfly|crossover|liegestütz|push.?up/i,['Brust'],[]],
+  [/overhead press|schulterdrücken|military|shoulder press/i,['Schultern'],['Trizeps']],
+  [/lateral|seitheben|face pull|reverse fly|rear delt/i,['Schultern'],[]],
+  [/pulldown|klimmz|pull.?up|chin|row|rudern/i,['Rücken'],['Bizeps']],
+  [/curl/i,['Bizeps'],[]],
+  [/crunch|leg raise|plank|sit.?up|twist|pallof|bauch/i,['Bauch'],[]]
+];
+function muscleOf(name){for(const [re,p,s] of MG_RULES)if(re.test(name))return {p,s};return null;}
+let MG_WEEK=0;
+function muscleSets(weekOffset){
+  const mon=monday(new Date());mon.setDate(mon.getDate()-7*weekOffset);
+  const from=mon.getTime(),to=from+7*864e5;
+  const cnt=Object.fromEntries(MG.map(g=>[g,0]));let other=0;
+  gymOnly().filter(w=>w.start>=from&&w.start<to).forEach(w=>w.exs.forEach(ex=>{
+    const n=ex.rows.filter(r=>r.done).length;if(!n)return;
+    const m=muscleOf(ex.name);if(!m){other+=n;return;}
+    m.p.forEach(g=>cnt[g]+=n);m.s.forEach(g=>cnt[g]+=n/2);
+  }));
+  return {cnt,other};
+}
+function muscleCard(){
+  const {cnt,other}=muscleSets(MG_WEEK),MAX=24;
+  const col=v=>v<10?'var(--gold)':v<=20?'var(--good)':'var(--accent)';
+  const rows=MG.map(g=>{const v=cnt[g];return `<div class="mgrow"><span>${g}</span><div class="mb" role="img" aria-label="${g}: ${fmtN(v)} Sätze"><i style="width:${Math.min(100,v/MAX*100).toFixed(1)}%;background:${col(v)}"></i><s style="left:${(10/MAX*100).toFixed(1)}%"></s><s style="left:${(20/MAX*100).toFixed(1)}%"></s></div><b>${fmtN(v)}</b></div>`;}).join('');
+  const low=MG.filter(g=>cnt[g]<10&&g!=='Bauch');
+  const tip=MG_WEEK===0?(low.length?`Noch Luft bei: ${low.join(', ')}.`:'Alle grossen Muskelgruppen im grünen Bereich. Stark!'):'';
+  return `<div class="card"><h2>Sätze pro Muskelgruppe</h2>
+    <div class="seg two" role="group" aria-label="Woche wählen"><button class="${MG_WEEK===0?'on':''}" data-act="mgweek" data-w="0">Diese Woche</button><button class="${MG_WEEK===1?'on':''}" data-act="mgweek" data-w="1">Letzte Woche</button></div>
+    ${rows}
+    <div class="mglegend"><span><i style="background:var(--gold)"></i>unter 10</span><span><i style="background:var(--good)"></i>10–20 (Aufbau)</span><span><i style="background:var(--accent)"></i>über 20</span></div>
+    <div class="muted small" style="margin-top:8px">${tip?esc(tip)+' ':''}Hilfsmuskeln zählen halb, z. B. Trizeps beim Bankdrücken.${other?` ${other} ${other===1?'Satz':'Sätze'} ohne Zuordnung.`:''}</div></div>`;
+}
+ACT.mgweek=b=>{MG_WEEK=+b.dataset.w;render();};
 
 /* rest timer */
 function startRest(sec,name){restState={end:Date.now()+sec*1000,total:sec,label:name,fired:false};$('#rest').className='on';tickRest();}
