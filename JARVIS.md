@@ -113,3 +113,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-22: P11 Fortschrittsfotos umgesetzt → PR #6.
 - 2026-11-22: PR #6 gemergt, alles live. Keine offenen PRs.
 - 2026-11-22: Janis fand die App unübersichtlich. Redesign (Icons, Unter-Tabs, weniger Text) → PR #7, gemergt und live.
+- 2026-11-22: Körper-Icons statt bunter Hantel-Icons → PR #8, gemergt und live.
