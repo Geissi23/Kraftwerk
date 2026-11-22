@@ -84,6 +84,12 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - [x] Supersatz-Pausen: Janis will es so lassen wie bisher (Pause nach jedem Satz). Entschieden am 2026-11-22.
 - [ ] Gewichte im Training einheitlich mit Komma anzeigen (Eingabefelder zeigen nach dem Abhaken «22.5», sonst überall «22,5»)
 
+## Später (wartet auf Janis)
+
+- Sprach-Assistent auf einem PC einrichten (github.com/adewaskar/jarvis, Claude Code lokal), sobald Janis einen PC hat:
+  zu Hause per Sprache Status abfragen und Pitches beantworten («P6 ja» → JARVIS.md). Die Cloud-Läufe machen weiter die Arbeit.
+  Janis meldet sich dafür selbst.
+
 ## Log
 
 - 2026-11-22: Jarvis eingerichtet.
