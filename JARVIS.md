@@ -62,6 +62,24 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 (Artifact publish `asset: true`, `url` siehe oben). Danach mit ArtifactData `update` die Datensätze
 `datasets/<name>` auf die neue `source.url` und `updated.at` setzen, alte Assets löschen. Die Seite selbst nicht anfassen.
 
+## Arbeitsrhythmus (seit 23.11.2026, Wunsch von Janis: weniger am Handy)
+
+- **Mo, Mi, Fr ca. 08:34 – Arbeits-Lauf:** arbeitet still alles ab («Eingang», genehmigte Pitches, Backlog, Daueraufgaben, Cockpit)
+  und schreibt ins «Tagesprotokoll». Push nur, wenn etwas kaputt ist.
+- **Mo, Mi, Fr ca. 17:37 – Bericht-Lauf:** Gesundheits-Check, Bericht im Chat und Push.
+- **Antworten von Janis** kommen in «Eingang» und werden im nächsten Arbeits-Lauf erledigt. Sofort erledigt werden nur «rückgängig»
+  und blockierende Bugs.
+- **Jede Frage hat einen Standard und eine Frist.** Ohne Antwort gilt der Standard. Keine Rückfragen-Kaskaden.
+- Der folgende «Ablauf eines Laufs» gilt sinngemäss, verteilt auf beide Läufe.
+
+## Eingang
+
+- (leer)
+
+## Tagesprotokoll
+
+- (wird vom Arbeits-Lauf gefüllt und vom Bericht-Lauf abgeschlossen)
+
 ## Ablauf eines Laufs (Mo, Mi, Fr – Bericht bis ca. 18:00 Uhr)
 
 1. Diese Datei lesen, offene Pull Requests und Kommentare von Janis prüfen und umsetzen.
@@ -193,3 +211,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-23: Garmin-Sync läuft (erster Lauf erfolgreich, alle 6 Endpunkte liefern Daten). Skript liegt in `kraftwerk-daten` unter `.github/workflows/scripts/garmin_sync.py`, täglich 04:17 UTC.
 - 2026-11-23: Janis meldet für Mittwoch: Info-Sheet nicht wegwischbar (Bug) und Wunsch nach Geräte-Einstellungen pro Übung. Beides im Backlog, Umsetzung im Lauf am Mi 25.11.
 - 2026-11-23: Balance-Check des Plans: Beinbizeps (4 Sätze/Wo.), hintere Schulter (0) und Po zu schwach. Janis hat 3 Tausche am Ganzkörper-Tag genehmigt.
+- 2026-11-23: Neuer Rhythmus: Arbeits-Lauf Mo/Mi/Fr 08:34 + Bericht-Lauf 17:37, Antworten über «Eingang», Fragen mit Standard. Erster Arbeits-Lauf am Mi 25.11.
