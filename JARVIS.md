@@ -150,6 +150,10 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - [x] Supersatz-Pausen: Janis will es so lassen wie bisher (Pause nach jedem Satz). Entschieden am 2026-11-22.
 - [x] Gewichte im Training einheitlich mit Komma anzeigen – **live** (PR #10), dazu «1 Satz» statt «1 Sätze» beim Aufwärmen.
 
+- [ ] **Bug:** Übungs-Info (ⓘ-Button) lässt sich nicht nach unten wegwischen. Alle Sheets sollen per Wischen nach unten schliessbar sein (gemeldet 23.11.).
+- [ ] **Wunsch von Janis (= Go, 23.11.):** Geräte-Einstellungen pro Übung speichern (Sitzhöhe, Lehne, Pin, Griff usw.).
+  Im Training sichtbar, damit er sie sich nicht merken muss. Neues optionales Feld mit Migrationspfad, Sync und Backup testen.
+
 ## Später (wartet auf Janis)
 
 - Sprach-Assistent auf einem PC einrichten (github.com/adewaskar/jarvis, Claude Code lokal), sobald Janis einen PC hat:
@@ -182,3 +186,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-23: Janis überträgt Jarvis 4 Daueraufgaben (Plan pflegen, Daten aufräumen, Sync-Wächter, Erholung via Garmin). athletedata ist verbunden, wartet aber noch auf Garmin-Verknüpfung + Abo.
 - 2026-11-23: Janis wählt die Gratis-Variante Garmin Personal API statt athletedata. Jarvis hat `garmin.yml` und `garmin_sync.py` gebaut. Schreiben in `kraftwerk-daten` ist im Lauf gesperrt, deshalb legt Janis die Dateien selbst an. Key-Ablauf beachten (max. 1 Jahr).
 - 2026-11-23: Garmin-Sync läuft (erster Lauf erfolgreich, alle 6 Endpunkte liefern Daten). Skript liegt in `kraftwerk-daten` unter `.github/workflows/scripts/garmin_sync.py`, täglich 04:17 UTC.
+- 2026-11-23: Janis meldet für Mittwoch: Info-Sheet nicht wegwischbar (Bug) und Wunsch nach Geräte-Einstellungen pro Übung. Beides im Backlog, Umsetzung im Lauf am Mi 25.11.
