@@ -106,12 +106,22 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 
 - [x] **P12 – Jarvis-Sync** (App speichert Trainingsdaten automatisch in ein privates Repo `Geissi23/kraftwerk-daten`, Jarvis wertet sie im Bericht aus) – Wunsch von Janis, genehmigt am 2026-11-22, **live** (PR #9)
 
+- [ ] **P13 – Doppelte Progression mit Ziel-Anzeige** – Aufwand: klein – gepitcht 2026-11-23
+  Pro Übung zeigt die App ein klares Ziel für heute («3 × 10 bei 90 kg → dann 95 kg»). Erst wenn alle Sätze das
+  obere Wdh.-Ende erreichen, schlägt sie mehr Gewicht vor. Warum: Schrägbank, Overhead Press und Lat Pulldown stehen seit Wochen still.
+- [ ] **P14 – Comeback-Modus** – Aufwand: klein – gepitcht 2026-11-23
+  Nach mehr als 14 Tagen Pause schlägt die App fürs erste Training ca. 90 % der letzten Gewichte und einen Satz weniger vor.
+  Warum: sanfter Wiedereinstieg ohne Muskelkater-Loch, danach normal weiter.
+- [ ] **P15 – Wochen-Rotation sichtbar** – Aufwand: klein – gepitcht 2026-11-23
+  Auf «Heute» drei Punkte Oberkörper/Unterkörper/Ganzkörper, die sich pro Woche füllen. Warum: zuletzt 5× hintereinander
+  Oberkörper A – Beine kamen seit dem 22.9. nicht mehr dran.
+
 ## Backlog
 
 - [x] Erste Bestandsaufnahme (2026-11-22) – Fixes **live** (PR #2 gemergt): Pausen-Leiste blockierte Tabs, iOS-Zoom
   in Eingabefeldern, abgeschnittene Kacheln/Knöpfe auf kleinen iPhones, Bildschirmsperre beim Verwerfen.
 - [x] Supersatz-Pausen: Janis will es so lassen wie bisher (Pause nach jedem Satz). Entschieden am 2026-11-22.
-- [ ] Gewichte im Training einheitlich mit Komma anzeigen (Eingabefelder zeigen nach dem Abhaken «22.5», sonst überall «22,5»)
+- [x] Gewichte im Training einheitlich mit Komma anzeigen – **live** (PR #10), dazu «1 Satz» statt «1 Sätze» beim Aufwärmen.
 
 ## Später (wartet auf Janis)
 
@@ -138,3 +148,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-22: Janis: Läufe Mo/Mi/Fr mit Bericht bis 18:00, Jarvis darf getestete PRs selbst mergen, Bericht mit Testhinweisen, Rückgängig-Hinweis, In Arbeit, Problemen, Pitches und Trainingstipp.
 - 2026-11-22: P12 Jarvis-Sync (Variante B: privates GitHub-Repo) von Janis genehmigt.
 - 2026-11-22: P12 Jarvis-Sync live (PR #9). Wartet auf Einrichtung durch Janis (privates Repo + Token).
+- 2026-11-23: Backlog Komma-Anzeige erledigt + «1 Satz»-Fix → PR #10, gemergt und live. Daten-Sync vom 22.11. gelesen (letztes Training 3.11.). Neue Pitches P13–P15.
