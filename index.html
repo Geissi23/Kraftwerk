@@ -1150,7 +1150,7 @@ function renderWorkout(){
       <div style="display:flex;gap:6px;flex:none">${EX_LIB[ex.key]?`<button class="icon" data-act="exinfo" data-i="${i}" aria-label="Übungsinfo zu ${esc(ex.name)}">ⓘ</button>`:''}<button class="icon" data-act="exmenu" data-i="${i}" aria-label="Übung-Optionen">⋯</button></div></div>${exExtras(ex,i)}
       ${(()=>{const sug=suggestNext(ex);return ex.rows.map((r,j)=>`<div class="row ${r.done?'done':''} ${r.pr&&r.pr!=='first'?'pr':''}">
         <span class="sn">${j+1}</span>
-        <input class="inp" inputmode="decimal" data-i="${i}" data-j="${j}" data-f="w" value="${esc(r.w)}" placeholder="kg" aria-label="Gewicht in kg, Satz ${j+1}">
+        <input class="inp" inputmode="decimal" data-i="${i}" data-j="${j}" data-f="w" value="${esc(String(r.w??"").replace(".",","))}" placeholder="kg" aria-label="Gewicht in kg, Satz ${j+1}">
         <input class="inp" inputmode="numeric" data-i="${i}" data-j="${j}" data-f="r" value="${esc(r.r)}" placeholder="Wdh." aria-label="Wiederholungen, Satz ${j+1}">
         <button class="chk" data-act="check" data-i="${i}" data-j="${j}" aria-label="Satz ${j+1} abhaken">${checkSvg}</button>
         ${r.pr&&r.pr!=='first'?`<div class="prtag">${r.pr==='weight'?'Gewichtsrekord!':r.pr==='reps'?'Wiederholungsrekord!':'Neue Bestleistung!'}</div>`:''}</div>${sug&&sug.rowIdx===j?`<div class="sugg">Nächster Satz: ${fmtN(sug.w)} kg (${sug.delta>=0?'+':''}${fmtN(sug.delta)})<button data-act="applysuggest" data-i="${i}">Übernehmen</button></div>`:''}`).join('');})()}
@@ -1349,7 +1349,7 @@ function exExtras(ex,i){
   const wus=warmupSets(ex);
   const heavy=i===firstHeavy();
   const showWu=wus.length&&(heavy||(st&&st.open));
-  if(showWu){const d=st?st.done.length:0;pills.push(`<button class="pill${st&&st.open?' on':''}" data-act="wutoggle" data-i="${i}" aria-expanded="${!!(st&&st.open)}">Aufwärmen${d?` ${Math.min(d,wus.length)}/${wus.length}`:` · ${wus.length} Sätze`}</button>`);}
+  if(showWu){const d=st?st.done.length:0;pills.push(`<button class="pill${st&&st.open?' on':''}" data-act="wutoggle" data-i="${i}" aria-expanded="${!!(st&&st.open)}">Aufwärmen${d?` ${Math.min(d,wus.length)}/${wus.length}`:` · ${wus.length} ${wus.length===1?"Satz":"Sätze"}`}</button>`);}
   if(isBarbell(ex)&&topW(ex)>0)pills.push(`<button class="pill" data-act="plates" data-i="${i}">Scheiben</button>`);
   let wuBox='';
   if(showWu&&st&&st.open){
