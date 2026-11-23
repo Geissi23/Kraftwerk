@@ -154,6 +154,11 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - [ ] **Wunsch von Janis (= Go, 23.11.):** Geräte-Einstellungen pro Übung speichern (Sitzhöhe, Lehne, Pin, Griff usw.).
   Im Training sichtbar, damit er sie sich nicht merken muss. Neues optionales Feld mit Migrationspfad, Sync und Backup testen.
 
+- [ ] **Plan-Update (Go von Janis, 23.11.), Ganzkörper-Tag:** Russian Twist → «Liegender Beinbeuger (Maschine)» 3×10–12;
+  Chest Fly → Reverse Fly an der Maschine 3×12–15 (in der Bibliothek gibt es bisher nur «Reverse Flyes (Kurzhantel)», Maschinen-Variante
+  ergänzen und Muskel-Zuordnung hintere Schulter); Leg Press → «Bulgarian Split Squat» 3×8–10 pro Bein. Per PLAN_VER-Update
+  (aktuell 3) einspielen, ohne Janis' eigene Änderungen zu verlieren. Am Mi 25.11. umsetzen, nicht während eines Trainings.
+
 ## Später (wartet auf Janis)
 
 - Sprach-Assistent auf einem PC einrichten (github.com/adewaskar/jarvis, Claude Code lokal), sobald Janis einen PC hat:
@@ -187,3 +192,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-23: Janis wählt die Gratis-Variante Garmin Personal API statt athletedata. Jarvis hat `garmin.yml` und `garmin_sync.py` gebaut. Schreiben in `kraftwerk-daten` ist im Lauf gesperrt, deshalb legt Janis die Dateien selbst an. Key-Ablauf beachten (max. 1 Jahr).
 - 2026-11-23: Garmin-Sync läuft (erster Lauf erfolgreich, alle 6 Endpunkte liefern Daten). Skript liegt in `kraftwerk-daten` unter `.github/workflows/scripts/garmin_sync.py`, täglich 04:17 UTC.
 - 2026-11-23: Janis meldet für Mittwoch: Info-Sheet nicht wegwischbar (Bug) und Wunsch nach Geräte-Einstellungen pro Übung. Beides im Backlog, Umsetzung im Lauf am Mi 25.11.
+- 2026-11-23: Balance-Check des Plans: Beinbizeps (4 Sätze/Wo.), hintere Schulter (0) und Po zu schwach. Janis hat 3 Tausche am Ganzkörper-Tag genehmigt.
