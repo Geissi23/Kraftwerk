@@ -112,9 +112,9 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - [ ] **P14 – Comeback-Modus** – Aufwand: klein – gepitcht 2026-11-23
   Nach mehr als 14 Tagen Pause schlägt die App fürs erste Training ca. 90 % der letzten Gewichte und einen Satz weniger vor.
   Warum: sanfter Wiedereinstieg ohne Muskelkater-Loch, danach normal weiter.
-- [ ] **P15 – Wochen-Rotation sichtbar** – Aufwand: klein – gepitcht 2026-11-23
-  Auf «Heute» drei Punkte Oberkörper/Unterkörper/Ganzkörper, die sich pro Woche füllen. Warum: zuletzt 5× hintereinander
-  Oberkörper A – Beine kamen seit dem 22.9. nicht mehr dran.
+- [ ] **P15 – Körpergewicht in 2 Sekunden** – Aufwand: klein – gepitcht 2026-11-23
+  Auf «Heute» erscheint 2× pro Woche eine Mini-Karte mit deinem letzten Gewicht und −/+ 0,1-Knöpfen, ein Tipp speichert.
+  Warum: bisher kein einziger Körpergewicht-Eintrag – ohne den sieht man nicht, ob der Muskelaufbau mit genug Essen läuft.
 
 ## Backlog
 
