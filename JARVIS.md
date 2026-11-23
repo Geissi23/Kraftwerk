@@ -41,6 +41,14 @@ Die App speichert Janis' Trainingsdaten automatisch als `kraftwerk-daten.json` i
 Jarvis liest diese Datei bei jedem Lauf **nur** (nie schreiben, nie Inhalte in das öffentliche Kraftwerk-Repo kopieren)
 und wertet sie im Bericht aus. Ist die Datei nicht erreichbar oder veraltet, steht das unter «Bekannte Probleme».
 
+## Kraftwerk Cockpit (seit 23.11.2026)
+
+Privates Dashboard auf claude.ai: https://claude.ai/artifact/VMVxfCKkAXfqyvE7tHbs5Y (Typ «Data»).
+Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> index.html <ordner>` erzeugt
+`trainings.json`, `uebungen.json`, `muskeln.json` und `gewicht.json`. Diese als Asset hochladen
+(Artifact publish `asset: true`, `url` siehe oben). Danach mit ArtifactData `update` die Datensätze
+`datasets/<name>` auf die neue `source.url` und `updated.at` setzen, alte Assets löschen. Die Seite selbst nicht anfassen.
+
 ## Ablauf eines Laufs (Mo, Mi, Fr – Bericht bis ca. 18:00 Uhr)
 
 1. Diese Datei lesen, offene Pull Requests und Kommentare von Janis prüfen und umsetzen.
@@ -157,3 +165,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-23: Backlog Komma-Anzeige erledigt + «1 Satz»-Fix → PR #10, gemergt und live. Daten-Sync vom 22.11. gelesen (letztes Training 3.11.). Neue Pitches P13–P15.
 - 2026-11-23: Janis hat P13–P15 genehmigt → PR #11, gemergt und live. Pause seit 3.11. ohne Training (Beine seit 22.9.), heute will er Beine trainieren.
 - 2026-11-23: Janis wünscht spannendere Berichte (wie ein Pitch, der den Chef beeindruckt). Als Stilregel unter «Ablauf» festgehalten.
+- 2026-11-23: Janis will die Idee «Live-Dashboard». Kraftwerk Cockpit gebaut (Skript via PR #12). Die übrigen Ideen hat er abgelehnt. Er wünscht sich, dass Jarvis ihm mehr Arbeit abnimmt, statt neue Features vorzuschlagen.
