@@ -181,6 +181,13 @@ svg.chart{width:100%;height:auto;display:block}
 .chk svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
 .row.done .chk{background:var(--good);border-color:var(--good);color:#fff}
 .prtag{grid-column:2 / 5;font-size:13px;font-weight:700;color:var(--gold-ink)}
+.cbban{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:8px 8px 8px 14px;background:var(--soft);border-radius:14px;font-size:14px;color:var(--ink)}
+.cbban span{flex:1}.cbban .ic{color:var(--accent);flex:none}
+.cbban button{min-height:44px;padding:0 14px;border-radius:10px;background:var(--card);color:var(--accent);font-weight:600;font-size:14px;flex:none}
+.bwq{display:flex;align-items:center;gap:8px}.bwq .bl{flex:1;display:flex;align-items:center;gap:8px;font-weight:600}.bwq .bl .ic{color:var(--accent)}
+.bwq .num{font-size:22px;min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+.bwq button{width:44px;height:44px;border-radius:12px;background:var(--soft);color:var(--ink);font-size:22px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.bwq button.ok{background:var(--accent);color:var(--on-accent)}.bwq button.x{background:none;color:var(--muted);width:32px}
 .sugg{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;padding:4px 6px 4px 12px;min-height:44px;background:var(--soft);border-radius:12px;font-size:13px;color:var(--ink)}
 .sugg button{min-height:44px;padding:0 16px;border-radius:9px;background:var(--accent);color:var(--on-accent);font-size:14px;font-weight:600;flex:none}
 .addset{margin-top:8px;width:100%;min-height:40px;border-radius:11px;color:var(--accent);font-weight:600;font-size:15px}
@@ -627,25 +634,39 @@ function lastSession(key){
   }
   return null;
 }
-function buildEx(e){
+/* P14: Comeback nach langer Pause (nur Vorschlag, gespeichert wird nichts Neues) */
+const CB_DAYS=14,CB_KEY='kraftwerk.cb';
+function pauseDays(){const g=gymOnly();if(!g.length)return 0;const t=Math.max(...g.map(w=>w.end||w.start));return Math.round((new Date(ymd(new Date()))-new Date(ymd(t)))/864e5);}
+function cbGet(){try{return localStorage.getItem(CB_KEY)||'';}catch(e){return '';}}
+function cbSet(v){try{v?localStorage.setItem(CB_KEY,v):localStorage.removeItem(CB_KEY);}catch(e){}}
+function buildEx(e,cb){
   const key=exKey(e.name),last=lastSession(key);
-  let rows=[],hint='',go=false;
+  let rows=[],hint='',go=false,sets=e.sets;
   if(last){
     const top=Math.max(...last.rows.map(r=>num(r.w)));
     const allMax=last.rows.length>=e.sets&&last.rows.every(r=>num(r.r)>=e.repMax);
     const inc=isLower(e.name)?5:2.5;
-    for(let j=0;j<e.sets;j++){
-      const b=last.rows[j]||last.rows[last.rows.length-1];
-      rows.push(allMax?{w:num(b.w)+inc,r:e.repMin,done:false}:{w:num(b.w),r:num(b.r),done:false});
-    }
     hint='Letztes Mal: '+last.rows.map(r=>fmtN(num(r.w))+'×'+num(r.r)).join(' · ');
-    if(allMax){hint+='\nAlle Sätze bei '+e.repMax+' Wdh. geschafft. Heute '+fmtN(top+inc)+' kg probieren.';go=true;}
-    else{const tr=Math.max(...last.rows.map(r=>num(r.r)));hint+='\nZiel: '+Math.min(tr+1,e.repMax)+' Wdh. bei '+fmtN(top)+' kg.';go=true;}
+    if(cb){
+      sets=Math.max(2,e.sets-1);
+      const rd=w=>w>0?Math.max(inc,Math.round(w*0.9/inc)*inc):w;
+      for(let j=0;j<sets;j++){const b=last.rows[j]||last.rows[last.rows.length-1];
+        rows.push({w:rd(num(b.w)),r:Math.max(e.repMin,Math.min(e.repMax,num(b.r))),done:false});}
+      hint+='\nComeback: '+sets+' × '+fmtN(rows[0].w)+' kg (90 %), sauber und ohne Muskelversagen.';go=true;
+    }else if(allMax){
+      for(let j=0;j<sets;j++){const b=last.rows[j]||last.rows[last.rows.length-1];rows.push({w:num(b.w)+inc,r:e.repMin,done:false});}
+      hint+='\nZiel: '+fmtN(top+inc)+' kg × '+e.repMin+' – alle Sätze am Limit geschafft!';go=true;
+    }else{
+      /* P13: doppelte Progression – pro Satz +1 Wdh. bis zum oberen Ende, dann mehr Gewicht */
+      for(let j=0;j<sets;j++){const b=last.rows[j]||last.rows[last.rows.length-1];rows.push({w:num(b.w),r:Math.min(num(b.r)+1,e.repMax),done:false});}
+      const lim=last.rows.filter(r=>num(r.r)>=e.repMax).length;
+      hint+='\nZiel: '+rows.map(r=>r.r).join('·')+' Wdh. bei '+fmtN(top)+' kg · '+lim+'/'+e.sets+' am Limit · ab '+e.sets+'×'+e.repMax+' → '+fmtN(top+inc)+' kg';go=true;
+    }
   }else{
     for(let j=0;j<e.sets;j++)rows.push({w:'',r:e.repMin,done:false});
     hint='Noch keine Daten. Wähle ein Gewicht, das dir '+e.repMin+'–'+e.repMax+' saubere Wdh. erlaubt.';
   }
-  return {key,name:e.name,sets:e.sets,repMin:e.repMin,repMax:e.repMax,rest:e.rest,ss:e.ss||'',rows,hint,go};
+  return {key,name:e.name,sets,repMin:e.repMin,repMax:e.repMax,rest:e.rest,ss:e.ss||'',rows,hint,go};
 }
 
 /* auto weight suggestion for the remaining open sets, based on the last checked set */
@@ -1028,7 +1049,7 @@ function viewToday(){
     <div class="wkline">${gymWeek>=goal?ic('trophy')+' Wochenziel erreicht':ic('flame')+' Noch '+(goal-gymWeek)+' bis zum Wochenziel'}${st.streak?` · ${st.streak} Wo. Serie`:''}${weekVol>0?` · ${fmtT(weekVol)}`:''}</div></div>`;
   const rest=S.routines.filter(x=>!r||x.id!==r.id);
   const others=rest.length?`<div class="h3">Andere Trainings</div><div class="hscroll">${rest.map(x=>`<button class="tcard" data-act="start" data-id="${x.id}"><span class="dotc">${ic(routineIcon(x),'lg')}</span><span class="tn">${esc(x.name)}</span><span class="ts">${ic('clock')} ${estMin(x)} Min.</span></button>`).join('')}</div>`:'';
-  return viewTop()+hero+reviewTeaser()+weekCard+others;
+  return viewTop()+hero+bwQuick()+reviewTeaser()+weekCard+others;
 }
 
 function viewPlan(){
@@ -1132,16 +1153,22 @@ ACT.start=b=>{
   const r=S.routines.find(x=>x.id===b.dataset.id);if(!r)return;
   if(S.active&&!arm(b,'Läuft schon ein Training. Nochmals tippen ersetzt es.'))return;
   unlockAudio();
-  S.active={id:uid(),routineId:r.id,name:r.name,start:Date.now(),exs:r.ex.map(buildEx)};
+  const pd=pauseDays(),cb=pd>CB_DAYS;
+  S.active={id:uid(),routineId:r.id,name:r.name,start:Date.now(),exs:r.ex.map(e=>buildEx(e,cb))};
+  cbSet(cb?S.active.id+'|'+pd:'');
   persist();openWorkout();
 };
 ACT.resume=()=>openWorkout();
+ACT.cboff=()=>{const A=S.active;if(!A)return;const r=S.routines.find(x=>x.id===A.routineId);
+  if(r)A.exs=A.exs.map(ex=>{if(ex.rows.some(x=>x.done))return ex;const d=r.ex.find(e=>exKey(e.name)===ex.key);return d?buildEx(d,false):ex;});
+  cbSet('');persist();renderWorkout();updateWk();toast('Normale Gewichte geladen');};
 function openWorkout(){$('#wk').classList.add('open');$('#wktitle').textContent=S.active.name;renderWorkout();updateWk();wake();}
 ACT.wkclose=()=>{$('#wk').classList.remove('open');render();};
 
 function renderWorkout(){
   const A=S.active;if(!A)return;const body=$('#wkbody'),y=body.scrollTop;
-  body.innerHTML=A.exs.map((ex,i)=>{
+  const cbv=cbGet().split('|'),cbOn=cbv[0]===A.id;
+  body.innerHTML=(cbOn?`<div class="cbban">${ic('history')}<span><b>Comeback</b> nach ${+cbv[1]} Tagen · 90 % · 1 Satz weniger</span><button data-act="cboff">Normal</button></div>`:'')+A.exs.map((ex,i)=>{
     const dn=ex.rows.filter(r=>r.done).length;
     const hl=(ex.hint||'').split('\n');
     return `<div class="ex"><div class="exh"><div><h3>${esc(ex.name)}${ex.ss?`<span class="ss">Supersatz ${esc(ex.ss)}</span>`:''}</h3>
@@ -1876,6 +1903,22 @@ ACT.wdel=b=>{
   const id=b.dataset.id;S.workouts=S.workouts.filter(w=>w.id!==id);S.deleted=[...new Set([...(S.deleted||[]),id])];
   savePlan();dropWorkoutRemote(id);closeSheet();render();
 };
+
+/* P15: Körpergewicht in 2 Sekunden – Karte auf «Heute», wenn der letzte Eintrag älter als 3 Tage ist */
+let BWQ=null;const BWQ_KEY='kraftwerk.bwskip';
+function bwQuick(){
+  if(S.active)return '';
+  const today=ymd(new Date());let skip='';try{skip=localStorage.getItem(BWQ_KEY)||'';}catch(e){}
+  if(skip===today)return '';
+  const last=[...S.bodyweight].sort((a,b)=>a.d.localeCompare(b.d)).pop();
+  if(last&&(new Date(today)-new Date(last.d))/864e5<3)return '';
+  if(!last)return `<div class="card bwq"><div class="bl">${ic('weight')} Körpergewicht</div><button class="ok" style="width:auto;padding:0 16px;font-size:15px" data-act="bwadd">Eintragen</button><button class="x" data-act="bwqskip" aria-label="Heute nicht">×</button></div>`;
+  if(BWQ===null)BWQ=num(last.kg);
+  return `<div class="card bwq"><div class="bl" aria-label="Körpergewicht">${ic('weight')}</div><button data-act="bwqd" data-d="-1" aria-label="0,1 kg weniger">−</button><span class="num" id="bwqv" data-act="bwadd">${fmtN(BWQ)}</span><span class="muted small">kg</span><button data-act="bwqd" data-d="1" aria-label="0,1 kg mehr">+</button><button class="ok" data-act="bwqsave" aria-label="Speichern">${ic('check')}</button><button class="x" data-act="bwqskip" aria-label="Heute nicht">×</button></div>`;
+}
+ACT.bwqd=b=>{BWQ=Math.round((BWQ+ +b.dataset.d*0.1)*10)/10;const v=$('#bwqv');if(v)v.textContent=fmtN(BWQ);};
+ACT.bwqsave=()=>{const d=ymd(new Date());if(!(BWQ>=30&&BWQ<=250))return;S.bodyweight=S.bodyweight.filter(x=>x.d!==d);S.bodyweight.push({d,kg:BWQ});BWQ=null;savePlan();toast('Gewicht gespeichert');render();};
+ACT.bwqskip=()=>{try{localStorage.setItem(BWQ_KEY,ymd(new Date()));}catch(e){}render();};
 
 /* bodyweight */
 ACT.bwadd=()=>{
