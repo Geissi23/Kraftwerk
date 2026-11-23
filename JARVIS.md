@@ -59,6 +59,12 @@ und wertet sie im Bericht aus. Ist die Datei nicht erreichbar oder veraltet, ste
      Plateaus, Muskelgruppen-Balance der letzten 2 Wochen, Körpergewicht-Trend
    - **Trainingstipp:** ein kurzer Tipp passend zu Janis' Plan und seinen echten Zahlen (Technik, Progression oder Erholung)
    - **Offene Fragen**
+   **Stil des Berichts (Wunsch von Janis, 23.11.2026):** kein trockenes Ablesen, sondern wie eine perfekte Präsentation
+   eines Mitarbeiters, der seinen Chef beeindrucken will und viel Mühe hineingesteckt hat. Spannend und fesselnd, es soll
+   Spass machen. Konkret: mit einem Aufhänger starten (das Highlight des Laufs), Zahlen als Geschichte erzählen
+   (Vorher → Nachher, «was das für dich heisst»), jede Neuerung als kleinen «Reveal» verkaufen, Pitches als Mini-Pitch
+   mit Hook, Nutzen und dem Moment im Gym, in dem es hilft. Mit Energie und Stolz, aber ehrlich, knapp und ohne Übertreibung.
+   Die Abschnitte bleiben als Gerüst erhalten.
    Janis antwortet mit «P12 ja / nein» oder Verbesserungswünschen; Jarvis setzt Antworten im selben Chat direkt um.
    Push-Nachricht nach jedem Lauf mit neuen Pitches oder Merges.
 
@@ -106,13 +112,13 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 
 - [x] **P12 – Jarvis-Sync** (App speichert Trainingsdaten automatisch in ein privates Repo `Geissi23/kraftwerk-daten`, Jarvis wertet sie im Bericht aus) – Wunsch von Janis, genehmigt am 2026-11-22, **live** (PR #9)
 
-- [ ] **P13 – Doppelte Progression mit Ziel-Anzeige** – Aufwand: klein – gepitcht 2026-11-23
+- [x] **P13 – Doppelte Progression mit Ziel-Anzeige** – Aufwand: klein – genehmigt am 2026-11-23, **live** (PR #11)
   Pro Übung zeigt die App ein klares Ziel für heute («3 × 10 bei 90 kg → dann 95 kg»). Erst wenn alle Sätze das
   obere Wdh.-Ende erreichen, schlägt sie mehr Gewicht vor. Warum: Schrägbank, Overhead Press und Lat Pulldown stehen seit Wochen still.
-- [ ] **P14 – Comeback-Modus** – Aufwand: klein – gepitcht 2026-11-23
+- [x] **P14 – Comeback-Modus** – Aufwand: klein – genehmigt am 2026-11-23, **live** (PR #11)
   Nach mehr als 14 Tagen Pause schlägt die App fürs erste Training ca. 90 % der letzten Gewichte und einen Satz weniger vor.
   Warum: sanfter Wiedereinstieg ohne Muskelkater-Loch, danach normal weiter.
-- [ ] **P15 – Körpergewicht in 2 Sekunden** – Aufwand: klein – gepitcht 2026-11-23
+- [x] **P15 – Körpergewicht in 2 Sekunden** – Aufwand: klein – genehmigt am 2026-11-23, **live** (PR #11)
   Auf «Heute» erscheint 2× pro Woche eine Mini-Karte mit deinem letzten Gewicht und −/+ 0,1-Knöpfen, ein Tipp speichert.
   Warum: bisher kein einziger Körpergewicht-Eintrag – ohne den sieht man nicht, ob der Muskelaufbau mit genug Essen läuft.
 
@@ -149,3 +155,5 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-22: P12 Jarvis-Sync (Variante B: privates GitHub-Repo) von Janis genehmigt.
 - 2026-11-22: P12 Jarvis-Sync live (PR #9). Wartet auf Einrichtung durch Janis (privates Repo + Token).
 - 2026-11-23: Backlog Komma-Anzeige erledigt + «1 Satz»-Fix → PR #10, gemergt und live. Daten-Sync vom 22.11. gelesen (letztes Training 3.11.). Neue Pitches P13–P15.
+- 2026-11-23: Janis hat P13–P15 genehmigt → PR #11, gemergt und live. Pause seit 3.11. ohne Training (Beine seit 22.9.), heute will er Beine trainieren.
+- 2026-11-23: Janis wünscht spannendere Berichte (wie ein Pitch, der den Chef beeindruckt). Als Stilregel unter «Ablauf» festgehalten.
