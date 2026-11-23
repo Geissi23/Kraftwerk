@@ -71,6 +71,11 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   und blockierende Bugs.
 - **Jede Frage hat einen Standard und eine Frist.** Ohne Antwort gilt der Standard. Keine Rückfragen-Kaskaden.
 - Der folgende «Ablauf eines Laufs» gilt sinngemäss, verteilt auf beide Läufe.
+- **Erst machen, dann fragen** (Go 23.11.): Kleine Verbesserungen (Aufwand klein, nichts entfernen, kein Datenformat, Sync oder Backup)
+  setzt Jarvis direkt um. Im Bericht stehen sie als «Neu ohne Rückfrage» mit Rückgängig-Hinweis. Grosses wird weiter gepitcht.
+- **Stille Tage:** Mi und Fr gibt es nur einen Bericht, wenn es etwas Berichtenswertes gibt. Mo ist immer der Wochenbericht mit «Wochenplan».
+- **Monats-Check:** Im ersten Arbeits-Lauf jedes Monats wird der Vormonat ausgewertet und der Plan angepasst (Vorher → Nachher).
+- **Sonntag ca. 17:35 – Wochenüberblick** für Kraftwerk und Team Manager in einer Nachricht (eigene geplante Aufgabe).
 
 ## Eingang
 
@@ -177,6 +182,11 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
   ergänzen und Muskel-Zuordnung hintere Schulter); Leg Press → «Bulgarian Split Squat» 3×8–10 pro Bein. Per PLAN_VER-Update
   (aktuell 3) einspielen, ohne Janis' eigene Änderungen zu verlieren. Am Mi 25.11. umsetzen, nicht während eines Trainings.
 
+- [ ] **P16 – Notiz an Jarvis (Go von Janis, 23.11.):** Ein kleiner Knopf in der App, über den Janis im Gym in wenigen
+  Sekunden einen Bug oder Wunsch eintippt. Die Notizen werden als neues optionales Feld (z. B. `jarvisNotes: [{t, text}]`) mit dem
+  bestehenden Jarvis-Sync nach `kraftwerk-daten` übertragen. Der Arbeits-Lauf liest sie und behandelt sie wie «Eingang».
+  Mit Migrationspfad, Sync und Backup testen.
+
 ## Später (wartet auf Janis)
 
 - Sprach-Assistent auf einem PC einrichten (github.com/adewaskar/jarvis, Claude Code lokal), sobald Janis einen PC hat:
@@ -212,3 +222,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-23: Janis meldet für Mittwoch: Info-Sheet nicht wegwischbar (Bug) und Wunsch nach Geräte-Einstellungen pro Übung. Beides im Backlog, Umsetzung im Lauf am Mi 25.11.
 - 2026-11-23: Balance-Check des Plans: Beinbizeps (4 Sätze/Wo.), hintere Schulter (0) und Po zu schwach. Janis hat 3 Tausche am Ganzkörper-Tag genehmigt.
 - 2026-11-23: Neuer Rhythmus: Arbeits-Lauf Mo/Mi/Fr 08:34 + Bericht-Lauf 17:37, Antworten über «Eingang», Fragen mit Standard. Erster Arbeits-Lauf am Mi 25.11.
+- 2026-11-23: Janis genehmigt alle 7 Ablauf-Ideen: Team Manager auf Arbeits- und Bericht-Lauf umgestellt, erst machen dann fragen, stille Tage, Wochenplan am Montag, P16 Notiz-Knopf, Monats-Check, Sonntags-Wochenüberblick für beide Apps.
