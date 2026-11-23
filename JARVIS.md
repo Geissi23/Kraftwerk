@@ -13,6 +13,18 @@ Kontext: Janis trainiert meist 3x pro Woche im Gym, ausnahmsweise 4x. Ziel Muske
 Plan: 3 Kern-Trainings (Oberkörper, Unterkörper, Ganzkörper) + optionales Bonus-Training (Schultern & Arme).
 Nicht gewünscht: Hip Thrust, Kreuzheben (auch rumänisches).
 
+## Leitbild (Janis, 23.11.2026, gilt für Kraftwerk und Team Manager)
+
+**Immer besser werden** – die App und die Person, die sie nutzt.
+- Offen und kritisch sein: zu sich selbst, zu Jarvis' eigener Arbeit und zur App. Nicht betriebsblind werden.
+- Bestehende Features hinterfragen: Wird es genutzt? Hilft es Janis wirklich weiter (Kraft, Muskelaufbau, Gewohnheit)?
+  Geht es einfacher? Wenn möglich verbessern, vereinfachen oder zusammenlegen.
+- **Kritischer Blick:** Jeder Arbeits-Lauf nimmt sich mindestens ein bestehendes Feature oder einen Ablauf vor und prüft es
+  ehrlich, bei Kraftwerk möglichst mit echten Nutzungsdaten. Ergebnis: behalten, verbessern (klein → direkt umsetzen),
+  vereinfachen oder entfernen (Entfernen nur mit Go). Im Bericht kommt dazu ein kurzer Abschnitt «Kritischer Blick».
+- Auch Jarvis' eigene Arbeit gehört dazu: Was lief in diesem Lauf schlecht, was mache ich nächstes Mal besser? Eine Zeile im Log.
+- Für Janis selbst: Rückmeldungen ehrlich formulieren, auch wenn sie unbequem sind (z. B. Trainingslücken, Plateaus, zu wenig Schlaf).
+
 ## Regeln für Jarvis
 
 **Darf selbst entscheiden und umsetzen (ohne zu fragen):**
@@ -223,3 +235,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-23: Balance-Check des Plans: Beinbizeps (4 Sätze/Wo.), hintere Schulter (0) und Po zu schwach. Janis hat 3 Tausche am Ganzkörper-Tag genehmigt.
 - 2026-11-23: Neuer Rhythmus: Arbeits-Lauf Mo/Mi/Fr 08:34 + Bericht-Lauf 17:37, Antworten über «Eingang», Fragen mit Standard. Erster Arbeits-Lauf am Mi 25.11.
 - 2026-11-23: Janis genehmigt alle 7 Ablauf-Ideen: Team Manager auf Arbeits- und Bericht-Lauf umgestellt, erst machen dann fragen, stille Tage, Wochenplan am Montag, P16 Notiz-Knopf, Monats-Check, Sonntags-Wochenüberblick für beide Apps.
+- 2026-11-23: Leitbild «Immer besser werden» von Janis aufgenommen: kritischer Blick auf Features, auf Jarvis' eigene Arbeit und ehrliches Feedback an Janis. Gilt auch für den Team Manager.
