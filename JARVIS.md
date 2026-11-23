@@ -236,3 +236,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-23: Neuer Rhythmus: Arbeits-Lauf Mo/Mi/Fr 08:34 + Bericht-Lauf 17:37, Antworten über «Eingang», Fragen mit Standard. Erster Arbeits-Lauf am Mi 25.11.
 - 2026-11-23: Janis genehmigt alle 7 Ablauf-Ideen: Team Manager auf Arbeits- und Bericht-Lauf umgestellt, erst machen dann fragen, stille Tage, Wochenplan am Montag, P16 Notiz-Knopf, Monats-Check, Sonntags-Wochenüberblick für beide Apps.
 - 2026-11-23: Leitbild «Immer besser werden» von Janis aufgenommen: kritischer Blick auf Features, auf Jarvis' eigene Arbeit und ehrliches Feedback an Janis. Gilt auch für den Team Manager.
+- 2026-11-23: Aufgeräumt: Team-Manager-Jarvis wird ab jetzt nur in der Team-Manager-Sitzung gepflegt (eigene JARVIS.md, Freeze). Diese Kraftwerk-Sitzung ändert nichts mehr am Team Manager. Der Sonntags-Wochenüberblick liest beide Apps.
