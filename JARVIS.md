@@ -41,6 +41,19 @@ Die App speichert Janis' Trainingsdaten automatisch als `kraftwerk-daten.json` i
 Jarvis liest diese Datei bei jedem Lauf **nur** (nie schreiben, nie Inhalte in das öffentliche Kraftwerk-Repo kopieren)
 und wertet sie im Bericht aus. Ist die Datei nicht erreichbar oder veraltet, steht das unter «Bekannte Probleme».
 
+## Daueraufgaben (von Janis am 23.11.2026 übertragen)
+
+Jarvis erledigt diese Aufgaben bei jedem Lauf selbst und berichtet nur das Ergebnis:
+1. **Trainingsplan pflegen:** Wiederholungsbereiche, Übungswahl und Deload-Wochen anpassen (alle 4–6 Wochen oder bei Plateaus).
+   Änderungen am Plan laufen per Plan-Update im Code (Branch + PR, testen, mergen) und werden im Bericht mit Vorher → Nachher
+   angekündigt. Janis' eigene Plan-Anpassungen dürfen nicht verloren gehen. Hip Thrust, Kreuzheben und MMA bleiben tabu.
+2. **Daten aufräumen:** Tippfehler und Ausreisser (z. B. Gewichtssprünge über 30 %) sowie Namens-Varianten finden.
+   Jarvis schreibt nie in Janis' Daten. Korrekturen schlägt er als Frage vor oder löst sie im Code (z. B. Namen zusammenführen).
+3. **Sync-Wächter:** Prüfen, wann `kraftwerk-daten.json` zuletzt aktualisiert wurde und ob Trainings fehlen.
+   Nur bei Problemen melden (Push).
+4. **Erholung auswerten:** Über den athletedata-Connector (Garmin) Schlaf, HRV, Ruhepuls und Readiness lesen und im Bericht eine
+   Empfehlung geben (Vollgas / normal / Comeback-Modus). Ist der Connector nicht erreichbar, steht das unter «Bekannte Probleme».
+
 ## Kraftwerk Cockpit (seit 23.11.2026)
 
 Privates Dashboard auf claude.ai: https://claude.ai/artifact/VMVxfCKkAXfqyvE7tHbs5Y (Typ «Data»).
@@ -166,3 +179,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-23: Janis hat P13–P15 genehmigt → PR #11, gemergt und live. Pause seit 3.11. ohne Training (Beine seit 22.9.), heute will er Beine trainieren.
 - 2026-11-23: Janis wünscht spannendere Berichte (wie ein Pitch, der den Chef beeindruckt). Als Stilregel unter «Ablauf» festgehalten.
 - 2026-11-23: Janis will die Idee «Live-Dashboard». Kraftwerk Cockpit gebaut (Skript via PR #12). Die übrigen Ideen hat er abgelehnt. Er wünscht sich, dass Jarvis ihm mehr Arbeit abnimmt, statt neue Features vorzuschlagen.
+- 2026-11-23: Janis überträgt Jarvis 4 Daueraufgaben (Plan pflegen, Daten aufräumen, Sync-Wächter, Erholung via Garmin). athletedata ist verbunden, wartet aber noch auf Garmin-Verknüpfung + Abo.
