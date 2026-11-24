@@ -91,7 +91,20 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 
 ## Eingang
 
-- (leer)
+- **24.11.2026, Janis (über die Jarvis-Zentrale): Idee «Körper-Seite spannender machen» (Körpergewicht & Fotos).**
+  - **Garmin-Werte in der App:** Auf der Seite Körpergewicht/Fotos sollen die Garmin-Werte angezeigt werden
+    (z. B. Schlaf, HRV, Ruhepuls, Body Battery). Achtung: `garmin.json` liegt im privaten Repo `kraftwerk-daten`,
+    das Kraftwerk-Repo und GitHub Pages sind öffentlich. Gesundheitsdaten dürfen nie ins öffentliche Repo oder in
+    den ausgelieferten Code. Die App müsste sie zur Laufzeit wie den Jarvis-Sync aus dem privaten Repo lesen.
+    Das berührt den Sync, darum zuerst als Pitch mit Mockup.
+  - **Seite allgemein:** Die Seite hat Potenzial, spannender zu werden. Jarvis darf eigene Ideen einbringen.
+  - **Fotos:** Janis ist unsicher, wie viel sie bringen. Ideen von ihm: eine Vorlage, wie man sich hinstellen soll,
+    oder eine Umrandung (Silhouette) auf der Kamera für eine gleiche Pose bei jedem Foto. Jarvis soll ehrlich
+    einschätzen, ob Fotos sich lohnen, und eigene Verbesserungen vorschlagen. Fotos sind privat: Klären, wo sie
+    gespeichert werden, nie ins öffentliche Repo.
+  - **Erwartet:** ein Pitch-Paket im nächsten Bericht (je Idee Was/Warum/Aufwand, Standard «nicht umsetzen»),
+    mit Mockups der neuen Seite in iPhone-Grösse hell/dunkel. Kleine, sichere Verbesserungen an der Seite ohne
+    Daten-, Sync- oder Backup-Änderung dürfen nach «erst machen, dann fragen» direkt umgesetzt werden.
 
 ## Tagesprotokoll
 
