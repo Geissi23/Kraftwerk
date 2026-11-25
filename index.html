@@ -545,8 +545,8 @@ const ic=(n,c='')=>`<svg class="ic${c?' '+c:''}" viewBox="0 0 24 24" aria-hidden
 const checkSvg='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
 
 /* ---------- default plan ---------- */
-const LIB=['Schrägbankdrücken (Kurzhantel)','Schrägbankdrücken (Langhantel)','Chest Press (Maschine)','Chest Fly','Triceps Pushdown (Kabel)','Triceps Extension (Kabel)','Triceps Extension (Langhantel)','Dips','Squat (Langhantel)','Leg Press','Bulgarian Split Squat','Seated Leg Curl (Maschine)','Leg Extension (Maschine)','Wadenheben stehend','Wadenheben sitzend','Hip Thrust','Rumänisches Kreuzheben','Hip Abductor (Maschine)','Hip Adductor (Maschine)','Lat Pulldown (Kabel)','Lat Pulldown (enger Griff)','Seated Row (Kabel)','Rudern vorgebeugt (Langhantel)','Klimmzüge','Einarmiges Kurzhantelrudern','Preacher Curl (Langhantel)','Incline Curl (Kurzhantel)','Hammer Curl (Kabel)','Hammer Curl (Kurzhantel)','Overhead Press (Langhantel)','Schulterdrücken (Kurzhantel)','Lateral Raise (Maschine)','Lateral Raise (Kurzhantel)','Face Pulls','Reverse Fly (Maschine)','Cable Crunch','Hanging Leg Raises','Pallof Press'];
-const PLAN_VER=4;
+const LIB=['Schrägbankdrücken (Kurzhantel)','Schrägbankdrücken (Langhantel)','Chest Press (Maschine)','Chest Fly','Triceps Pushdown (Kabel)','Triceps Extension (Kabel)','Triceps Extension (Langhantel)','Dips','Squat (Langhantel)','Squat (Maschine)','Leg Press','Bulgarian Split Squat','Seated Leg Curl (Maschine)','Leg Extension (Maschine)','Wadenheben stehend','Wadenheben sitzend','Hip Thrust','Rumänisches Kreuzheben','Hip Abductor (Maschine)','Hip Adductor (Maschine)','Lat Pulldown (Kabel)','Lat Pulldown (enger Griff)','Seated Row (Kabel)','Rudern vorgebeugt (Langhantel)','Klimmzüge','Einarmiges Kurzhantelrudern','Preacher Curl (Langhantel)','Incline Curl (Kurzhantel)','Hammer Curl (Kabel)','Hammer Curl (Kurzhantel)','Overhead Press (Langhantel)','Schulterdrücken (Kurzhantel)','Lateral Raise (Maschine)','Lateral Raise (Kurzhantel)','Face Pulls','Reverse Fly (Maschine)','Cable Crunch','Hanging Leg Raises','Pallof Press'];
+const PLAN_VER=5;
 const OLD_DEFAULT_IDS=['r_ua','r_la','r_ub','r_lb'];
 function defaultPlan(){
   const ex=(name,sets,a,b,rest,ss='')=>({id:uid(),name,sets,repMin:a,repMax:b,rest,ss});
@@ -557,7 +557,7 @@ function defaultPlan(){
       ex('Lateral Raise (Maschine)',3,12,15,60,'A'),ex('Bizeps-Curl (Langhantel)',2,8,10,60,'B'),
       ex('Triceps Extension (Kabel)',2,10,12,60,'B')]},
     {id:'r_k2',name:'Unterkörper',ex:[
-      ex('Squat (Langhantel)',4,5,7,120),ex('Leg Press',3,10,12,90),
+      ex('Squat (Maschine)',4,5,7,120),ex('Leg Press',3,10,12,90),
       ex('Seated Leg Curl (Maschine)',4,10,12,60,'A'),ex('Leg Extension (Maschine)',3,12,15,60,'A'),
       ex('Wadenheben sitzend',4,10,15,45),ex('Reverse Crunch',3,12,15,45)]},
     {id:'r_k3',name:'Ganzkörper',ex:[
@@ -586,7 +586,8 @@ function baseState(){
 const PLAN_SWAPS={
   4:{r_k3:[['Russian Twist',{name:'Liegender Beinbeuger (Maschine)',sets:3,repMin:10,repMax:12,rest:60}],
            ['Chest Fly',{name:'Reverse Fly (Maschine)',sets:3,repMin:12,repMax:15,rest:60}],
-           ['Leg Press',{name:'Bulgarian Split Squat',sets:3,repMin:8,repMax:10,rest:90}]]}
+           ['Leg Press',{name:'Bulgarian Split Squat',sets:3,repMin:8,repMax:10,rest:90}]]},
+  5:{r_k2:[['Squat (Langhantel)',{name:'Squat (Maschine)'}]]}
 };
 function migratePlan(st,fromVer){
   if((fromVer||0)>=3&&Array.isArray(st.routines)){
@@ -623,6 +624,25 @@ normExtras();
 const CORE_IDS=['r_k1','r_k2','r_k3'];
 function normRot(){(S.routines||[]).forEach(r=>{if(typeof r.rot!=='boolean')r.rot=CORE_IDS.includes(r.id);});}
 normRot();
+/* Datenkorrekturen auf Wunsch von Janis (idempotent, ändert nur die genannten Trainings) */
+const DATA_FIXES=[{wid:'f2ka4545yc',from:'squat (langhantel)',to:'Squat (Maschine)'}]; // 25.11.2026: Squat am 23.11. war an der Maschine
+const FIXED_IDS=new Set();
+function dataFixes(){
+  const fixed=[];
+  DATA_FIXES.forEach(f=>{const w=(S.workouts||[]).find(x=>x.id===f.wid);if(!w||!Array.isArray(w.exs))return;
+    const toKey=f.to.toLowerCase();
+    w.exs.forEach(ex=>{if(ex.key!==f.from)return;ex.key=toKey;ex.name=f.to;
+      let maxW=-1,best=-1,maxR=-1,any=false;
+      const add=x=>{if(!x.done)return;any=true;const xw=+x.w||0,xr=+x.r||0;if(xw>maxW)maxW=xw;if(e1(xw,xr)>best)best=e1(xw,xr);if(xr>maxR)maxR=xr;};
+      S.workouts.filter(o=>o.kind!=='mma'&&o.start<w.start).forEach(o=>(o.exs||[]).filter(e=>e.key===toKey).forEach(e=>(e.rows||[]).forEach(add)));
+      ex.rows.forEach(r=>{if(!r.done)return;const rw=+r.w||0,rr=+r.r||0;let pr=null;
+        if(!any)pr='first';else if(rw>0){if(rw>maxW)pr='weight';else if(e1(rw,rr)>best+0.01)pr='e1rm';}else if(rr>maxR)pr='reps';
+        r.pr=pr;add(r);});
+      fixed.push(w.id);FIXED_IDS.add(w.id);});
+  });
+  return fixed;
+}
+if(dataFixes().length){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function savePlan(){S.pt=Date.now();persist();schedulePush();ghSchedule();}
 
@@ -656,7 +676,8 @@ async function syncInit(){
     const local=new Set(S.workouts.map(w=>w.id));
     S.workouts=S.workouts.filter(w=>!S.deleted.includes(w.id));
     Object.values(remote).forEach(w=>{if(!local.has(w.id)&&!S.deleted.includes(w.id)){S.workouts.push(w);changed=true;}});
-    for(const w of S.workouts){if(!remote[w.id])await pushWorkout(w);}
+    if(dataFixes().length){changed=true;}
+    for(const w of S.workouts){if(!remote[w.id]||FIXED_IDS.has(w.id))await pushWorkout(w);}
     Sync.status='Cloud-Sicherung aktiv';
     if(changed){normRot();persist();render();}
   }catch(e){Sync.status='Nur auf diesem Gerät gespeichert';}
@@ -869,6 +890,7 @@ const EX_LIB={
  'bizeps-curl (langhantel)':{n:'Bizeps-Curl (Langhantel)',id:'Barbell_Curl',m:'Bizeps',g:'Langhantel',bp:['Bizeps'],t:['Aufrecht stehen, Ellbogen eng am Oberkörper fixiert.','Stange ohne Schwung nach oben curlen, Oberarme bleiben ruhig.','Kontrolliert bis fast zur vollen Streckung absenken.'],x:'Mit dem Rücken schwingen, um das Gewicht hochzuwerfen.',a:['Preacher Curl (Langhantel)','Hammer Curl (Kurzhantel)','Konzentrationscurl']},
  'hammer curl (kurzhantel)':{n:'Hammer Curl (Kurzhantel)',id:'Hammer_Curls',m:'Bizeps, Unterarme',g:'Kurzhantel',bp:['Bizeps'],t:['Neutraler Griff, Handflächen zeigen während der ganzen Bewegung zueinander.','Ellbogen bleiben am Körper, nur die Unterarme bewegen sich.','Kontrolliert absenken, keinen Schwung aus den Schultern holen.'],x:'Die Ellbogen nach vorne schieben, um das Gewicht leichter hochzubekommen.',a:['Preacher Curl (Langhantel)','Incline Curl (Kurzhantel)','Bizeps-Curl (Langhantel)']},
  'goblet squat':{n:'Goblet Squat',id:'Goblet_Squat',m:'Quadrizeps, Gesäss',g:'Kurzhantel',bp:['Beine'],t:['Kurzhantel oder Kettlebell senkrecht vor der Brust halten.','Hüfte nach hinten unten führen, Ellbogen zwischen den Knien.','Aufrechten Oberkörper beibehalten, dann über die Fersen hochdrücken.'],x:'Die Fersen beim Absenken vom Boden abheben lassen.',a:['Squat (Langhantel)','Bulgarian Split Squat','Leg Press']},
+ 'squat (maschine)':{n:'Squat (Maschine)',id:null,m:'Quadrizeps, Gesäss',g:'Maschine',bp:['Beine'],t:['Schultern satt unter den Polstern, Füsse schulterbreit auf der Plattform.','Kontrolliert absenken, bis die Oberschenkel mindestens parallel sind, Knie zeigen in Fussrichtung.','Über die ganze Fusssohle hochdrücken, Knie oben nicht durchdrücken.'],x:'Zu wenig Tiefe: Halbe Wiederholungen bringen deutlich weniger für Quadrizeps und Gesäss.',a:['Hack Squat','Leg Press','Bulgarian Split Squat']},
  'hack squat':{n:'Hack Squat',id:'Hack_Squat',m:'Quadrizeps, Gesäss',g:'Maschine',bp:['Beine'],t:['Füsse schulterbreit auf der Plattform, Rücken flach an der Lehne.','Knie in Fussrichtung absenken, bis die Oberschenkel etwa parallel sind.','Über die ganze Fusssohle nach oben drücken, Knie oben nicht durchknallen.'],x:'Nur mit den Fersen abheben und das Gewicht auf die Zehen verlagern.',a:['Squat (Langhantel)','Leg Press']},
  'liegender beinbeuger (maschine)':{n:'Liegender Beinbeuger (Maschine)',id:'Lying_Leg_Curls',m:'Hintere Oberschenkel',g:'Maschine',bp:['Beine'],t:['Bauchlage, Polster liegt oberhalb der Fersen an.','Beine kontrolliert so weit wie möglich beugen, Hüfte bleibt auf der Bank.','Langsam zurückführen, die Gewichte nicht durchsacken lassen.'],x:'Die Hüfte beim Beugen anheben, um mehr Gewicht bewegen zu können.',a:['Seated Leg Curl (Maschine)','Beinbeuger stehend (Maschine)']},
  'reverse crunch':{n:'Reverse Crunch',id:'Reverse_Crunch',m:'Bauch',g:'Körpergewicht',bp:['Bauch'],t:['Rückenlage, Beine angewinkelt, unterer Rücken bleibt am Boden.','Becken durch Anspannen der Bauchmuskeln Richtung Rippen einrollen.','Kontrolliert zurückführen, ohne die Füsse abzustellen.'],x:'Mit Schwung aus den Beinen arbeiten, statt aus der Bauchmuskulatur.',a:['Cable Crunch','Hanging Leg Raises','Plank']},
@@ -1957,10 +1979,10 @@ ACT.ghrestore=async b=>{
   if(!arm(b,'Ersetzt die Daten hier. Nochmals tippen'))return;
   try{const r=await ghApi('/contents/'+GH_FILE);const j=await r.json();const o=JSON.parse(ghFromB64(j.content));const d=o.data;
     if(o.app!=='kraftwerk'||!d||!Array.isArray(d.workouts)||!Array.isArray(d.routines))throw new Error('Datei ungültig');
-    S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();normExtras();persist();pushPlan();S.workouts.forEach(pushWorkout);closeSheet();render();toast('Aus GitHub wiederhergestellt');
+    S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();normExtras();dataFixes();persist();pushPlan();S.workouts.forEach(pushWorkout);closeSheet();render();toast('Aus GitHub wiederhergestellt');
   }catch(e){toast((e&&e.message)||'Wiederherstellen fehlgeschlagen');}
 };
-if(ghOn()&&Date.now()-GH.last>6*3600e3)ghSchedule(8000);
+if(ghOn()&&(FIXED_IDS.size||Date.now()-GH.last>6*3600e3))ghSchedule(8000);
 
 /* rest timer */
 function startRest(sec,name){restState={end:Date.now()+sec*1000,total:sec,label:name,fired:false};$('#rest').className='on';tickRest();}
@@ -2154,7 +2176,7 @@ ACT.doimport=()=>{
   try{
     const o=JSON.parse($('#bkin').value);const d=o.data;
     if(o.app!=='kraftwerk'||!Array.isArray(d.routines)||!Array.isArray(d.workouts))throw 0;
-    S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();normExtras();persist();pushPlan();S.workouts.forEach(pushWorkout);
+    S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();normExtras();dataFixes();persist();pushPlan();S.workouts.forEach(pushWorkout);
     closeSheet();render();toast('Backup wiederhergestellt');
   }catch(e){toast('Das Backup konnte nicht gelesen werden.');}
 };
