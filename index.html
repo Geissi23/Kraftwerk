@@ -360,8 +360,8 @@ button.rec{width:100%;text-align:left;color:inherit}
 .phth{position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center}
 .phth img{width:100%;height:100%;object-fit:cover;display:block}
 .phth span.pl{position:absolute;left:6px;bottom:6px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:600;border-radius:6px;padding:1px 6px}
-label.phpick{cursor:pointer;flex-direction:column;gap:4px;border:1.5px dashed var(--line)}
-label.phpick b{font-size:26px;line-height:1;color:var(--accent)}
+label.phpick,button.phpick{cursor:pointer;flex-direction:column;gap:4px;border:1.5px dashed var(--line)}
+label.phpick b,button.phpick b{font-size:26px;line-height:1;color:var(--accent)}
 .phpick input{position:absolute;width:1px;height:1px;opacity:0}
 .phcmp{position:relative;width:100%;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#000;touch-action:pan-y}
 .phcmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -448,6 +448,37 @@ input[type=range].phr{width:100%;margin:12px 0 4px}
 .search input{padding-left:38px}
 .hist .item{padding:10px 0}
 .mgrow{padding:3px 0}
+/* P17 erholung */
+.hero.hasrec .hbig{bottom:auto;top:10px;width:76px;height:76px}
+.recl{position:relative;display:flex;align-items:center;gap:10px;width:100%;text-align:left;color:inherit;background:rgba(255,255,255,.16);border-radius:14px;padding:9px 12px;margin:-4px 0 12px;min-height:44px}
+.recl .rd{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.85)}
+.recl.good .rd{background:#3DD6A3}.recl.gold .rd{background:#FFC93C}.recl.bad .rd{background:#FF6B63}.recl.dim .rd{background:transparent;box-shadow:inset 0 0 0 2px currentColor;opacity:.6}
+.recl .rt{flex:1;min-width:0}
+.recl .rt b{display:block;font-size:15px;font-weight:600}
+.recl .rt span{display:block;font-size:13px;opacity:.88}
+.recl.dim .rt b{font-weight:500;opacity:.92}
+.chip.rec-good{background:rgba(15,143,104,.14);color:var(--good)}
+.chip.rec-gold{background:var(--gold-soft);color:var(--gold-ink)}
+.chip.rec-bad{background:rgba(214,64,58,.12);color:var(--bad)}
+.rcv{display:grid;grid-template-columns:minmax(0,1fr) 112px;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.rcv .rl{font-size:12px;color:var(--muted)}
+.rcv .rv{font-family:var(--disp);font-size:26px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.rcv .rv small{font-family:var(--body);font-size:12px;font-weight:600;color:var(--muted);margin-left:7px}
+.spk{width:112px;height:36px;display:block}
+.rcf{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--line)}
+.rcf .linkbtn{font-size:13px;min-height:32px;flex:none}
+/* P18 foto-pose-hilfe */
+button.phpick{width:100%;font:inherit;font-size:13px}
+.phguide{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.phguide.one{grid-template-columns:minmax(0,200px);justify-content:center}
+.phsil{aspect-ratio:3/4;border-radius:12px;background:var(--bg);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.phsil svg{width:100%;height:100%;display:block}
+.phrules{margin:10px 0 0;padding-left:22px;font-size:14px}
+.phrules li{margin-bottom:5px}
+.phcam{position:relative;overflow:hidden}
+.phcam input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.phgb .btn{padding:0 10px;white-space:nowrap;font-size:16px;gap:6px}
+.phcmp.phghost{width:auto;height:min(40vh,118vw);max-width:100%;margin:0 auto}
 @media (prefers-reduced-motion:reduce){#toast,.tog i{transition:none}}
 </style>
 </head>
@@ -1123,12 +1154,12 @@ function viewToday(){
       <button class="btn light" data-act="resume">${ic('play')} Weiter trainieren</button></section>`;
   }else if(r){
     const last=routineLast(r.id);
-    hero=`<section class="hero"><svg class="hbig" viewBox="0 0 24 24" aria-hidden="true">${ICONS[routineIcon(r)]}</svg><div class="hl">${today.length?ic('check')+' Heute erledigt · als Nächstes':ic('sparkle')+' Als Nächstes'}</div><h1>${esc(r.name)}</h1>
+    hero=`<section class="hero hasrec"><svg class="hbig" viewBox="0 0 24 24" aria-hidden="true">${ICONS[routineIcon(r)]}</svg><div class="hl">${today.length?ic('check')+' Heute erledigt · als Nächstes':ic('sparkle')+' Als Nächstes'}</div><h1>${esc(r.name)}</h1>
       <div class="hchips"><span>${ic('dumbbell')} ${r.ex.length} Übungen</span><span>${ic('clock')} ${estMin(r)} Min.</span><span>${ic('history')} ${esc(agoText(last.t).replace('Zuletzt ',''))}</span></div>
-      <button class="btn light" data-act="start" data-id="${r.id}">${ic('play')} Training starten</button></section>`;
+      ${recoveryLine()}<button class="btn light" data-act="start" data-id="${r.id}">${ic('play')} Training starten</button></section>`;
   }else{
     hero=`<section class="hero"><div class="hl">${ic('sparkle')} Los geht's</div><h1>Bereit?</h1>
-      <p class="small">Schalte im Tab «Plan» bei deinen Kern-Trainings «Im Vorschlag» ein.</p></section>`;
+      <p class="small">Schalte im Tab «Plan» bei deinen Kern-Trainings «Im Vorschlag» ein.</p>${recoveryLine()}</section>`;
   }
   const mon=monday(now);
   const strip=ORDER.map((d,i)=>{
@@ -1180,7 +1211,7 @@ function viewStats(){
     bwInfo=`<div class="muted" style="margin-top:8px">${diff>=0?'+':''}${fmtN(diff)} kg seit ${fmtDate(f.d)}${days>=7?` (Ø ${(diff/days*7>=0?'+':'')}${fmtN(diff/days*7)} kg/Woche, ideal +0,25 bis +0,4)`:''}</div>`;
   }
   const bwCard=`<div class="card"><div class="row2"><h2>Körpergewicht</h2><button class="btn sm soft" data-act="bwadd">${ic('plus')} Eintragen</button></div>${bw.length?`<div class="num" style="font-size:40px">${fmtN(bw[bw.length-1].kg)} kg</div>`:''}${lineChart(bw.map(b=>({x:fmtDate(b.d),y:b.kg})),'Körpergewicht')}${bwInfo}</div>`;
-    return viewTop()+sub+bwCard+photoCard();
+    return viewTop()+sub+recoveryCard()+bwCard+photoCard();
   }
   const lvl=`<div class="card"><div class="lvlc"><span class="lb">${l}</span><div style="flex:1"><div class="row2"><b>${esc(titleOf(l))}</b><span class="muted small">${xp} XP</span></div><div class="bar" aria-label="Fortschritt zum nächsten Level"><i style="width:${pct}%"></i></div><div class="muted small" style="margin-top:4px">Noch ${b-xp} XP bis Level ${l+1}</div></div></div></div>`;
   const now=new Date(),pm=new Date(now.getFullYear(),now.getMonth()-1,1);
@@ -1823,9 +1854,9 @@ function photoCard(){
   const thumbs=last?`<div class="phrow">${POSES.map(([k,l])=>{const p=phGet(last,k);return `<div class="phth">${p?`<img src="${phUrl(p)}" alt="${l}, ${fmtD(last)}">`:'–'}<span class="pl">${l}</span></div>`;}).join('')}</div>`:'';
   return `<div class="card"><div class="row2"><h2>Fotos</h2><button class="btn sm soft" data-act="phadd">${ic('camera')} Neu</button></div>
     ${last?`<div class="muted small">Zuletzt am ${fmtD(last)}${ago>0?` (vor ${ago} Tag${ago===1?'':'en'})`:''} · ${ds.length} Termin${ds.length===1?'':'e'}</div>${thumbs}
-      ${ago>=28?'<div class="small" style="color:var(--accent);font-weight:600;margin-bottom:8px">Zeit für neue Fotos. Alle 2–4 Wochen ist ideal.</div>':''}
+      ${ago>=PH_EVERY?'<div class="small" style="color:var(--accent);font-weight:600;margin-bottom:8px">Zeit für neue Fotos. Alle 4 Wochen ist ideal.</div>':`<div class="muted small" style="margin-bottom:8px">Nächste Fotos in ${PH_EVERY-ago} Tag${PH_EVERY-ago===1?'':'en'} (alle 4 Wochen).</div>`}
       <div class="btnrow" style="grid-template-columns:1fr 1fr;margin-top:4px"><button class="btn" data-act="phcmp" ${ds.length<2?'disabled style="opacity:.5"':''}>Vergleichen</button><button class="btn ghost" data-act="phgal">Alle Fotos</button></div>`
-     :`<div class="muted small" style="margin:6px 0 4px">${ic('camera')} Alle 2–4 Wochen vorne, seitlich, hinten. Dann Vorher/Nachher vergleichen.</div>`}
+     :`<div class="muted small" style="margin:6px 0 4px">${ic('camera')} Alle 4 Wochen vorne, seitlich, hinten. Dann Vorher/Nachher vergleichen.</div>`}
     <div class="muted small" style="margin-top:8px">Nur auf diesem iPhone gespeichert.</div></div>`;
 }
 function phAddSheet(){
@@ -1834,23 +1865,72 @@ function phAddSheet(){
     <label class="fl">Datum<input class="ti" type="date" id="phd" value="${d}" max="${ymd(new Date())}"></label>
     <div class="phrow">${POSES.map(([k,l])=>{const p=phGet(d,k);return p
       ?`<button class="phth" data-act="phview" data-id="${p.id}" aria-label="${l} ansehen"><img src="${phUrl(p)}" alt=""><span class="pl">${l} ✓</span></button>`
-      :`<label class="phth phpick"><b>+</b>${l}<input type="file" accept="image/*" data-phpose="${k}" aria-label="Foto ${l}"></label>`;}).join('')}</div>
-    <div class="muted small">Tipps: gleiches Licht, gleicher Abstand, morgens vor dem Essen, entspannt stehen. Am einfachsten mit Selbstauslöser oder vor dem Spiegel.</div>
+      :`<button class="phth phpick" data-act="phguide" data-p="${k}" aria-label="Foto ${l} aufnehmen"><b>+</b>${l}</button>`;}).join('')}</div>
+    <div class="muted small">Tippe auf eine Ansicht: Zuerst kommt eine Vorlage, wie du stehst. Nach dem Foto legt die App es über das letzte, damit du die Pose prüfen kannst.</div>
     <div class="btnrow"><button class="btn" data-act="closesheet">Fertig</button></div>`);
 }
 ACT.phadd=()=>{PH.addD=ymd(new Date());phAddSheet();};
+/* P18: Pose-Hilfe – Vorlage vor dem Foto, Geisterbild danach */
+const PH_EVERY=28; // Erinnerung: alle 4 Wochen
+function phPrev(pose,d,ex){
+  const o=PH.list.filter(p=>p.pose===pose&&p.id!==ex&&p.d!==d),b=o.filter(p=>p.d<d);
+  return (b.length?b:o).slice().sort((x,y)=>x.d.localeCompare(y.d)||x.t-y.t).pop()||null;
+}
+const PH_SIL={
+  v:'<path d="M56 30v4c-6 2-14 2-18 5-4 2-5 7-6 13l-3 22-2 18c0 3 4 3 5 0l3-18 4-18 3-4 1 14c0 8 1 14 1 22l1 32 1 28c0 3 9 3 9 0l2-30 2-20h2l2 20 2 30c0 3 9 3 9 0l1-28 1-32c0-8 1-14 1-22l1-14 3 4 4 18 3 18c1 3 5 3 5 0l-2-18-3-22c-1-6-2-11-6-13-4-3-12-3-18-5v-4"/><circle cx="60" cy="20" r="10"/>',
+  s:'<path d="M57 30v5c-7 2-8 9-8 17 0 10 2 18 3 28 0 6-1 10 0 16l2 26v24c0 3-4 4-4 6h20c0-3-4-3-4-6v-24l1-26c1-8 3-14 2-22-1-6 3-14 3-22s-3-14-9-17v-5"/><circle cx="60" cy="20" r="10"/><path d="M70 18l3 3-3 1"/><path d="M61 40c-2 14-2 26 0 48"/>',
+  h:'<path d="M56 30v4c-6 2-14 2-18 5-4 2-5 7-6 13l-3 22-2 18c0 3 4 3 5 0l3-18 4-18 3-4 1 14c0 8 1 14 1 22l1 32 1 28c0 3 9 3 9 0l2-30 2-20h2l2 20 2 30c0 3 9 3 9 0l1-28 1-32c0-8 1-14 1-22l1-14 3 4 4 18 3 18c1 3 5 3 5 0l-2-18-3-22c-1-6-2-11-6-13-4-3-12-3-18-5v-4"/><circle cx="60" cy="20" r="10"/><path d="M60 40v44M50 46c2 4 6 6 8 6M70 46c-2 4-6 6-8 6"/>'
+};
+const PH_TIP={v:'Gerade zur Kamera, Arme locker neben dem Körper, Blick geradeaus.',s:'Rechte Seite zur Kamera, Arme hängen lassen, normal atmen (nicht einziehen).',h:'Rücken zur Kamera, Füsse hüftbreit, Arme locker neben dem Körper.'};
+function phSilSvg(k){
+  return `<svg viewBox="0 0 120 160" role="img" aria-label="Umriss-Vorlage"><g stroke="var(--muted)" stroke-width=".8" stroke-dasharray="3 3" opacity=".7"><line x1="8" y1="8" x2="112" y2="8"/><line x1="8" y1="153" x2="112" y2="153"/><line x1="60" y1="4" x2="60" y2="157"/></g>
+    <g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">${PH_SIL[k]||PH_SIL.v}</g>
+    <text x="112" y="6" font-size="6.5" text-anchor="end" fill="var(--muted)">Kopf</text><text x="112" y="159" font-size="6.5" text-anchor="end" fill="var(--muted)">Füsse</text></svg>`;
+}
+function phGuideSheet(k){
+  const l=(POSES.find(x=>x[0]===k)||[])[1]||'',d=PH.addD||ymd(new Date()),prev=phPrev(k,d,null);
+  openSheet(`<h2>So gelingt das Foto</h2>
+    <div class="muted small" style="margin:-6px 0 10px"><b style="color:var(--ink)">${esc(l)}</b> · ${esc(PH_TIP[k]||'')}</div>
+    <div class="phguide${prev?'':' one'}"><div class="phsil">${phSilSvg(k)}</div>${prev?`<div class="phth"><img src="${phUrl(prev)}" alt="Letztes Foto ${esc(l)}"><span class="pl">Letztes Mal · ${fmtD(prev.d)}</span></div>`:''}</div>
+    <ol class="phrules">
+      <li><b>Ca. 2 m Abstand</b>, von Kopf bis Füsse im Bild</li>
+      <li><b>Handy auf Brusthöhe</b>, immer an derselben Stelle (Selbstauslöser)</li>
+      <li><b>Gleiches Licht</b>: gleicher Raum, gleiche Lampe</li>
+      <li><b>Morgens nüchtern</b>, gleiche Kleidung</li>
+    </ol>
+    <div class="btnrow"><label class="btn phcam">${ic('camera')} Foto aufnehmen<input type="file" accept="image/*" data-phpose="${k}" aria-label="Foto ${esc(l)} aufnehmen"></label><button class="btn ghost" data-act="phback">Zurück</button></div>`);
+}
+function phGhostSheet(newId,oldId){
+  const N=PH.list.find(x=>x.id===newId),O=PH.list.find(x=>x.id===oldId);if(!N||!O){phAddSheet();return;}
+  PH.addD=N.d;const op=PH.ghost??50,l=(POSES.find(x=>x[0]===N.pose)||[])[1]||'';
+  openSheet(`<h2>Pose prüfen</h2>
+    <div class="muted small" style="margin:-6px 0 10px">${esc(l)}: Dein neues Foto, darüber halbtransparent das Foto vom ${fmtD(O.d)}. Passen Abstand, Höhe und Haltung ungefähr?</div>
+    <div class="phcmp phghost"><img src="${phUrl(N)}" alt="Neues Foto"><img id="phgo" src="${phUrl(O)}" alt="Letztes Foto vom ${fmtD(O.d)}" style="opacity:${op/100}"><span class="tagl">Neu</span><span class="tagr">${fmtD(O.d)}</span></div>
+    <label class="fl" style="margin:10px 0 0">Deckkraft altes Foto: <b id="phgv" style="color:var(--ink)">${op} %</b><input type="range" class="phr" id="phgop" min="0" max="100" value="${op}" aria-label="Deckkraft des alten Fotos"></label>
+    <div class="btnrow phgb" style="grid-template-columns:1fr 1fr"><button class="btn" data-act="phok">${ic('check')} Passt</button><label class="btn ghost phcam">${ic('camera')} Neu aufnehmen<input type="file" accept="image/*" data-phpose="${N.pose}" data-phreplace="${N.id}" aria-label="Foto neu aufnehmen (ersetzt das eben gespeicherte)"></label></div>`);
+}
+ACT.phguide=b=>phGuideSheet(b.dataset.p);
+ACT.phback=()=>phAddSheet();
+ACT.phok=()=>phAddSheet();
 document.addEventListener('change',async e=>{
   const t=e.target;
   if(t.id==='phd'){PH.addD=t.value||ymd(new Date());phAddSheet();return;}
   if(t.dataset&&t.dataset.phpose&&t.files&&t.files[0]){
-    const f=t.files[0],pose=t.dataset.phpose,d=PH.addD||ymd(new Date());
+    const f=t.files[0],pose=t.dataset.phpose,d=PH.addD||ymd(new Date()),rep=t.dataset.phreplace||'';
     toast('Foto wird gespeichert…');
     try{
       const blob=await phShrink(f);
       const rec={id:uid(),d,pose,t:Date.now(),blob};
       await phTx('readwrite',st=>st.put(rec));
-      PH.list.push(rec);PH.list.sort((a,b)=>a.d.localeCompare(b.d)||a.t-b.t);
-      phAddSheet();render();toast('Gespeichert');
+      PH.list.push(rec);
+      // «Neu aufnehmen»: erst nach dem Speichern des neuen Fotos das eben gemachte entfernen
+      if(rep&&rep!==rec.id){try{await phTx('readwrite',st=>st.delete(rep));}catch(e2){}
+        if(PH.urls[rep]){URL.revokeObjectURL(PH.urls[rep]);delete PH.urls[rep];}PH.list=PH.list.filter(x=>x.id!==rep);}
+      PH.list.sort((a,b)=>a.d.localeCompare(b.d)||a.t-b.t);
+      render();
+      const prev=phPrev(pose,d,rec.id);
+      if(prev)phGhostSheet(rec.id,prev.id);else phAddSheet();
+      toast('Gespeichert');
     }catch(err){toast('Foto konnte nicht gespeichert werden.');}
   }
   if(t.id==='pha'||t.id==='phb'){PH.cmp[t.id==='pha'?'a':'b']=t.value;phCmpSheet();}
@@ -1880,6 +1960,7 @@ function phCmpSheet(){
     <div class="seg two" role="group" aria-label="Darstellung"><button class="${C.mode==='slide'?'on':''}" data-act="phmode" data-m="slide">Schieber</button><button class="${C.mode==='side'?'on':''}" data-act="phmode" data-m="side">Nebeneinander</button></div>
     <div class="btnrow" style="margin-top:4px"><button class="btn ghost" data-act="closesheet">Schliessen</button></div>`);
 }
+document.addEventListener('input',e=>{if(e.target.id==='phgop'){const v=+e.target.value;PH.ghost=v;const o=$('#phgo'),l=$('#phgv');if(o)o.style.opacity=v/100;if(l)l.textContent=v+' %';}});
 document.addEventListener('input',e=>{if(e.target.id==='phx'){const x=+e.target.value;PH.cmp.x=x;const t=$('#phtop'),l=$('#phln');if(t)t.style.clipPath=`inset(0 ${100-x}% 0 0)`;if(l)l.style.left=x+'%';}});
 function phSetX(x){x=Math.max(0,Math.min(100,x));PH.cmp.x=x;const t=$('#phtop'),l=$('#phln'),r=$('#phx');if(t)t.style.clipPath=`inset(0 ${100-x}% 0 0)`;if(l)l.style.left=x+'%';if(r)r.value=Math.round(x);}
 let phDrag=false;
@@ -1934,7 +2015,7 @@ function ghStatusText(){
 function ghB64(str){const bytes=new TextEncoder().encode(str);let bin='';for(let i=0;i<bytes.length;i+=0x8000)bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));return btoa(bin);}
 function ghFromB64(b){const bin=atob(b.replace(/\s/g,''));const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new TextDecoder().decode(u);}
 async function ghApi(path,opt={}){
-  const r=await fetch('https://api.github.com/repos/'+GH.repo+path,Object.assign({},opt,{headers:Object.assign({'Authorization':'Bearer '+GH.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},opt.body?{'Content-Type':'application/json'}:{})}));
+  const r=await fetch('https://api.github.com/repos/'+GH.repo+path,Object.assign({},opt,{headers:Object.assign({'Authorization':'Bearer '+GH.token,'Accept':opt.accept||'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},opt.body?{'Content-Type':'application/json'}:{})}));
   if(r.status===401)throw new Error('Schlüssel ungültig oder abgelaufen');
   if(r.status===403)throw new Error('Keine Berechtigung (Contents: Read and write?)');
   if(r.status===404&&!opt.allow404)throw new Error('Repo nicht gefunden');
@@ -1983,6 +2064,149 @@ ACT.ghrestore=async b=>{
   }catch(e){toast((e&&e.message)||'Wiederherstellen fehlgeschlagen');}
 };
 if(ghOn()&&(FIXED_IDS.size||Date.now()-GH.last>6*3600e3))ghSchedule(8000);
+
+/* ---------- P17: Erholung von Garmin ----------
+   Liest garmin.json (tägliche GitHub-Automatik «Garmin-Sync») nur lesend aus demselben privaten Repo
+   wie der Jarvis-Sync. Gespeichert werden nur abgeleitete Tageswerte der letzten 14 Tage unter einem
+   eigenen Schlüssel – nie im App-State S, nicht im Backup, nicht im Jarvis- oder Claude-Sync. */
+const GA_KEY='kraftwerk.garmin',GA_FILE='garmin.json',GA_MAX_AGE=3*3600e3,GA_RETRY=15*60e3;
+const GA={c:null,busy:false};
+try{const c=JSON.parse(localStorage.getItem(GA_KEY)||'null');if(c&&typeof c==='object'&&c.days&&typeof c.days==='object')GA.c=c;}catch(e){}
+const gaSave=()=>{try{localStorage.setItem(GA_KEY,JSON.stringify(GA.c));}catch(e){}};
+const gaNum=v=>typeof v==='number'&&isFinite(v)?v:null;
+const gaDay=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v)?v:null;
+const gaAdd=(d,n)=>{const x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return ymd(x);};
+/* Tageswerte: sl Schlaf (s), ss Schlaf-Score, hv HRV letzte Nacht (ms), hs HRV-Status, hb HRV-Normalbereich,
+   rh Ruhepuls, bb Body Battery max. Garmin datiert Schlaf und HRV auf den Morgen danach.
+   Fehlende Nächte (Einträge voller null) werden übersprungen. */
+function gaParse(g){
+  const D=(g&&g.daten)||{},days={},arr=v=>Array.isArray(v)?v:[],day=d=>days[d]||(days[d]={});
+  arr(D.schlaf).forEach(e=>{const d=gaDay(e&&e.calendarDate),s=gaNum(e&&e.sleepTimeSeconds);if(!d||s===null||s<=0)return;
+    const o=day(d);o.sl=s;const sc=gaNum(e.sleepScores&&e.sleepScores.overall&&e.sleepScores.overall.value);if(sc!==null)o.ss=sc;});
+  arr(D.hrv&&D.hrv.hrvSummaries).forEach(e=>{const d=gaDay(e&&e.calendarDate);if(!d)return;const v=gaNum(e.lastNightAvg);if(v===null||v<=0)return;
+    const o=day(d);o.hv=v;if(typeof e.status==='string')o.hs=e.status;
+    const b=e.baseline||{},lo=gaNum(b.balancedLow),hi=gaNum(b.balancedUpper);if(lo!==null&&hi!==null&&hi>lo)o.hb=[lo,hi];});
+  arr(D.tage&&D.tage.data).forEach(e=>{const d=gaDay(e&&e.calendarDate),v=gaNum(e&&e.heartRate&&e.heartRate.restingValue);if(d&&v!==null&&v>20&&v<150)day(d).rh=v;});
+  arr(D.body_battery).forEach(e=>{const d=gaDay(e&&e.date);if(!d)return;let mx=null;
+    arr(e.bodyBatteryValuesArray).forEach(p=>{const v=Array.isArray(p)?gaNum(p[1]):null;if(v!==null&&v>=0&&(mx===null||v>mx))mx=v;});if(mx!==null)day(d).bb=mx;});
+  const cut=gaAdd(ymd(new Date()),-14),out={};
+  Object.keys(days).filter(d=>d>=cut).sort().forEach(d=>{out[d]=days[d];});
+  const at=Date.parse(g&&g.abgerufen);
+  return {days:out,at:isFinite(at)?at:null};
+}
+const gaStale=()=>!GA.c||GA.c.repo!==GH.repo||!GA.c.t||Date.now()-GA.c.t>(GA.c.err?GA_RETRY:GA_MAX_AGE);
+async function gaFetch(force){
+  if(!ghOn()||GA.busy)return;
+  if(!force&&!gaStale())return;
+  GA.busy=true;
+  try{
+    /* Rohdatei anfordern (geht auch über 1 MB); liefert GitHub doch Contents-JSON, wird base64 dekodiert. */
+    const r=await ghApi('/contents/'+GA_FILE,{allow404:true,accept:'application/vnd.github.raw+json'});
+    if(r.status===404)GA.c={t:Date.now(),repo:GH.repo,days:{},at:null,err:'garmin.json nicht gefunden'};
+    else if(!r.ok)throw new Error('Laden fehlgeschlagen ('+r.status+')');
+    else{let o=JSON.parse(await r.text());
+      if(o&&o.encoding==='base64'&&typeof o.content==='string')o=JSON.parse(ghFromB64(o.content));
+      if(!o||typeof o.daten!=='object')throw new Error('Datei ungültig');
+      const p=gaParse(o);GA.c={t:Date.now(),repo:GH.repo,days:p.days,at:p.at,err:''};}
+  }catch(e){
+    const old=GA.c&&GA.c.repo===GH.repo?GA.c:{days:{},at:null};
+    GA.c=Object.assign({},old,{t:Date.now(),repo:GH.repo,err:(e&&e.message)||'Keine Verbindung'});
+  }finally{GA.busy=false;gaSave();}
+  if(TAB==='today'||(TAB==='stats'&&STATS_SUB==='body'))render();
+}
+const gaKick=()=>{try{if(ghOn()&&!GA.busy&&gaStale())setTimeout(()=>gaFetch(false),0);}catch(e){}};
+const HRV_DE={BALANCED:'ausgeglichen',UNBALANCED:'unausgeglichen',LOW:'niedrig',POOR:'schlecht'};
+const hrvDe=s=>s?(HRV_DE[s]||String(s).toLowerCase()):'';
+function recovery(){
+  if(!ghOn())return {st:'setup'};
+  const c=GA.c;
+  if(!c||c.repo!==GH.repo)return {st:'load'};
+  const D=c.days||{};
+  if(!Object.keys(D).length)return {st:'nodata',err:c.err,at:c.at};
+  const today=ymd(new Date()),n=D[today]||{};
+  const sleepH=n.sl!=null?n.sl/3600:null,hs=n.hv!=null?(n.hs||null):null;
+  // Ruhepuls von heute, sonst von gestern; verglichen mit dem Schnitt der 7 Tage davor (mind. 3 Werte)
+  const rd=n.rh!=null?today:gaAdd(today,-1),rhr=(D[rd]||{}).rh??null,prev=[];
+  for(let i=1;i<=7;i++){const v=(D[gaAdd(rd,-i)]||{}).rh;if(v!=null)prev.push(v);}
+  const avg=prev.length>=3?prev.reduce((a,b)=>a+b,0)/prev.length:null;
+  const R={today,D,sleepH,ss:n.ss??null,hv:n.hv??null,hs,hb:n.hb||null,rhr,avg,bb:n.bb??null,at:c.at,err:c.err};
+  if(sleepH==null&&n.hv==null){R.st='none';return R;}
+  /* Ampel-Regel (bewusst einfach und ehrlich):
+     - Comeback, wenn Schlaf < 5,5 h ODER HRV-Status LOW/POOR ODER Ruhepuls > 7-Tage-Schnitt + 5.
+     - Vollgas, wenn Schlaf ≥ 7 h UND HRV-Status BALANCED UND Ruhepuls ≤ 7-Tage-Schnitt + 2.
+       Dafür müssen alle drei Werte da sein; ein fehlender Wert zählt nie als gut.
+     - Sonst Normal. */
+  if((sleepH!=null&&sleepH<5.5)||hs==='LOW'||hs==='POOR'||(rhr!=null&&avg!=null&&rhr>avg+5))R.st='comeback';
+  else if(sleepH!=null&&sleepH>=7&&hs==='BALANCED'&&rhr!=null&&avg!=null&&rhr<=avg+2)R.st='vollgas';
+  else R.st='normal';
+  return R;
+}
+const REC_L={vollgas:'Vollgas',normal:'Normal',comeback:'Comeback'};
+const REC_C={vollgas:'good',normal:'gold',comeback:'bad'};
+function recReason(R){
+  const p=[];if(R.sleepH!=null)p.push('Schlaf '+fmtN(R.sleepH)+' h');if(R.hs)p.push('HRV '+hrvDe(R.hs));if(R.rhr!=null)p.push('Ruhepuls '+R.rhr);
+  return p.join(' · ');
+}
+const gaAtToday=R=>R.at&&ymd(R.at)===ymd(new Date());
+const recNoneHint=R=>gaAtToday(R)?'Uhr synchronisieren':'Garmin-Abruf von heute fehlt noch';
+const recNone=R=>'Keine Daten von letzter Nacht – '+recNoneHint(R);
+function recoveryLine(){
+  gaKick();
+  const R=recovery();
+  const row=(cls,act,b,s)=>`<button class="recl${cls?' '+cls:''}" data-act="${act}"><i class="rd"></i><span class="rt"><b>${b}</b>${s?`<span>${esc(s)}</span>`:''}</span><span aria-hidden="true">›</span></button>`;
+  if(R.st==='setup')return row('dim','ghsheet','Erholung: Jarvis-Sync einrichten','');
+  if(R.st==='load')return row('dim','recov','Erholung: wird geladen…','');
+  if(R.st==='nodata')return row('dim','recov','Erholung: Keine Garmin-Daten',R.err||'');
+  if(R.st==='none')return row('dim','recov','Keine Daten von letzter Nacht',recNoneHint(R));
+  return row(REC_C[R.st],'recov','Erholung: '+REC_L[R.st],recReason(R));
+}
+/* Mini-Kurve über 7 Tage: Lücken bleiben Lücken (Punkt unten = keine Daten), letzter Tag hervorgehoben */
+function spark(vals,band,label){
+  const W=112,H=36,P=4,B=7,n=vals.length,nums=vals.filter(v=>v!=null);
+  const X=i=>P+(W-2*P)*i/(n-1);
+  const gaps=vals.map((v,i)=>v==null?`<circle cx="${X(i).toFixed(1)}" cy="${H-2.5}" r="1.7" fill="var(--muted)" opacity=".45"/>`:'').join('');
+  if(!nums.length)return `<svg class="spk" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}: keine Daten">${gaps}</svg>`;
+  let lo=Math.min(...nums),hi=Math.max(...nums);if(band){lo=Math.min(lo,band[0]);hi=Math.max(hi,band[1]);}
+  if(hi-lo<1e-9){hi+=1;lo-=1;}const pd=(hi-lo)*.1;lo-=pd;hi+=pd;
+  const Y=v=>P+(H-P-B)*(1-(v-lo)/(hi-lo));
+  let d='',pen=false;vals.forEach((v,i)=>{if(v==null){pen=false;return;}d+=(pen?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)+' ';pen=true;});
+  const solo=vals.map((v,i)=>v!=null&&vals[i-1]==null&&vals[i+1]==null&&i!==n-1?`<circle cx="${X(i).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="2" fill="var(--accent)"/>`:'').join('');
+  const lv=vals[n-1];
+  return `<svg class="spk" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}, letzte 7 Tage">
+    ${band?`<rect x="${P}" y="${Y(band[1]).toFixed(1)}" width="${W-2*P}" height="${Math.max(1,Y(band[0])-Y(band[1])).toFixed(1)}" rx="3" fill="var(--good)" opacity=".13"/>`:''}
+    <path d="${d.trim()}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>${solo}${gaps}
+    ${lv!=null?`<circle cx="${X(n-1).toFixed(1)}" cy="${Y(lv).toFixed(1)}" r="3.2" fill="var(--gold)"/>`:''}</svg>`;
+}
+const gaStand=t=>{const d=new Date(t);return d.getDate()+'.'+(d.getMonth()+1)+'., '+pad(d.getHours())+':'+pad(d.getMinutes());};
+function recoveryCard(){
+  gaKick();
+  const R=recovery();
+  const head=chip=>`<div class="row2" style="margin-bottom:6px"><h2 style="margin:0">Erholung</h2>${chip||''}</div>`;
+  if(R.st==='setup')return `<div class="card">${head()}<div class="muted small" style="margin-bottom:10px">Richte den Jarvis-Sync ein, dann zeigt die App hier Schlaf, HRV, Ruhepuls und Body Battery deiner Garmin-Uhr.</div><button class="btn sm soft" data-act="ghsheet">${ic('repeat')} Jarvis-Sync einrichten</button></div>`;
+  if(R.st==='load')return `<div class="card">${head()}<div class="muted small">Garmin-Daten werden geladen…</div></div>`;
+  const foot=`<div class="rcf"><span>${R.at?'Garmin-Stand: '+gaStand(R.at):'Garmin-Stand unbekannt'}${R.err?` · <span style="color:var(--bad)">${esc(R.err)}</span>`:''}</span><button class="linkbtn" data-act="garminreload">Aktualisieren</button></div>`;
+  if(R.st==='nodata')return `<div class="card">${head()}<div class="muted small">Keine Garmin-Daten. Läuft die Automatik «Garmin-Sync» im Daten-Repo?</div>${foot}</div>`;
+  const days=[];for(let i=6;i>=0;i--)days.push(gaAdd(R.today,-i));
+  const col=k=>days.map(d=>{const v=(R.D[d]||{})[k];return v==null?null:(k==='sl'?v/3600:v);});
+  const hbLast=(()=>{for(let i=days.length-1;i>=0;i--){const o=R.D[days[i]];if(o&&o.hb)return o.hb;}return null;})();
+  const chip=R.st==='none'?`<span class="chip">neutral</span>`:`<span class="chip rec-${REC_C[R.st]}">${REC_L[R.st]}</span>`;
+  const dash='<span class="muted">–</span>';
+  // fehlt der Wert von letzter Nacht: zuletzt bekannten Wert der 7 Tage dazuschreiben
+  const lastK=(k,f)=>{for(let i=days.length-2;i>=0;i--){const v=(R.D[days[i]]||{})[k];if(v!=null){const d=new Date(days[i]+'T12:00:00');return 'zuletzt '+f(v)+' am '+d.getDate()+'.'+(d.getMonth()+1)+'.';}}return '';};
+  const row=(lab,val,sub,sp)=>`<div class="rcv"><div style="min-width:0"><div class="rl">${lab}</div><div class="rv">${val}${sub?`<small>${sub}</small>`:''}</div></div>${sp}</div>`;
+  return `<div class="card">${head(chip)}
+    <div class="small" style="margin-bottom:4px;${R.st==='none'?'color:var(--muted)':''}">${esc(R.st==='none'?recNone(R):recReason(R)||'')}</div>
+    ${row('Schlaf',R.sleepH!=null?fmtN(R.sleepH)+' h':dash,R.sleepH!=null?(R.ss!=null?'Score '+R.ss:''):lastK('sl',v=>fmtN(v/3600)+' h'),spark(col('sl'),null,'Schlaf'))}
+    ${row('HRV letzte Nacht',R.hv!=null?R.hv+' ms':dash,R.hv!=null?esc(hrvDe(R.hs)):lastK('hv',v=>v+' ms'),spark(col('hv'),hbLast,'HRV'))}
+    ${row('Ruhepuls',R.rhr!=null?String(R.rhr):dash,R.rhr!=null?(R.avg!=null?'Ø 7 Tage '+fmtN(R.avg):'Schläge/Min.'):lastK('rh',v=>String(v)),spark(col('rh'),null,'Ruhepuls'))}
+    ${row('Body Battery max.',R.bb!=null?String(R.bb):dash,R.bb!=null?'':lastK('bb',v=>String(v)),spark(col('bb'),null,'Body Battery'))}
+    <div class="muted small" style="margin-top:8px">Kurven: 7 Tage, Punkt unten = keine Daten${hbLast?', Band = HRV-Normalbereich':''}.<br>Vollgas: Schlaf ≥ 7 h, HRV ausgeglichen, Ruhepuls normal. Comeback: Schlaf &lt; 5,5 h, HRV tief oder Ruhepuls klar erhöht.</div>
+    ${foot}</div>`;
+}
+ACT.recov=()=>{TAB='stats';STATS_SUB='body';render();window.scrollTo(0,0);};
+ACT.garminreload=()=>{if(!ghOn()){ghSheet();return;}toast('Garmin-Daten werden geladen…');gaFetch(true);};
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)gaKick();});
+gaKick();
 
 /* rest timer */
 function startRest(sec,name){restState={end:Date.now()+sec*1000,total:sec,label:name,fired:false};$('#rest').className='on';tickRest();}
