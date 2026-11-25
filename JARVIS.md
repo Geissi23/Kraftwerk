@@ -91,30 +91,11 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 
 ## Eingang
 
-- **25.11. ~15:30 (Janis, Chat):**
-  - Garmin Connect aktualisiert (fehlende Werte seit 23.11.) → nächster Lauf prüft, ob `garmin.json` wieder Nächte hat.
-  - «Beide Probleme lösen» (= Bekannte Probleme): (a) Plan v4 im Sync → löst sich beim Öffnen der App, nächster Lauf prüft `planVer`.
-    (b) Garmin-Sync startet bis zu 10 h zu spät → Fix: zweiter Zeitplan `- cron: "43 6 * * *"` in `garmin.yml` (kraftwerk-daten,
-    Jarvis darf dort nicht schreiben → Janis trägt die Zeile ein, Vorschlag im Chat). Ohne Änderung: beobachten.
-  - **Design-Feedback:** Mockups zu ähnlich wie jetzt, «sieht aus wie viele KI-Interfaces». Neue Designphilosophie (Janis):
-    athletisch, modern, leistungsorientiert · premium, elegant, raffiniert · minimalistisch, aber unverwechselbar · innovativ, einprägsam ·
-    intuitiv, funktional · clean UI, nahtlose UX. Visuell: starke eigene Identität, kräftige Typografie und klare Hierarchie,
-    geometrische Elemente und feine Formen, harmonische Palette mit gezielten Akzenten, hochwertige Charts/Fortschrittsanzeigen/Statistiken,
-    dezente Animationen und flüssige Übergänge, konsequente Abstände. → **Fr 27.11.: komplett neues Konzept + Mockups** (nicht das alte
-    nachbessern). Etappe 1 (Training) wird danach gebaut. Standard: ohne Antwort baue ich Etappe 1 im neuen Stil am Mo 30.11.
-  - **P17 ja, P18 ja, P19 nein.**
-  - **Neue Idee (Wunsch):** Ernährung: Kalorien-/Eiweiss-Tracker, Rezepte, Konfigurator «was habe ich zuhause». → Fr 27.11. als Pitch P20
-    mit Etappen und ehrlicher Einschätzung (Aufwand, was wirklich hilft). Gross → Umsetzung erst nach Go.
-  - **Datenkorrektur (Wunsch = Go):** Training 23.11. Unterkörper: Squat war an der **Maschine**, nicht mit der Langhantel. Per Code-Migration
-    «Squat (Langhantel)» → «Squat (Maschine)» in diesem Training (Rekord-Markierungen neu berechnen) und im Unterkörper-Plan dauerhaft auf
-    «Squat (Maschine)» umstellen. Eigene Änderungen erhalten, Backup/Sync testen. Fr 27.11.
-- **25.11. ~17:45 (Janis, über die Jarvis-Zentrale): Design v2 «Das Instrument» inklusive neuem Logo ist von Janis gesehen und
-  BESTÄTIGT** (Branch `jarvis/design-v2`, letzter Commit 25.11. 16:42 UTC, aus der Chat-Sitzung am Nachmittag). Damit ist der Punkt
-  «Fr 27.11.: komplett neues Konzept + Mockups» oben **erledigt – kein neues Konzept machen**. Arbeits-Lauf Fr 27.11.: prüfen, ob
-  `jarvis/design-v2` schon als PR gemergt ist. Falls nicht: gegen `main` aktualisieren (P17/P18 aus #19 sind inzwischen drin),
-  sorgfältig testen (node, Playwright iPhone hell/dunkel, alle Screens, Daten/Sync/Backup unverändert), PR öffnen und mergen
-  (Go von Janis), im Bericht mit Vorher/Nachher-Screenshots und Rückgängig-Hinweis. Läuft in einer Chat-Sitzung noch Arbeit am
-  Branch, diese nicht überschreiben.
+- **Alle Einträge vom 25.11. erledigt** (Janis wollte «alles jetzt», Chat 25.11. abends):
+  Squat Maschine → PR #18 · P17 + P18 → PR #19 · Design v2 «Das Instrument» + Logo L1 → PR #20 (alle gemergt, live) ·
+  P19 nein · Ernährung → Pitch P20 · Garmin-Verspätung: Vorschlag zweiter cron an Janis (kraftwerk-daten, nur er darf schreiben).
+  Für Fr 27.11.: kein neues Konzept, Design ist live. Stattdessen Feinschliff nach Janis' Rückmeldung zum echten Gerät
+  (Webfonts in der Sandbox nicht prüfbar; Titel wie «GANZKÖRPER» auf Heute ggf. verkleinern).
 - App-Notizen (`jarvisNotes` im privaten Repo): bisher keine. Zuletzt gelesen: 25.11.2026 08:40.
 
 ## Tagesprotokoll
@@ -278,16 +259,23 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
   Warum: bisher kein einziger Körpergewicht-Eintrag – ohne den sieht man nicht, ob der Muskelaufbau mit genug Essen läuft.
 - [x] **P16 – Notiz an Jarvis** – Go am 2026-11-23, **live** (PR #16)
 
-- [x] **P17 – Erholung von Garmin auf der Körper-Seite** – Aufwand: mittel – **Go am 2026-11-25**
+- [x] **P17 – Erholung von Garmin auf der Körper-Seite** – Aufwand: mittel – Go am 2026-11-25, **live (PR #19)**
   Karte «Erholung» mit Schlaf, HRV-Status, Ruhepuls und Body Battery der letzten Nacht plus 7-Tage-Mini-Kurven, und eine Ampel
   in der Startkarte auf «Heute». Die App liest `garmin.json` zur Laufzeit mit dem bestehenden Jarvis-Sync-Schlüssel aus dem privaten
   Repo; nichts davon landet im öffentlichen Code. Warum: Du siehst vor dem Training, ob Vollgas oder lockerer sinnvoll ist.
-- [x] **P18 – Foto-Pose-Hilfe** – Aufwand: klein bis mittel – **Go am 2026-11-25**
+- [x] **P18 – Foto-Pose-Hilfe** – Aufwand: klein bis mittel – Go am 2026-11-25, **live (PR #19)**
   Vor dem Foto eine Vorlage (Umriss, Abstand ca. 2 m, Handy auf Brusthöhe, gleiches Licht, morgens), danach legt die App das neue
   Foto halbtransparent über das letzte, damit du die Pose prüfen kannst. Erinnerung alle 4 Wochen. Fotos bleiben nur auf dem iPhone.
 - ~~P19 – Körpermasse (Taille, Brust, Arm)~~ – **nein (Janis, 25.11.)**
   Optional alle 2 Wochen drei Masse in cm, mit Trend. Neues optionales Feld (Datenformat, darum Pitch).
   Warum: Taille stabil + Arm/Brust wächst = sauberer Aufbau. Verlässlicher als Fotos.
+- [ ] **P20 – Ernährung (Wunsch von Janis, 25.11.)** – Aufwand: gross, darum in Etappen – Standard: Etappe A umsetzen, Frist Mo 30.11.
+  A (klein): Eiweiss-Zähler auf «Heute» – Tagesziel ca. 1,6–2 g pro kg Körpergewicht aus dem letzten Gewicht, Schnell-Knöpfe für
+  häufige Portionen (selbst anlegbar, z. B. «Skyr 25 g», «Shake 30 g»), Wochenkurve. Neues optionales Feld mit Migration.
+  B (mittel): Kalorien grob dazu (Portion mit kcal), ohne Lebensmittel-Datenbank. C (mittel): Rezepte – eigene Sammlung mit Eiweiss pro
+  Portion, ein paar Startrezepte. D (gross): Konfigurator «was habe ich zuhause» → passende Rezepte; ohne externen Dienst nur aus der
+  eigenen Rezeptsammlung (KI-Variante bräuchte einen Dienst → eigener Pitch). Ehrlich: Für Muskelaufbau bringt A am meisten,
+  ein volles Kalorien-Tracking scheitert meist am Aufwand im Alltag.
 
 ## Backlog
 
@@ -312,8 +300,8 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 
 - [x] Muskelgruppen feiner (Wunsch 25.11.) – **live** (PR #15).
 - [x] Bug «Oberkörper – Noch nie gemacht» (alte Plan-IDs) – **live** (PR #17).
-- [ ] **Design-Etappen (Go 25.11., Konzept https://claude.ai/artifact/EqFvSSNdG3T5MrPtDGFcsV):** je eigener PR mit Vorher/Nachher-Bildern.
-  1 Training-Screen (Fr 27.11.) · 2 Heute · 3 Fortschritt · 4 Plan · 5 Körper (wartet auf P17/P18).
+- [x] **Design v2 «Das Instrument» + Logo L1 – live (PR #20)**, alle Etappen auf einmal (Wunsch Janis 25.11.). Konzept: https://claude.ai/artifact/3NHhgUsJ1sneHQk9Pk6EBp
+  (altes Konzept EqFvSSNdG3T5MrPtDGFcsV verworfen: «zu ähnlich wie jetzt»). Offen: Feinschliff nach Test auf dem iPhone.
 - [ ] Cockpit-Seite: Muskel-Ampel nutzt noch feste Grenzen 10/20 statt `richtwert` (Seite nur auf Wunsch anfassen).
 
 ## Später (wartet auf Janis)
@@ -361,3 +349,5 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-25: Antwort von Janis im Eingang: P17/P18 ja, P19 nein, neue Designphilosophie (neues Konzept Fr), Idee Ernährung (Pitch P20), Squat 23.11. war Maschine (Korrektur Fr).
 - 2026-11-25 (selbstkritisch): Den Squat-«Rekord» habe ich ungeprüft gemeldet. An der Maschine war das kein Rekord. Künftig Rekorde gegen Varianten derselben Übung gegenprüfen und bei neuen Übungsnamen nachfragen.
 - 2026-11-25 (Bericht-Lauf 17:37): stiller Tag. Pages ok, `planVer` 5 im Sync, PR #19 (P17/P18) offen → Fr prüfen und mergen.
+- 2026-11-25 (abends, Chat): Alles sofort umgesetzt: PR #18 Squat Maschine, PR #19 P17 Erholung + P18 Foto-Pose, PR #20 Design v2 «Das Instrument» + Logo L1 (alle getestet und gemergt). P20 Ernährung gepitcht.
+- 2026-11-25 (selbstkritisch): Merge- und PR-Aufruf nie parallel schicken; GitHub-API war mehrfach 500/502, geduldig wiederholen.
