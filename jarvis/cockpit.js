@@ -14,7 +14,7 @@ const [dataFile,appFile,out]=process.argv.slice(2);
     const prog=[];g.forEach(w=>w.exs.forEach(ex=>{const r=ex.rows.filter(x=>x.done);if(!r.length)return;
       prog.push({datum:day(w.start),uebung:ex.name,top_kg:Math.max(...r.map(x=>num(x.w))),e1rm_kg:Math.round(Math.max(...r.map(x=>e1(num(x.w),num(x.r))))*10)/10,saetze:r.length});}));
     const to=Date.now(),from=to-56*864e5;const ms=muscleSetsRange(from,to);
-    const cnt=ms.cnt||ms;const muskeln=MG.map(m=>({muskelgruppe:m,saetze_8_wochen:Math.round((cnt[m]||0)*10)/10,pro_woche:Math.round((cnt[m]||0)/8*10)/10}));
+    const cnt=ms.cnt||ms;const info=typeof MG_INFO!=='undefined'?MG_INFO:{};const muskeln=MG.map(m=>{const I=info[m]||{};return {muskelgruppe:m,hauptgruppe:I.g||'',saetze_8_wochen:Math.round((cnt[m]||0)*10)/10,pro_woche:Math.round((cnt[m]||0)/8*10)/10,richtwert:I.lo?I.lo+'–'+I.hi:'indirekt'};});
     const bw=[...S.bodyweight].sort((a,b)=>a.d.localeCompare(b.d)).map(x=>({datum:x.d,kg:num(x.kg)}));
     return {sessions,prog,muskeln,bw};
   });
