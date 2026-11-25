@@ -102,6 +102,11 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   **Fr 27.11.**: Übersichtlichkeit von Design v2 gezielt verbessern (Stil und Logo bleiben). Zuerst ehrlicher Befund pro Screen: was
   ist zu voll, wo fehlt Hierarchie, was findet man nicht auf Anhieb. Dann klare Hauptaktion pro Screen, weniger gleichzeitig sichtbar,
   Nebensächliches einklappen, grössere Abstände und klare Gruppierung. Im Bericht Vorher/Nachher-Screenshots und Rückgängig-Hinweis.
+- **25.11. 18:00 (Janis, Ergänzung zum Design-Feedback):** «Alles ist sehr vollgepackt.» Ausserdem springen die Schriftgrössen:
+  im aktuellen Satz ist z. B. «80 kg» gross und «82.5» kleiner geschrieben. Gleiche Art von Wert = gleiche Grösse, auch bei
+  Kommazahlen und unterschiedlich langen Zahlen (vermutlich automatische Schriftverkleinerung je nach Textlänge oder unterschiedliche
+  Klassen; prüfen und vereinheitlichen, z. B. feste Grösse mit tabellarischen Ziffern). Alle Screens auf solche Sprünge prüfen.
+  Teil des Auftrags Fr 27.11. (weniger Inhalt pro Screen, ruhigere Typografie).
 - App-Notizen (`jarvisNotes` im privaten Repo): bisher keine. Zuletzt gelesen: 25.11.2026 17:50.
 
 ## Tagesprotokoll
