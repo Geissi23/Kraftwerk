@@ -520,8 +520,8 @@ const ic=(n,c='')=>`<svg class="ic${c?' '+c:''}" viewBox="0 0 24 24" aria-hidden
 const checkSvg='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
 
 /* ---------- default plan ---------- */
-const LIB=['Schrägbankdrücken (Kurzhantel)','Schrägbankdrücken (Langhantel)','Chest Press (Maschine)','Chest Fly','Triceps Pushdown (Kabel)','Triceps Extension (Kabel)','Triceps Extension (Langhantel)','Dips','Squat (Langhantel)','Leg Press','Bulgarian Split Squat','Seated Leg Curl (Maschine)','Leg Extension (Maschine)','Wadenheben stehend','Wadenheben sitzend','Hip Thrust','Rumänisches Kreuzheben','Hip Abductor (Maschine)','Hip Adductor (Maschine)','Lat Pulldown (Kabel)','Lat Pulldown (enger Griff)','Seated Row (Kabel)','Rudern vorgebeugt (Langhantel)','Klimmzüge','Einarmiges Kurzhantelrudern','Preacher Curl (Langhantel)','Incline Curl (Kurzhantel)','Hammer Curl (Kabel)','Hammer Curl (Kurzhantel)','Overhead Press (Langhantel)','Schulterdrücken (Kurzhantel)','Lateral Raise (Maschine)','Lateral Raise (Kurzhantel)','Face Pulls','Cable Crunch','Hanging Leg Raises','Pallof Press'];
-const PLAN_VER=3;
+const LIB=['Schrägbankdrücken (Kurzhantel)','Schrägbankdrücken (Langhantel)','Chest Press (Maschine)','Chest Fly','Triceps Pushdown (Kabel)','Triceps Extension (Kabel)','Triceps Extension (Langhantel)','Dips','Squat (Langhantel)','Leg Press','Bulgarian Split Squat','Seated Leg Curl (Maschine)','Leg Extension (Maschine)','Wadenheben stehend','Wadenheben sitzend','Hip Thrust','Rumänisches Kreuzheben','Hip Abductor (Maschine)','Hip Adductor (Maschine)','Lat Pulldown (Kabel)','Lat Pulldown (enger Griff)','Seated Row (Kabel)','Rudern vorgebeugt (Langhantel)','Klimmzüge','Einarmiges Kurzhantelrudern','Preacher Curl (Langhantel)','Incline Curl (Kurzhantel)','Hammer Curl (Kabel)','Hammer Curl (Kurzhantel)','Overhead Press (Langhantel)','Schulterdrücken (Kurzhantel)','Lateral Raise (Maschine)','Lateral Raise (Kurzhantel)','Face Pulls','Reverse Fly (Maschine)','Cable Crunch','Hanging Leg Raises','Pallof Press'];
+const PLAN_VER=4;
 const OLD_DEFAULT_IDS=['r_ua','r_la','r_ub','r_lb'];
 function defaultPlan(){
   const ex=(name,sets,a,b,rest,ss='')=>({id:uid(),name,sets,repMin:a,repMax:b,rest,ss});
@@ -536,10 +536,10 @@ function defaultPlan(){
       ex('Seated Leg Curl (Maschine)',4,10,12,60,'A'),ex('Leg Extension (Maschine)',3,12,15,60,'A'),
       ex('Wadenheben sitzend',4,10,15,45),ex('Reverse Crunch',3,12,15,45)]},
     {id:'r_k3',name:'Ganzkörper',ex:[
-      ex('Leg Press',3,10,12,90),ex('Chest Press (Maschine)',3,8,12,90),
-      ex('Lat Pulldown (enger Griff)',3,10,12,90),ex('Chest Fly',2,12,15,60,'A'),
+      ex('Bulgarian Split Squat',3,8,10,90),ex('Chest Press (Maschine)',3,8,12,90),
+      ex('Lat Pulldown (enger Griff)',3,10,12,90),ex('Reverse Fly (Maschine)',3,12,15,60,'A'),
       ex('Seated Row (Kabel)',3,10,12,60,'A'),ex('Sit-up',3,12,15,45,'B'),
-      ex('Russian Twist',3,15,15,45,'B')]},
+      ex('Liegender Beinbeuger (Maschine)',3,10,12,60,'B')]},
     {id:'r_bonus',name:'Bonus: Schultern & Arme',ex:[
       ex('Schrägbankdrücken (Maschine)',3,10,12,90),ex('Lateral Raise (Maschine)',3,12,15,60,'A'),
       ex('Face Pulls',3,15,15,60,'A'),ex('Bizeps-Curl (Langhantel)',3,10,12,60,'B'),
@@ -556,7 +556,20 @@ function baseState(){
 /* ---------- plan migration ---------- */
 /* Ersetzt nur die Standard-Trainings und den Wochenplan. Trainingsverlauf, Körpergewicht
    und selbst angelegte Trainings bleiben erhalten. */
+/* Gezielte Tausche pro Plan-Version: ersetzt nur die genannte Übung im Standard-Training,
+   wenn sie dort noch unverändert steht. Eigene Anpassungen bleiben so erhalten. */
+const PLAN_SWAPS={
+  4:{r_k3:[['Russian Twist',{name:'Liegender Beinbeuger (Maschine)',sets:3,repMin:10,repMax:12,rest:60}],
+           ['Chest Fly',{name:'Reverse Fly (Maschine)',sets:3,repMin:12,repMax:15,rest:60}],
+           ['Leg Press',{name:'Bulgarian Split Squat',sets:3,repMin:8,repMax:10,rest:90}]]}
+};
 function migratePlan(st,fromVer){
+  if((fromVer||0)>=3&&Array.isArray(st.routines)){
+    for(let v=fromVer+1;v<=PLAN_VER;v++){const sw=PLAN_SWAPS[v];if(!sw)continue;
+      Object.entries(sw).forEach(([rid,list])=>{const r=st.routines.find(x=>x.id===rid);if(!r||!Array.isArray(r.ex))return;
+        list.forEach(([from,to])=>{const e=r.ex.find(x=>x.name===from);if(e)Object.assign(e,to);});});}
+    st.planVer=PLAN_VER;st.pt=Date.now();return;
+  }
   const p=defaultPlan();
   const custom=(st.routines||[]).filter(r=>!OLD_DEFAULT_IDS.includes(r.id)&&!p.routines.some(x=>x.id===r.id));
   st.routines=[...p.routines,...custom];
@@ -829,7 +842,7 @@ const EX_LIB={
  'hammer curl (kurzhantel)':{n:'Hammer Curl (Kurzhantel)',id:'Hammer_Curls',m:'Bizeps, Unterarme',g:'Kurzhantel',bp:['Bizeps'],t:['Neutraler Griff, Handflächen zeigen während der ganzen Bewegung zueinander.','Ellbogen bleiben am Körper, nur die Unterarme bewegen sich.','Kontrolliert absenken, keinen Schwung aus den Schultern holen.'],x:'Die Ellbogen nach vorne schieben, um das Gewicht leichter hochzubekommen.',a:['Preacher Curl (Langhantel)','Incline Curl (Kurzhantel)','Bizeps-Curl (Langhantel)']},
  'goblet squat':{n:'Goblet Squat',id:'Goblet_Squat',m:'Quadrizeps, Gesäss',g:'Kurzhantel',bp:['Beine'],t:['Kurzhantel oder Kettlebell senkrecht vor der Brust halten.','Hüfte nach hinten unten führen, Ellbogen zwischen den Knien.','Aufrechten Oberkörper beibehalten, dann über die Fersen hochdrücken.'],x:'Die Fersen beim Absenken vom Boden abheben lassen.',a:['Squat (Langhantel)','Bulgarian Split Squat','Leg Press']},
  'hack squat':{n:'Hack Squat',id:'Hack_Squat',m:'Quadrizeps, Gesäss',g:'Maschine',bp:['Beine'],t:['Füsse schulterbreit auf der Plattform, Rücken flach an der Lehne.','Knie in Fussrichtung absenken, bis die Oberschenkel etwa parallel sind.','Über die ganze Fusssohle nach oben drücken, Knie oben nicht durchknallen.'],x:'Nur mit den Fersen abheben und das Gewicht auf die Zehen verlagern.',a:['Squat (Langhantel)','Leg Press']},
- 'liegender beinbeuger (maschine)':{n:'Liegender Beinbeuger (Maschine)',id:'Lying_Leg_Curls',m:'Hintere Oberschenkel',g:'Maschine',bp:['Beine'],t:['Bauchlage, Polster liegt oberhalb der Fersen an.','Beine kontrolliert so weit wie möglich beugen, Hüfte bleibt auf der Bank.','Langsam zurückführen, die Gewichte nicht durchsacken lassen.'],x:'Die Hüfte beim Beugen anheben, um mehr Gewicht bewegen zu können.',a:['Seated Leg Curl (Maschine)','Rumänisches Kreuzheben']},
+ 'liegender beinbeuger (maschine)':{n:'Liegender Beinbeuger (Maschine)',id:'Lying_Leg_Curls',m:'Hintere Oberschenkel',g:'Maschine',bp:['Beine'],t:['Bauchlage, Polster liegt oberhalb der Fersen an.','Beine kontrolliert so weit wie möglich beugen, Hüfte bleibt auf der Bank.','Langsam zurückführen, die Gewichte nicht durchsacken lassen.'],x:'Die Hüfte beim Beugen anheben, um mehr Gewicht bewegen zu können.',a:['Seated Leg Curl (Maschine)','Beinbeuger stehend (Maschine)']},
  'reverse crunch':{n:'Reverse Crunch',id:'Reverse_Crunch',m:'Bauch',g:'Körpergewicht',bp:['Bauch'],t:['Rückenlage, Beine angewinkelt, unterer Rücken bleibt am Boden.','Becken durch Anspannen der Bauchmuskeln Richtung Rippen einrollen.','Kontrolliert zurückführen, ohne die Füsse abzustellen.'],x:'Mit Schwung aus den Beinen arbeiten, statt aus der Bauchmuskulatur.',a:['Cable Crunch','Hanging Leg Raises','Plank']},
  'plank':{n:'Plank',id:'Plank',m:'Bauch, Rumpf',g:'Körpergewicht',bp:['Bauch'],t:['Unterarme und Zehenspitzen am Boden, Körper bildet eine gerade Linie.','Bauch und Gesäss aktiv anspannen, kein Hohlkreuz und kein Rundrücken.','Ruhig weiteratmen, Position so lange wie möglich sauber halten.'],x:'Das Becken absacken lassen, wodurch der untere Rücken belastet wird.',a:['Cable Crunch','Reverse Crunch','Russian Twist']},
  'kurzhantel-fliegende':{n:'Kurzhantel-Fliegende',id:'Dumbbell_Flyes',m:'Brust',g:'Kurzhantel',bp:['Brust'],t:['Rückenlage, Kurzhanteln über der Brust, leichte Beugung in den Ellbogen.','Arme in einem weiten Bogen seitlich absenken, Ellbogenwinkel bleibt gleich.','Bis auf Brusthöhe absenken, dann die Hanteln wieder zusammenführen.'],x:'Zu tief absenken und dabei die Schultergelenke überdehnen.',a:['Chest Fly','Chest Press (Maschine)']},
@@ -838,6 +851,7 @@ const EX_LIB={
  'enges bankdrücken (langhantel)':{n:'Enges Bankdrücken (Langhantel)',id:'Close-Grip_Barbell_Bench_Press',m:'Trizeps, Brust',g:'Langhantel',bp:['Trizeps'],t:['Griff etwa schulterbreit, enger als beim normalen Bankdrücken.','Ellbogen nah am Körper führen, Stange kontrolliert zur unteren Brust absenken.','Nach oben drücken, ohne die Ellbogen weit nach aussen zu öffnen.'],x:'Den Griff zu eng wählen, was die Handgelenke unnötig belastet.',a:['Triceps Pushdown (Kabel)','Bankdrücken (Langhantel)','Dips']},
  'sit-up':{n:'Sit-Up',id:'Sit-Up',m:'Bauch, Hüftbeuger',g:'Körpergewicht',bp:['Bauch'],t:['Füsse fixiert oder angewinkelt aufgestellt, Hände locker am Kopf oder vor der Brust.','Aus der Bauchspannung nach oben kommen, nicht mit den Armen ziehen.','Kontrolliert zurück in die Ausgangsposition absenken.'],x:'Mit Schwung aus dem Nacken hochreissen, statt aus dem Rumpf zu arbeiten.',a:['Cable Crunch','Reverse Crunch','Plank']},
  'russian twist':{n:'Russian Twist',id:'Russian_Twist',m:'Bauch, seitliche Bauchmuskeln',g:'Körpergewicht',bp:['Bauch'],t:['Sitzposition mit angewinkelten Beinen, Oberkörper leicht zurückgelehnt.','Rumpf gerade halten, Rotation kommt aus dem Oberkörper, nicht aus den Armen.','Kontrolliert von Seite zu Seite drehen, keinen Schwung einsetzen.'],x:'Einen runden Rücken machen, statt den Rumpf während der Drehung stabil zu halten.',a:['Plank','Cable Crunch']},
+ 'reverse fly (maschine)':{n:'Reverse Fly (Maschine)',id:null,m:'Hintere Schulter, oberer Rücken',g:'Maschine',bp:['Schultern'],t:['Rückwärts an die Butterfly-Maschine setzen, Brust an das Polster, Griffe auf Schulterhöhe.','Arme mit leicht gebeugten Ellbogen in einem Bogen nach hinten führen, bis sie etwa in einer Linie mit dem Körper sind.','Kurz halten, dann langsam zurück. Schultern bleiben unten, weg von den Ohren.'],x:'Die Schulterblätter stark zusammenquetschen und mit dem Rücken ziehen, statt die hintere Schulter arbeiten zu lassen.',a:['Reverse Flyes (Kurzhantel)','Face Pulls']},
  'reverse flyes (kurzhantel)':{n:'Reverse Flyes (Kurzhantel)',id:'Reverse_Flyes',m:'Hintere Schulter, oberer Rücken',g:'Kurzhantel',bp:['Schultern'],t:['Leicht vorgebeugt, Rücken neutral, Kurzhanteln hängen locker.','Arme mit leicht gebeugten Ellbogen seitlich nach oben führen.','Bewegung kommt aus der hinteren Schulter, nicht aus dem Schwung des Rückens.'],x:'Den Oberkörper hochreissen, um mehr Gewicht bewegen zu können.',a:['Face Pulls','Lateral Raise (Maschine)']},
  't-bar rudern':{n:'T-Bar Rudern',id:'T-Bar_Row_with_Handle',m:'Mittlerer Rücken, Latissimus',g:'Langhantel',bp:['Rücken'],t:['Oberkörper vorgebeugt, Rücken neutral, Griff etwa hüftbreit fassen.','Stange zum unteren Bauch ziehen, Ellbogen nah am Körper.','Schulterblätter am Ende zusammenziehen, dann kontrolliert absenken.'],x:'Mit rundem Rücken und Schwung aus den Beinen ziehen.',a:['Rudern vorgebeugt (Langhantel)','Seated Row (Kabel)']},
  'konzentrationscurl':{n:'Konzentrationscurl',id:'Concentration_Curls',m:'Bizeps',g:'Kurzhantel',bp:['Bizeps'],t:['Sitzend, Ellbogen an der Innenseite des Oberschenkels abgestützt.','Ohne Schwung nach oben curlen, Blick auf den Bizeps.','Ganz kontrolliert bis zur fast vollen Streckung absenken.'],x:'Den Ellbogen vom Oberschenkel abheben, um mehr Gewicht zu bewegen.',a:['Preacher Curl (Langhantel)','Bizeps-Curl (Langhantel)','Hammer Curl (Kurzhantel)']},
