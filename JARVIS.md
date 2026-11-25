@@ -177,6 +177,18 @@ Vergleich mit dem Vorzeitraum ist bei wenigen Trainings kaum aussagekräftig und
 - 15:25: Nachtrag fürs Training heute Abend (Janis geht ca. 17:00 ins Gym): Empfehlung Oberkörper im Comeback-Modus statt Ganzkörper.
   **Der reguläre Bericht-Lauf um 17:37 bleibt still**, ausser seither ist etwas wirklich Neues passiert.
 
+### Mi 25.11.2026 – regulärer Bericht-Lauf 17:37 (stiller Tag)
+
+- GitHub Pages auf dem neusten Commit (#18) veröffentlicht. PR #18 (Squat Maschine, Plan v5) gemergt.
+- Jarvis-Sync lief am Nachmittag, App ist auf `planVer` 5 → Bekanntes Problem (a) «Plan v4 im Sync» erledigt. Keine App-Notizen.
+- **PR #19 (P17 + P18) ist offen** (aus der Chat-Sitzung am Nachmittag, laut PR getestet, konfliktfrei). Nicht gemergt, weil Janis gerade
+  im Gym ist und die Chat-Sitzung den PR selbst führt. → Arbeits-Lauf Fr 27.11.: falls noch offen, selbst gegenprüfen (node, Playwright
+  hell/dunkel, Daten unverändert) und mergen.
+- Garmin-Sync lief (Nachmittag, wieder verzögert). Die letzten Nächte fehlen noch, der Abruf war aber vor Janis' Garmin-Connect-Update
+  → Fr prüfen, ob die Nächte nachgeliefert wurden.
+- Heutiges Training noch nicht im Sync (Janis war beim letzten Sync wohl noch nicht fertig) → Fr auswerten.
+- Nichts Neues seit dem vorgezogenen Bericht → kein Bericht, kein Push.
+
 ## Ablauf eines Laufs (Mo, Mi, Fr – Bericht bis ca. 18:00 Uhr)
 
 1. Diese Datei lesen, offene Pull Requests und Kommentare von Janis prüfen und umsetzen.
@@ -341,3 +353,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-25: Bericht 25.11. vorgezogen verschickt (Nachtrag 15:25 mit Empfehlung fürs Training heute Abend).
 - 2026-11-25: Antwort von Janis im Eingang: P17/P18 ja, P19 nein, neue Designphilosophie (neues Konzept Fr), Idee Ernährung (Pitch P20), Squat 23.11. war Maschine (Korrektur Fr).
 - 2026-11-25 (selbstkritisch): Den Squat-«Rekord» habe ich ungeprüft gemeldet. An der Maschine war das kein Rekord. Künftig Rekorde gegen Varianten derselben Übung gegenprüfen und bei neuen Übungsnamen nachfragen.
+- 2026-11-25 (Bericht-Lauf 17:37): stiller Tag. Pages ok, `planVer` 5 im Sync, PR #19 (P17/P18) offen → Fr prüfen und mergen.
