@@ -108,6 +108,13 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   - **Datenkorrektur (Wunsch = Go):** Training 23.11. Unterkörper: Squat war an der **Maschine**, nicht mit der Langhantel. Per Code-Migration
     «Squat (Langhantel)» → «Squat (Maschine)» in diesem Training (Rekord-Markierungen neu berechnen) und im Unterkörper-Plan dauerhaft auf
     «Squat (Maschine)» umstellen. Eigene Änderungen erhalten, Backup/Sync testen. Fr 27.11.
+- **25.11. ~17:45 (Janis, über die Jarvis-Zentrale): Design v2 «Das Instrument» inklusive neuem Logo ist von Janis gesehen und
+  BESTÄTIGT** (Branch `jarvis/design-v2`, letzter Commit 25.11. 16:42 UTC, aus der Chat-Sitzung am Nachmittag). Damit ist der Punkt
+  «Fr 27.11.: komplett neues Konzept + Mockups» oben **erledigt – kein neues Konzept machen**. Arbeits-Lauf Fr 27.11.: prüfen, ob
+  `jarvis/design-v2` schon als PR gemergt ist. Falls nicht: gegen `main` aktualisieren (P17/P18 aus #19 sind inzwischen drin),
+  sorgfältig testen (node, Playwright iPhone hell/dunkel, alle Screens, Daten/Sync/Backup unverändert), PR öffnen und mergen
+  (Go von Janis), im Bericht mit Vorher/Nachher-Screenshots und Rückgängig-Hinweis. Läuft in einer Chat-Sitzung noch Arbeit am
+  Branch, diese nicht überschreiben.
 - App-Notizen (`jarvisNotes` im privaten Repo): bisher keine. Zuletzt gelesen: 25.11.2026 08:40.
 
 ## Tagesprotokoll
