@@ -95,8 +95,8 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   Squat Maschine → PR #18 · P17 + P18 → PR #19 · Design v2 «Das Instrument» + Logo L1 → PR #20 (alle gemergt, live) ·
   P19 nein · Ernährung → Pitch P20 · Garmin-Verspätung: Vorschlag zweiter cron an Janis (kraftwerk-daten, nur er darf schreiben).
   Für Fr 27.11.: kein neues Konzept, Design ist live. Stattdessen Feinschliff nach Janis' Rückmeldung zum echten Gerät
-  (Webfonts in der Sandbox nicht prüfbar; Titel wie «GANZKÖRPER» auf Heute ggf. verkleinern).
-- App-Notizen (`jarvisNotes` im privaten Repo): bisher keine. Zuletzt gelesen: 25.11.2026 08:40.
+  (Webfonts in der Sandbox nicht prüfbar). Titel «GANZKÖRPER» auf Heute → erledigt in PR #21 (Arbeits-Lauf 25.11. abends).
+- App-Notizen (`jarvisNotes` im privaten Repo): bisher keine. Zuletzt gelesen: 25.11.2026 17:50.
 
 ## Tagesprotokoll
 
@@ -176,6 +176,23 @@ Vergleich mit dem Vorzeitraum ist bei wenigen Trainings kaum aussagekräftig und
   → Fr prüfen, ob die Nächte nachgeliefert wurden.
 - Heutiges Training noch nicht im Sync (Janis war beim letzten Sync wohl noch nicht fertig) → Fr auswerten.
 - Nichts Neues seit dem vorgezogenen Bericht → kein Bericht, kein Push.
+
+### Mi 25.11.2026 – Arbeits-Lauf (verspätet gestartet, ca. 17:50) (Berichtenswert: nein, Kleinigkeit für den Fr-Bericht)
+
+- Ausgangslage: Eingang war bereits von der Chat-Sitzung erledigt (#18–#20 live). Keine offenen PRs, keine App-Notizen.
+- **Neu ohne Rückfrage – PR #21** https://github.com/Geissi23/Kraftwerk/pull/21 (gemergt, Pages veröffentlicht): Auf «Heute» wurde der
+  grosse Trainingsname mitten im Wort getrennt («GANZKÖR-/PER»). Jetzt wird die Schrift verkleinert, bis das Wort passt; auf kleinen
+  iPhones bleibt «Training starten» einzeilig. Getestet: node, Playwright iPhone 13 hell/dunkel + iPhone SE, keine Konsolenfehler,
+  gespeicherte Daten unverändert. Testen: Heute → «Ganzkörper» in einer Zeile. Rückgängig: «PR #21 rückgängig».
+- **Kritischer Blick:** Design v2 (#20) mit echten Daten durchgeklickt (alle 4 Tabs, hell/dunkel): keine Fehler, Daten bleiben erhalten.
+  Gefunden: Worttrennung im Startkarten-Titel (behoben, s. o.). Auf dem Plan-Tab ist der Unterkörper-Auszug noch «Squat · …» –
+  prüfen am Fr, ob der Name im Plan wirklich «Squat (Maschine)» heisst oder nur gekürzt angezeigt wird.
+- **Cockpit** aktualisiert (4 neue Assets, Datensätze auf 25.11. abends, alte Assets gelöscht).
+- **Sync-Wächter:** Jarvis-Sync ok (heute Nachmittag, `planVer` 5). Das heutige Abendtraining ist noch nicht im Sync → Fr auswerten.
+  Garmin-Sync lief heute 14:15 UTC, also **vor** Janis' Garmin-Connect-Update; die letzten Nächte fehlen darum noch. Fr prüfen. Kein Push.
+- **Erholung:** keine neue Nacht in `garmin.json`, Empfehlung bleibt wie am Morgen.
+- Kein Wochenplan (Mittwoch), kein Monats-Check (erst Mi 2.12.).
+- Offene Fragen unverändert: Squat-Aufwärmsätze → «so lassen» bis Mo 30.11. · P20 → Standard «Etappe A umsetzen» bis Mo 30.11.
 
 ## Ablauf eines Laufs (Mo, Mi, Fr – Bericht bis ca. 18:00 Uhr)
 
@@ -351,3 +368,5 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-25 (Bericht-Lauf 17:37): stiller Tag. Pages ok, `planVer` 5 im Sync, PR #19 (P17/P18) offen → Fr prüfen und mergen.
 - 2026-11-25 (abends, Chat): Alles sofort umgesetzt: PR #18 Squat Maschine, PR #19 P17 Erholung + P18 Foto-Pose, PR #20 Design v2 «Das Instrument» + Logo L1 (alle getestet und gemergt). P20 Ernährung gepitcht.
 - 2026-11-25 (selbstkritisch): Merge- und PR-Aufruf nie parallel schicken; GitHub-API war mehrfach 500/502, geduldig wiederholen.
+- 2026-11-25 (Arbeits-Lauf, verspätet ~17:50): PR #21 Titel ohne Worttrennung (neu ohne Rückfrage), Cockpit aktualisiert, Sync/Pages ok.
+- 2026-11-25 (selbstkritisch): Vor der Arbeit erst `git pull` auf JARVIS.md – eine Chat-Sitzung hatte parallel geschrieben. Und Playwright-Route-Filter nicht auf Wörter wie «claude» setzen (trifft auch file://-Pfade).
