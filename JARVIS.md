@@ -91,7 +91,23 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 
 ## Eingang
 
-- (leer – alle Einträge bis 25.11. erledigt, siehe Tagesprotokoll)
+- **25.11. ~15:30 (Janis, Chat):**
+  - Garmin Connect aktualisiert (fehlende Werte seit 23.11.) → nächster Lauf prüft, ob `garmin.json` wieder Nächte hat.
+  - «Beide Probleme lösen» (= Bekannte Probleme): (a) Plan v4 im Sync → löst sich beim Öffnen der App, nächster Lauf prüft `planVer`.
+    (b) Garmin-Sync startet bis zu 10 h zu spät → Fix: zweiter Zeitplan `- cron: "43 6 * * *"` in `garmin.yml` (kraftwerk-daten,
+    Jarvis darf dort nicht schreiben → Janis trägt die Zeile ein, Vorschlag im Chat). Ohne Änderung: beobachten.
+  - **Design-Feedback:** Mockups zu ähnlich wie jetzt, «sieht aus wie viele KI-Interfaces». Neue Designphilosophie (Janis):
+    athletisch, modern, leistungsorientiert · premium, elegant, raffiniert · minimalistisch, aber unverwechselbar · innovativ, einprägsam ·
+    intuitiv, funktional · clean UI, nahtlose UX. Visuell: starke eigene Identität, kräftige Typografie und klare Hierarchie,
+    geometrische Elemente und feine Formen, harmonische Palette mit gezielten Akzenten, hochwertige Charts/Fortschrittsanzeigen/Statistiken,
+    dezente Animationen und flüssige Übergänge, konsequente Abstände. → **Fr 27.11.: komplett neues Konzept + Mockups** (nicht das alte
+    nachbessern). Etappe 1 (Training) wird danach gebaut. Standard: ohne Antwort baue ich Etappe 1 im neuen Stil am Mo 30.11.
+  - **P17 ja, P18 ja, P19 nein.**
+  - **Neue Idee (Wunsch):** Ernährung: Kalorien-/Eiweiss-Tracker, Rezepte, Konfigurator «was habe ich zuhause». → Fr 27.11. als Pitch P20
+    mit Etappen und ehrlicher Einschätzung (Aufwand, was wirklich hilft). Gross → Umsetzung erst nach Go.
+  - **Datenkorrektur (Wunsch = Go):** Training 23.11. Unterkörper: Squat war an der **Maschine**, nicht mit der Langhantel. Per Code-Migration
+    «Squat (Langhantel)» → «Squat (Maschine)» in diesem Training (Rekord-Markierungen neu berechnen) und im Unterkörper-Plan dauerhaft auf
+    «Squat (Maschine)» umstellen. Eigene Änderungen erhalten, Backup/Sync testen. Fr 27.11.
 - App-Notizen (`jarvisNotes` im privaten Repo): bisher keine. Zuletzt gelesen: 25.11.2026 08:40.
 
 ## Tagesprotokoll
@@ -243,14 +259,14 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
   Warum: bisher kein einziger Körpergewicht-Eintrag – ohne den sieht man nicht, ob der Muskelaufbau mit genug Essen läuft.
 - [x] **P16 – Notiz an Jarvis** – Go am 2026-11-23, **live** (PR #16)
 
-- [ ] **P17 – Erholung von Garmin auf der Körper-Seite** – Aufwand: mittel – Standard: nicht umsetzen, Frist Mo 30.11.
+- [x] **P17 – Erholung von Garmin auf der Körper-Seite** – Aufwand: mittel – **Go am 2026-11-25**
   Karte «Erholung» mit Schlaf, HRV-Status, Ruhepuls und Body Battery der letzten Nacht plus 7-Tage-Mini-Kurven, und eine Ampel
   in der Startkarte auf «Heute». Die App liest `garmin.json` zur Laufzeit mit dem bestehenden Jarvis-Sync-Schlüssel aus dem privaten
   Repo; nichts davon landet im öffentlichen Code. Warum: Du siehst vor dem Training, ob Vollgas oder lockerer sinnvoll ist.
-- [ ] **P18 – Foto-Pose-Hilfe** – Aufwand: klein bis mittel – Standard: nicht umsetzen, Frist Mo 30.11.
+- [x] **P18 – Foto-Pose-Hilfe** – Aufwand: klein bis mittel – **Go am 2026-11-25**
   Vor dem Foto eine Vorlage (Umriss, Abstand ca. 2 m, Handy auf Brusthöhe, gleiches Licht, morgens), danach legt die App das neue
   Foto halbtransparent über das letzte, damit du die Pose prüfen kannst. Erinnerung alle 4 Wochen. Fotos bleiben nur auf dem iPhone.
-- [ ] **P19 – Körpermasse (Taille, Brust, Arm)** – Aufwand: klein – Standard: nicht umsetzen, Frist Mo 30.11.
+- ~~P19 – Körpermasse (Taille, Brust, Arm)~~ – **nein (Janis, 25.11.)**
   Optional alle 2 Wochen drei Masse in cm, mit Trend. Neues optionales Feld (Datenformat, darum Pitch).
   Warum: Taille stabil + Arm/Brust wächst = sauberer Aufbau. Verlässlicher als Fotos.
 
@@ -323,3 +339,5 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-25 (selbstkritisch): Den Bug mit den alten Plan-IDs hätte ich beim Plan-Umbau am 22.11. finden müssen; künftig bei Plan-Änderungen «Zuletzt»/Vorschlag mit echtem Verlauf mittesten. Ausserdem: In PR-Texten und JARVIS.md keine Trainings- oder Gesundheitszahlen, auch keine Anzahlen.
 - 2026-11-25 (Bericht): Gesundheits-Check ok, Bericht und Push zu PR #13–#17 verschickt. Plan v4 im Sync noch nicht sichtbar (Sync lief vor dem Merge) → nächster Lauf prüft.
 - 2026-11-25: Bericht 25.11. vorgezogen verschickt (Nachtrag 15:25 mit Empfehlung fürs Training heute Abend).
+- 2026-11-25: Antwort von Janis im Eingang: P17/P18 ja, P19 nein, neue Designphilosophie (neues Konzept Fr), Idee Ernährung (Pitch P20), Squat 23.11. war Maschine (Korrektur Fr).
+- 2026-11-25 (selbstkritisch): Den Squat-«Rekord» habe ich ungeprüft gemeldet. An der Maschine waren es am 22.9. schon 110 × 7. Künftig Rekorde gegen Varianten derselben Übung gegenprüfen und bei neuen Übungsnamen nachfragen.
