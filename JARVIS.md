@@ -96,6 +96,8 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   P19 nein · Ernährung → Pitch P20 · Garmin-Verspätung: Vorschlag zweiter cron an Janis (kraftwerk-daten, nur er darf schreiben).
   Für Fr 27.11.: kein neues Konzept, Design ist live. Stattdessen Feinschliff nach Janis' Rückmeldung zum echten Gerät
   (Webfonts in der Sandbox nicht prüfbar). Titel «GANZKÖRPER» auf Heute → erledigt in PR #21 (Arbeits-Lauf 25.11. abends).
+- **25.11. 17:58 (Jarvis-Zentrale, Go von Janis):** Problem (b) Garmin-Sync erledigt: zweiter Zeitplan `- cron: "43 6 * * *"` in
+  `kraftwerk-daten/.github/workflows/garmin.yml` eingetragen (Commit 7a3f96b, nur diese Zeile). Ab Do 26.11. beobachten, ob die Daten morgens da sind.
 - App-Notizen (`jarvisNotes` im privaten Repo): bisher keine. Zuletzt gelesen: 25.11.2026 17:50.
 
 ## Tagesprotokoll
