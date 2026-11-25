@@ -194,6 +194,13 @@ Vergleich mit dem Vorzeitraum ist bei wenigen Trainings kaum aussagekräftig und
 - Kein Wochenplan (Mittwoch), kein Monats-Check (erst Mi 2.12.).
 - Offene Fragen unverändert: Squat-Aufwärmsätze → «so lassen» bis Mo 30.11. · P20 → Standard «Etappe A umsetzen» bis Mo 30.11.
 
+### Mi 25.11.2026 – Zusatzlauf «Design v2 mergen» (~17:55)
+
+- War schon erledigt: PR #20 https://github.com/Geissi23/Kraftwerk/pull/20 (Branch `jarvis/design-v2`, Kopf 89b7863) ist seit 16:48 UTC
+  gemergt, der Branch hat keine neueren Commits. P17/P18 (#19) und Squat-Korrektur (#18) sind in `main` enthalten.
+- Gegengeprüft (im Arbeits-Lauf kurz davor): Playwright iPhone 13 hell/dunkel, alle 4 Tabs, keine Konsolenfehler, Trainingsdaten
+  unverändert. Pages auf dem neusten Commit veröffentlicht. Push «Design v2 ist live» an Janis (Rückgängig: «PR #20 rückgängig»).
+
 ## Ablauf eines Laufs (Mo, Mi, Fr – Bericht bis ca. 18:00 Uhr)
 
 1. Diese Datei lesen, offene Pull Requests und Kommentare von Janis prüfen und umsetzen.
@@ -370,3 +377,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-25 (selbstkritisch): Merge- und PR-Aufruf nie parallel schicken; GitHub-API war mehrfach 500/502, geduldig wiederholen.
 - 2026-11-25 (Arbeits-Lauf, verspätet ~17:50): PR #21 Titel ohne Worttrennung (neu ohne Rückfrage), Cockpit aktualisiert, Sync/Pages ok.
 - 2026-11-25 (selbstkritisch): Vor der Arbeit erst `git pull` auf JARVIS.md – eine Chat-Sitzung hatte parallel geschrieben. Und Playwright-Route-Filter nicht auf Wörter wie «claude» setzen (trifft auch file://-Pfade).
+- 2026-11-25 (Zusatzlauf): «Design v2 mergen» war bereits erledigt (PR #20), geprüft und per Push bestätigt.
