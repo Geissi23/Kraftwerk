@@ -151,6 +151,14 @@ Vergleich mit dem Vorzeitraum ist bei wenigen Trainings kaum aussagekräftig und
 
 **Offene Fragen** (mit Standard und Frist): P17/P18/P19 → «nicht umsetzen» bis Mo 30.11. · Squat-Aufwärmsätze → «so lassen» bis Mo 30.11.
 
+### Mi 25.11.2026 – Bericht-Lauf (abgeschlossen)
+
+- Gesundheits-Check: keine offenen PRs, #13–#17 gemergt, GitHub Pages auf dem neusten Commit veröffentlicht. Jarvis-Sync heute früh
+  (vor den Merges, darum noch alte Plan-Version im Sync; v4 wird beim nächsten Öffnen der App eingespielt, im nächsten Lauf prüfen).
+  Garmin-Sync lief heute erfolgreich, wieder stark verzögert (Nachmittag statt 04:17 UTC). Garmin liefert für die letzten Nächte keine Werte
+  (Uhr nicht synchronisiert?) → im Bericht erwähnt.
+- Kein Fix nötig. Bericht + Push verschickt.
+
 ## Ablauf eines Laufs (Mo, Mi, Fr – Bericht bis ca. 18:00 Uhr)
 
 1. Diese Datei lesen, offene Pull Requests und Kommentare von Janis prüfen und umsetzen.
@@ -311,3 +319,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-23: Aufgeräumt: Team-Manager-Jarvis wird ab jetzt nur in der Team-Manager-Sitzung gepflegt (eigene JARVIS.md, Freeze). Diese Kraftwerk-Sitzung ändert nichts mehr am Team Manager. Der Sonntags-Wochenüberblick liest beide Apps.
 - 2026-11-25: Erster Arbeits-Lauf. PR #13 (Sheets wischen), #14 (Plan v4), #15 (Muskelgruppen fein), #16 (P16 Notizen + Geräte-Einstellungen), #17 (Zuletzt mit alten Plan-IDs) gemergt und live. Cockpit aktualisiert. Design-Konzept mit Mockups veröffentlicht. Neue Pitches P17–P19.
 - 2026-11-25 (selbstkritisch): Den Bug mit den alten Plan-IDs hätte ich beim Plan-Umbau am 22.11. finden müssen; künftig bei Plan-Änderungen «Zuletzt»/Vorschlag mit echtem Verlauf mittesten. Ausserdem: In PR-Texten und JARVIS.md keine Trainings- oder Gesundheitszahlen, auch keine Anzahlen.
+- 2026-11-25 (Bericht): Gesundheits-Check ok, Bericht und Push zu PR #13–#17 verschickt. Plan v4 im Sync noch nicht sichtbar (Sync lief vor dem Merge) → nächster Lauf prüft.
