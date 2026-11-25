@@ -683,7 +683,7 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--fg);backgro
 #story.y .sbtn .btn{background:#111;color:#FFD400}
 
 @media (max-width:380px){.wkh #wktitle{font-size:20px}}
-@media (max-width:360px){.pghead h1{font-size:44px}.nextc h2{font-size:46px}.exh h3{font-size:30px}.ex.cur .exh h3{font-size:34px}}
+@media (max-width:360px){.pghead h1{font-size:44px}.nextc h2{font-size:46px}.nextc .btn{font-size:19px;white-space:nowrap}.exh h3{font-size:30px}.ex.cur .exh h3{font-size:34px}}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
@@ -1551,9 +1551,20 @@ function render(){
   document.querySelectorAll('.nav button').forEach(b=>{b.classList.toggle('on',b.dataset.tab===TAB);if(b.dataset.tab===TAB)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
   const v={today:viewToday,plan:viewPlan,stats:viewStats,records:viewRecords}[TAB];
   $('#main').innerHTML=v();
+  fitTitles();
   const dl=new Set(LIB);S.routines.forEach(r=>r.ex.forEach(e=>dl.add(e.name)));S.workouts.forEach(w=>(w.exs||[]).forEach(e=>dl.add(e.name)));
   $('#exlib').innerHTML=[...dl].sort().map(n=>`<option value="${esc(n)}">`).join('');
 }
+/* Grosse Titel (z. B. «Ganzkörper» auf Heute) nicht mitten im Wort trennen: Schrift verkleinern, bis das längste Wort passt (25.11.2026) */
+function fitTitles(){
+  document.querySelectorAll('#main .nextc h2').forEach(el=>{
+    el.style.fontSize='';el.style.hyphens=el.style.webkitHyphens='manual';el.style.overflowWrap='normal';
+    let fs=parseFloat(getComputedStyle(el).fontSize)||56;
+    while(el.scrollWidth>el.clientWidth+1&&fs>26){fs-=2;el.style.fontSize=fs+'px';}
+  });
+}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>fitTitles());
+window.addEventListener('resize',()=>fitTitles());
 function fadeMain(){const m=$('#main');m.classList.remove('fade');void m.offsetWidth;m.classList.add('fade');}
 ACT.tab=b=>{TAB=b.dataset.tab;render();fadeMain();window.scrollTo(0,0);};
 document.addEventListener('change',e=>{
