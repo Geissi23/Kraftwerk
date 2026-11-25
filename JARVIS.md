@@ -158,6 +158,8 @@ Vergleich mit dem Vorzeitraum ist bei wenigen Trainings kaum aussagekräftig und
   Garmin-Sync lief heute erfolgreich, wieder stark verzögert (Nachmittag statt 04:17 UTC). Garmin liefert für die letzten Nächte keine Werte
   (Uhr nicht synchronisiert?) → im Bericht erwähnt.
 - Kein Fix nötig. Bericht + Push verschickt.
+- 15:25: Nachtrag fürs Training heute Abend (Janis geht ca. 17:00 ins Gym): Empfehlung Oberkörper im Comeback-Modus statt Ganzkörper.
+  **Der reguläre Bericht-Lauf um 17:37 bleibt still**, ausser seither ist etwas wirklich Neues passiert.
 
 ## Ablauf eines Laufs (Mo, Mi, Fr – Bericht bis ca. 18:00 Uhr)
 
@@ -320,3 +322,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-25: Erster Arbeits-Lauf. PR #13 (Sheets wischen), #14 (Plan v4), #15 (Muskelgruppen fein), #16 (P16 Notizen + Geräte-Einstellungen), #17 (Zuletzt mit alten Plan-IDs) gemergt und live. Cockpit aktualisiert. Design-Konzept mit Mockups veröffentlicht. Neue Pitches P17–P19.
 - 2026-11-25 (selbstkritisch): Den Bug mit den alten Plan-IDs hätte ich beim Plan-Umbau am 22.11. finden müssen; künftig bei Plan-Änderungen «Zuletzt»/Vorschlag mit echtem Verlauf mittesten. Ausserdem: In PR-Texten und JARVIS.md keine Trainings- oder Gesundheitszahlen, auch keine Anzahlen.
 - 2026-11-25 (Bericht): Gesundheits-Check ok, Bericht und Push zu PR #13–#17 verschickt. Plan v4 im Sync noch nicht sichtbar (Sync lief vor dem Merge) → nächster Lauf prüft.
+- 2026-11-25: Bericht 25.11. vorgezogen verschickt (Nachtrag 15:25 mit Empfehlung fürs Training heute Abend).
