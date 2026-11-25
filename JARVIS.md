@@ -98,6 +98,10 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   (Webfonts in der Sandbox nicht prüfbar). Titel «GANZKÖRPER» auf Heute → erledigt in PR #21 (Arbeits-Lauf 25.11. abends).
 - **25.11. 17:58 (Jarvis-Zentrale, Go von Janis):** Problem (b) Garmin-Sync erledigt: zweiter Zeitplan `- cron: "43 6 * * *"` in
   `kraftwerk-daten/.github/workflows/garmin.yml` eingetragen (Commit 7a3f96b, nur diese Zeile). Ab Do 26.11. beobachten, ob die Daten morgens da sind.
+- **25.11. 17:58 (Janis, über die Jarvis-Zentrale): Feedback Design v2: «nicht sehr übersichtlich».** Auftrag für den Arbeits-Lauf
+  **Fr 27.11.**: Übersichtlichkeit von Design v2 gezielt verbessern (Stil und Logo bleiben). Zuerst ehrlicher Befund pro Screen: was
+  ist zu voll, wo fehlt Hierarchie, was findet man nicht auf Anhieb. Dann klare Hauptaktion pro Screen, weniger gleichzeitig sichtbar,
+  Nebensächliches einklappen, grössere Abstände und klare Gruppierung. Im Bericht Vorher/Nachher-Screenshots und Rückgängig-Hinweis.
 - App-Notizen (`jarvisNotes` im privaten Repo): bisher keine. Zuletzt gelesen: 25.11.2026 17:50.
 
 ## Tagesprotokoll
