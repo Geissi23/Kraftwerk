@@ -54,6 +54,14 @@ h1,h2,h3{font-family:var(--disp);font-weight:600;margin:0;line-height:1.05;lette
 /* top bar */
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .brand{font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:.01em}
+.jnote{display:inline-flex;align-items:center;gap:5px;min-height:34px;padding:0 11px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--accent);font-size:14px;font-weight:600}
+.jnote svg{width:15px;height:15px}
+.pill.gearpill{color:var(--ink)}
+#jnin{font-family:inherit;font-size:16px}
+.gearpill svg{width:15px;height:15px;color:var(--muted)}
+.jn{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.jn p{flex:1;margin:0;font-size:14px;white-space:pre-wrap;word-break:break-word}
+.jn .small{display:block}
 .lvl{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 6px;font-size:14px;font-weight:500}
 .lvl b{display:grid;place-items:center;min-width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-family:var(--disp);font-size:16px}
 
@@ -458,6 +466,7 @@ input[type=range].phr{width:100%;margin:12px 0 4px}
     <div class="r1">
       <button class="icon" data-act="wkclose" aria-label="Training schliessen">&#8249;</button>
       <h2 id="wktitle">Training</h2>
+      <button class="icon" data-act="jnote" aria-label="Notiz an Jarvis">&#9998;</button>
       <button class="btn sm" data-act="finish">Beenden</button>
     </div>
     <div class="wkstats">
@@ -566,7 +575,7 @@ function defaultPlan(){
 }
 function baseState(){
   const p=defaultPlan();
-  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null};
+  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null,gear:{},jarvisNotes:[]};
 }
 
 /* ---------- plan migration ---------- */
@@ -608,6 +617,9 @@ function loadState(){
   return baseState();
 }
 let S=loadState();
+/* Optionale Felder (seit 25.11.2026): gear = Geräte-Einstellung pro Übung, jarvisNotes = Notizen an Jarvis */
+function normExtras(){if(!S.gear||typeof S.gear!=='object'||Array.isArray(S.gear))S.gear={};if(!Array.isArray(S.jarvisNotes))S.jarvisNotes=[];}
+normExtras();
 const CORE_IDS=['r_k1','r_k2','r_k3'];
 function normRot(){(S.routines||[]).forEach(r=>{if(typeof r.rot!=='boolean')r.rot=CORE_IDS.includes(r.id);});}
 normRot();
@@ -616,7 +628,7 @@ function savePlan(){S.pt=Date.now();persist();schedulePush();ghSchedule();}
 
 /* ---------- optional cloud sync (db capability) ---------- */
 const Sync={db:null,base:null,status:'Nur auf diesem Gerät gespeichert',timer:null};
-const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer});
+const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer,gear:S.gear,jarvisNotes:S.jarvisNotes});
 function schedulePush(){clearTimeout(Sync.timer);Sync.timer=setTimeout(pushPlan,1500);}
 async function pushPlan(){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/plan').set({json:JSON.stringify(planPart()),t:Date.now()});}catch(e){}}
 async function pushWorkout(w){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/w_'+w.id).set({json:JSON.stringify(w),t:Date.now()});}catch(e){}}
@@ -636,7 +648,7 @@ async function syncInit(){
     if(rp){
       S.deleted=[...new Set([...(S.deleted||[]),...(rp.deleted||[])])];
       if((rp.pt||0)>(S.pt||0)){
-        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});
+        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer','gear','jarvisNotes'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});normExtras();
         if(!(S.planVer>=PLAN_VER)){migratePlan(S,S.planVer);pushPlan();}
         changed=true;
       }else pushPlan();
@@ -1047,7 +1059,7 @@ function barChart(items,unit){
 function estMin(r){return Math.round(r.ex.reduce((a,e)=>a+e.sets*(40+e.rest),0)/60+5);}
 function viewTop(){
   const xp=xpTotal(),l=levelOf(xp);
-  return `<div class="top"><div class="brand">Kraftwerk</div><div class="lvl" title="${xp} XP"><b>${l}</b>${esc(titleOf(l))}</div></div>`;
+  return `<div class="top"><div class="brand">Kraftwerk</div><div style="display:flex;gap:8px;align-items:center"><button class="jnote" data-act="jnote" aria-label="Notiz an Jarvis">${ic('edit')}<span>Jarvis</span></button><div class="lvl" title="${xp} XP"><b>${l}</b>${esc(titleOf(l))}</div></div></div>`;
 }
 function routineLast(id){let t=0,n=0;gymOnly().forEach(w=>{if(w.routineId===id){n++;if(w.start>t)t=w.start;}});return {t,n};}
 function nextRoutine(){
@@ -1292,11 +1304,38 @@ ACT.exmenu=b=>{
     <button class="btn ghost" data-act="exhist" data-i="${i}">Mein Verlauf mit dieser Übung</button>
     <button class="btn ghost" data-act="wutoggle" data-i="${i}">Aufwärmsätze anzeigen</button>
     <button class="btn ghost" data-act="plates" data-i="${i}">Scheibenrechner</button>
+    <button class="btn ghost" data-act="gearedit" data-i="${i}">Geräte-Einstellung${(S.gear||{})[ex.key]?' ändern':' merken'}</button>
     <button class="btn ghost" data-act="exup" data-i="${i}">Nach oben schieben</button>
     <button class="btn danger" data-act="exrm" data-i="${i}">Übung aus diesem Training entfernen</button>
     <button class="btn ghost" data-act="closesheet">Schliessen</button></div>`);
 };
 ACT.closesheet=closeSheet;
+/* Geräte-Einstellung pro Übung (z. B. «Sitz 4 · Lehne 2 · Pin 7») */
+ACT.gearedit=b=>{
+  const i=+b.dataset.i,ex=S.active&&S.active.exs[i];if(!ex)return;const cur=(S.gear||{})[ex.key]||'';
+  openSheet(`<h2>Geräte-Einstellung</h2><p class="muted small">${esc(ex.name)}: Sitzhöhe, Lehne, Pin, Griff … Steht ab jetzt bei jedem Training an dieser Übung.</p>
+    <label class="fl">Einstellung<input class="ti" id="gearin" maxlength="80" value="${esc(cur)}" placeholder="z. B. Sitz 4 · Lehne 2 · Griff eng" autocomplete="off"></label>
+    <div class="pills" style="margin:-2px 0 6px">${['Sitz ','Lehne ','Pin ','Polster ','Griff '].map(t=>`<button class="pill" data-act="gearadd" data-t="${t}">${t.trim()}</button>`).join('')}</div>
+    <div class="btnrow"><button class="btn" data-act="gearsave" data-i="${i}">Speichern</button>${cur?`<button class="btn ghost" data-act="geardel" data-i="${i}">Einstellung löschen</button>`:''}<button class="btn ghost" data-act="closesheet">Abbrechen</button></div>`);
+};
+ACT.gearadd=b=>{const el=$('#gearin');const v=el.value.trim();el.value=(v?v+' · ':'')+b.dataset.t;el.focus();};
+ACT.gearsave=b=>{const ex=S.active&&S.active.exs[+b.dataset.i];if(!ex)return;const v=($('#gearin').value||'').trim().slice(0,80);
+  if(v)S.gear[ex.key]=v;else delete S.gear[ex.key];savePlan();closeSheet();renderWorkout();toast(v?'Einstellung gemerkt':'Einstellung gelöscht');};
+ACT.geardel=b=>{const ex=S.active&&S.active.exs[+b.dataset.i];if(!ex)return;delete S.gear[ex.key];savePlan();closeSheet();renderWorkout();toast('Einstellung gelöscht');};
+/* P16: Notiz an Jarvis (geht mit dem Jarvis-Sync ins private Repo) */
+ACT.jnote=()=>{
+  const list=(S.jarvisNotes||[]).slice().sort((a,b)=>b.t-a.t).slice(0,5);
+  openSheet(`<h2>Notiz an Jarvis</h2><p class="muted small">Bug, Wunsch oder Idee, in ein paar Worten. Jarvis liest sie beim nächsten Arbeits-Lauf (Mo, Mi, Fr).${ghOn()?'':' <b>Jarvis-Sync ist nicht eingerichtet</b>, die Notiz bleibt vorerst auf dem iPhone.'}</p>
+    <textarea class="ti" id="jnin" maxlength="1000" rows="4" placeholder="z. B. Pausen-Ton zu leise, Gewicht beim Beinbeuger springt"></textarea>
+    <div class="btnrow"><button class="btn" data-act="jnsave">Senden</button><button class="btn ghost" data-act="closesheet">Abbrechen</button></div>
+    ${list.length?`<div class="h3" style="margin-top:14px">Zuletzt gesendet</div>${list.map(n=>`<div class="jn"><p>${esc(n.text)}<span class="small muted">${esc(fmtDate(n.t))}${n.ctx?' · '+esc(n.ctx):''}</span></p><button class="icon" data-act="jndel" data-t="${n.t}" aria-label="Notiz löschen">×</button></div>`).join('')}`:''}`);
+  setTimeout(()=>{const t=$('#jnin');if(t)t.focus();},250);
+};
+ACT.jnsave=()=>{const v=($('#jnin').value||'').trim().slice(0,1000);if(!v){toast('Bitte kurz etwas eintippen.');return;}
+  const n={t:Date.now(),text:v};if(S.active&&$('#wk').classList.contains('open'))n.ctx='im Training: '+S.active.name;
+  S.jarvisNotes.push(n);if(S.jarvisNotes.length>100)S.jarvisNotes=S.jarvisNotes.slice(-100);
+  savePlan();ghSchedule(800);closeSheet();toast(ghOn()?'Notiz an Jarvis gesendet':'Notiz gespeichert',true);};
+ACT.jndel=b=>{const t=+b.dataset.t;S.jarvisNotes=S.jarvisNotes.filter(n=>n.t!==t);savePlan();ACT.jnote();};
 ACT.exrmset=b=>{const ex=S.active.exs[+b.dataset.i];if(ex.rows.length>1)ex.rows.pop();persist();closeSheet();renderWorkout();updateWk();};
 ACT.exup=b=>{const i=+b.dataset.i,a=S.active.exs;if(i>0){[a[i-1],a[i]]=[a[i],a[i-1]];}persist();closeSheet();renderWorkout();};
 ACT.exrm=b=>{S.active.exs.splice(+b.dataset.i,1);persist();closeSheet();renderWorkout();updateWk();};
@@ -1435,6 +1474,9 @@ function exExtras(ex,i){
   const showWu=wus.length&&(heavy||(st&&st.open));
   if(showWu){const d=st?st.done.length:0;pills.push(`<button class="pill${st&&st.open?' on':''}" data-act="wutoggle" data-i="${i}" aria-expanded="${!!(st&&st.open)}">Aufwärmen${d?` ${Math.min(d,wus.length)}/${wus.length}`:` · ${wus.length} ${wus.length===1?"Satz":"Sätze"}`}</button>`);}
   if(isBarbell(ex)&&topW(ex)>0)pills.push(`<button class="pill" data-act="plates" data-i="${i}">Scheiben</button>`);
+  const gs=(S.gear||{})[ex.key];
+  if(gs)pills.unshift(`<button class="pill gearpill" data-act="gearedit" data-i="${i}" aria-label="Geräte-Einstellung ändern: ${esc(gs)}">${ic('gear')}${esc(gs)}</button>`);
+  else if(['Maschine','Kabelzug'].includes(gearOf(ex)))pills.push(`<button class="pill" data-act="gearedit" data-i="${i}">${ic('gear')}Einstellung</button>`);
   let wuBox='';
   if(showWu&&st&&st.open){
     wuBox=`<div class="wu"><div class="wuh">Aufwärmsätze zählen nicht fürs Volumen, keine Pause nötig.</div>${wus.map((x,j)=>{const dn=st.done.includes(j);return `<div class="wuset${dn?' done':''}"><span class="small muted">${esc(x.t)}</span><b>${fmtN(x.w)} kg × ${x.r}</b><button class="chk" data-act="wucheck" data-i="${i}" data-j="${j}" aria-label="Aufwärmsatz ${j+1} abhaken" aria-pressed="${dn}">${checkSvg}</button></div>`;}).join('')}</div>`;
@@ -1912,7 +1954,7 @@ ACT.ghrestore=async b=>{
   if(!arm(b,'Ersetzt die Daten hier. Nochmals tippen'))return;
   try{const r=await ghApi('/contents/'+GH_FILE);const j=await r.json();const o=JSON.parse(ghFromB64(j.content));const d=o.data;
     if(o.app!=='kraftwerk'||!d||!Array.isArray(d.workouts)||!Array.isArray(d.routines))throw new Error('Datei ungültig');
-    S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();persist();pushPlan();S.workouts.forEach(pushWorkout);closeSheet();render();toast('Aus GitHub wiederhergestellt');
+    S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();normExtras();persist();pushPlan();S.workouts.forEach(pushWorkout);closeSheet();render();toast('Aus GitHub wiederhergestellt');
   }catch(e){toast((e&&e.message)||'Wiederherstellen fehlgeschlagen');}
 };
 if(ghOn()&&Date.now()-GH.last>6*3600e3)ghSchedule(8000);
@@ -2109,7 +2151,7 @@ ACT.doimport=()=>{
   try{
     const o=JSON.parse($('#bkin').value);const d=o.data;
     if(o.app!=='kraftwerk'||!Array.isArray(d.routines)||!Array.isArray(d.workouts))throw 0;
-    S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();persist();pushPlan();S.workouts.forEach(pushWorkout);
+    S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();normExtras();persist();pushPlan();S.workouts.forEach(pushWorkout);
     closeSheet();render();toast('Backup wiederhergestellt');
   }catch(e){toast('Das Backup konnte nicht gelesen werden.');}
 };
