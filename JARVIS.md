@@ -105,6 +105,22 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   - **Erwartet:** ein Pitch-Paket im nächsten Bericht (je Idee Was/Warum/Aufwand, Standard «nicht umsetzen»),
     mit Mockups der neuen Seite in iPhone-Grösse hell/dunkel. Kleine, sichere Verbesserungen an der Seite ohne
     Daten-, Sync- oder Backup-Änderung dürfen nach «erst machen, dann fragen» direkt umgesetzt werden.
+- **25.11.2026, Janis (über die Jarvis-Zentrale): Muskelgruppen im Fortschritt feiner aufteilen.**
+  Die Karte «Muskelgruppen» (Sätze pro Woche, `MG`/`MG_RULES`/`muscleOf()` in index.html, «P3») ist zu grob:
+  bei «Beine» ist z. B. unklar, welche Muskeln gemeint sind. Spezifischer machen (z. B. Quadrizeps,
+  Beinbeuger, Gesäss, Waden; analog Rücken, Schultern, Arme usw.). Bei Übungen, die mehrere Muskeln treffen,
+  sinnvoll zählen (z. B. Hauptmuskel voll, Hilfsmuskel halb) und das kurz erklären. Die Richtwerte für die
+  Sätze pro Woche und den Tipp «Noch Luft bei» anpassen, das Cockpit (`muskeln.json`) mitziehen. Das ist eine
+  reine Auswertung im Code, keine Änderung an gespeicherten Daten: direkt umsetzen, im Bericht als «Neu ohne
+  Rückfrage» mit Vorher/Nachher und Rückgängig-Hinweis. Am Handy übersichtlich halten (z. B. Hauptgruppen
+  aufklappbar).
+- **25.11.2026, Janis: Design der ganzen App überprüfen und hinterfragen, sinnvoll und modern gestalten.
+  Jarvis ist dabei komplett frei (Go von Janis).** Vorgehen: zuerst ein kurzer, ehrlicher Design-Befund
+  (was ist gut, was wirkt alt, was ist umständlich) mit einem Gesamtkonzept als Mockups (iPhone-Grösse,
+  hell/dunkel) im nächsten Bericht. Danach Umsetzung in Etappen, jede Etappe als eigener PR mit
+  Vorher/Nachher-Screenshots im Bericht und Rückgängig-Hinweis. Grenzen bleiben: keine Änderung an
+  gespeicherten Daten, Sync oder Backup; keine Funktion ersatzlos entfernen, ohne es im Bericht anzukündigen.
+  Die Ideen zur Körper-Seite (Eintrag 24.11.) ins Gesamtkonzept einbeziehen.
 
 ## Tagesprotokoll
 
