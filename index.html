@@ -210,6 +210,9 @@ svg.chart{width:100%;height:auto;display:block}
 #sheetbg.open{display:flex}
 #sheet{background:var(--surface);width:100%;max-width:560px;max-height:88%;overflow-y:auto;border-radius:24px 24px 0 0;padding:10px 18px calc(22px + env(safe-area-inset-bottom,0px))}
 .grab{width:42px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 14px}
+#sheet{overscroll-behavior:contain;will-change:transform}
+#sheet.drag{transition:none}
+#sheet.snap{transition:transform .22s ease}
 #sheet h2{font-size:30px;margin-bottom:12px}
 .fl{display:block;font-size:14px;color:var(--muted);margin-bottom:10px}
 .fl .ti{margin-top:4px;color:var(--ink)}
@@ -947,9 +950,33 @@ ACT.exlib=()=>{LIB_Q='';LIB_BP='';libStack=[];libCurrent=null;showExLib();};
 ACT.exlibbp=b=>{LIB_BP=b.dataset.bp;exLibRefresh();};
 
 function toast(msg,gold){const t=$('#toast');t.textContent=msg;t.className='show'+(gold?' gold':'')+($('#rest').classList.contains('on')?' above-rest':'');clearTimeout(toast.t);toast.t=setTimeout(()=>t.className='',2600);}
-function openSheet(html){$('#sheetc').innerHTML=html;$('#sheetbg').classList.add('open');$('#sheet').scrollTop=0;}
-function closeSheet(){$('#sheetbg').classList.remove('open');}
+function openSheet(html){const sh=$('#sheet');sh.style.transform='';sh.classList.remove('drag','snap');$('#sheetbg').style.background='';$('#sheetc').innerHTML=html;$('#sheetbg').classList.add('open');sh.scrollTop=0;}
+function closeSheet(){$('#sheetbg').classList.remove('open');const sh=$('#sheet');sh.style.transform='';sh.classList.remove('drag','snap');$('#sheetbg').style.background='';}
 $('#sheetbg').addEventListener('click',e=>{if(e.target.id==='sheetbg')closeSheet();});
+/* Sheets per Wischen nach unten schliessen (nur wenn ganz oben gescrollt) */
+(function(){
+  const sh=$('#sheet'),bg=$('#sheetbg');let y0=0,x0=0,t0=0,dy=0,on=false,lock=false;
+  sh.addEventListener('touchstart',e=>{
+    if(e.touches.length!==1)return;const t=e.target;
+    if(t.closest('input[type=range],textarea,.noswipe'))return;
+    if(sh.scrollTop>0)return;
+    y0=e.touches[0].clientY;x0=e.touches[0].clientX;t0=Date.now();dy=0;on=true;lock=false;
+  },{passive:true});
+  sh.addEventListener('touchmove',e=>{
+    if(!on)return;const y=e.touches[0].clientY,x=e.touches[0].clientX;dy=y-y0;
+    if(!lock){if(Math.abs(x-x0)>Math.abs(dy)+4||dy<0||sh.scrollTop>0){on=false;return;}if(dy>6){lock=true;sh.classList.add('drag');sh.classList.remove('snap');}else return;}
+    if(e.cancelable)e.preventDefault();
+    sh.style.transform='translateY('+Math.max(0,dy)+'px)';
+    bg.style.background='rgba(8,10,14,'+(0.55*Math.max(0,1-dy/(sh.offsetHeight||600))).toFixed(3)+')';
+  },{passive:false});
+  const end=()=>{
+    if(!on)return;on=false;if(!lock)return;sh.classList.remove('drag');
+    const v=dy/Math.max(1,Date.now()-t0);
+    if(dy>110||(dy>40&&v>.6)){sh.classList.add('snap');sh.style.transform='translateY(100%)';setTimeout(closeSheet,200);}
+    else{sh.classList.add('snap');sh.style.transform='';bg.style.background='';setTimeout(()=>sh.classList.remove('snap'),230);}
+  };
+  sh.addEventListener('touchend',end);sh.addEventListener('touchcancel',end);
+})();
 function arm(b,label){if(b.dataset.armed)return true;b.dataset.armed=1;const o=b.textContent;b.textContent=label;setTimeout(()=>{delete b.dataset.armed;b.textContent=o;},3000);return false;}
 
 /* ---------- charts ---------- */
