@@ -1061,7 +1061,10 @@ function viewTop(){
   const xp=xpTotal(),l=levelOf(xp);
   return `<div class="top"><div class="brand">Kraftwerk</div><div style="display:flex;gap:8px;align-items:center"><button class="jnote" data-act="jnote" aria-label="Notiz an Jarvis">${ic('edit')}<span>Jarvis</span></button><div class="lvl" title="${xp} XP"><b>${l}</b>${esc(titleOf(l))}</div></div></div>`;
 }
-function routineLast(id){let t=0,n=0;gymOnly().forEach(w=>{if(w.routineId===id){n++;if(w.start>t)t=w.start;}});return {t,n};}
+/* Trainings aus dem alten Plan (vor 22.11.2026) zählen für das passende neue Kern-Training */
+const LEGACY_RID={r_ua:'r_k1',r_ub:'r_k1',r_la:'r_k2',r_lb:'r_k2'};
+const ridOf=w=>LEGACY_RID[w.routineId]&&!S.routines.some(r=>r.id===w.routineId)?LEGACY_RID[w.routineId]:w.routineId;
+function routineLast(id){let t=0,n=0;gymOnly().forEach(w=>{if(ridOf(w)===id){n++;if(w.start>t)t=w.start;}});return {t,n};}
 function nextRoutine(){
   const rot=S.routines.filter(r=>r.rot&&r.ex.length);if(!rot.length)return null;
   let best=null,bt=Infinity;rot.forEach(r=>{const t=routineLast(r.id).t;if(t<bt){bt=t;best=r;}});
