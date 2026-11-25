@@ -91,40 +91,65 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 
 ## Eingang
 
-- **24.11.2026, Janis (über die Jarvis-Zentrale): Idee «Körper-Seite spannender machen» (Körpergewicht & Fotos).**
-  - **Garmin-Werte in der App:** Auf der Seite Körpergewicht/Fotos sollen die Garmin-Werte angezeigt werden
-    (z. B. Schlaf, HRV, Ruhepuls, Body Battery). Achtung: `garmin.json` liegt im privaten Repo `kraftwerk-daten`,
-    das Kraftwerk-Repo und GitHub Pages sind öffentlich. Gesundheitsdaten dürfen nie ins öffentliche Repo oder in
-    den ausgelieferten Code. Die App müsste sie zur Laufzeit wie den Jarvis-Sync aus dem privaten Repo lesen.
-    Das berührt den Sync, darum zuerst als Pitch mit Mockup.
-  - **Seite allgemein:** Die Seite hat Potenzial, spannender zu werden. Jarvis darf eigene Ideen einbringen.
-  - **Fotos:** Janis ist unsicher, wie viel sie bringen. Ideen von ihm: eine Vorlage, wie man sich hinstellen soll,
-    oder eine Umrandung (Silhouette) auf der Kamera für eine gleiche Pose bei jedem Foto. Jarvis soll ehrlich
-    einschätzen, ob Fotos sich lohnen, und eigene Verbesserungen vorschlagen. Fotos sind privat: Klären, wo sie
-    gespeichert werden, nie ins öffentliche Repo.
-  - **Erwartet:** ein Pitch-Paket im nächsten Bericht (je Idee Was/Warum/Aufwand, Standard «nicht umsetzen»),
-    mit Mockups der neuen Seite in iPhone-Grösse hell/dunkel. Kleine, sichere Verbesserungen an der Seite ohne
-    Daten-, Sync- oder Backup-Änderung dürfen nach «erst machen, dann fragen» direkt umgesetzt werden.
-- **25.11.2026, Janis (über die Jarvis-Zentrale): Muskelgruppen im Fortschritt feiner aufteilen.**
-  Die Karte «Muskelgruppen» (Sätze pro Woche, `MG`/`MG_RULES`/`muscleOf()` in index.html, «P3») ist zu grob:
-  bei «Beine» ist z. B. unklar, welche Muskeln gemeint sind. Spezifischer machen (z. B. Quadrizeps,
-  Beinbeuger, Gesäss, Waden; analog Rücken, Schultern, Arme usw.). Bei Übungen, die mehrere Muskeln treffen,
-  sinnvoll zählen (z. B. Hauptmuskel voll, Hilfsmuskel halb) und das kurz erklären. Die Richtwerte für die
-  Sätze pro Woche und den Tipp «Noch Luft bei» anpassen, das Cockpit (`muskeln.json`) mitziehen. Das ist eine
-  reine Auswertung im Code, keine Änderung an gespeicherten Daten: direkt umsetzen, im Bericht als «Neu ohne
-  Rückfrage» mit Vorher/Nachher und Rückgängig-Hinweis. Am Handy übersichtlich halten (z. B. Hauptgruppen
-  aufklappbar).
-- **25.11.2026, Janis: Design der ganzen App überprüfen und hinterfragen, sinnvoll und modern gestalten.
-  Jarvis ist dabei komplett frei (Go von Janis).** Vorgehen: zuerst ein kurzer, ehrlicher Design-Befund
-  (was ist gut, was wirkt alt, was ist umständlich) mit einem Gesamtkonzept als Mockups (iPhone-Grösse,
-  hell/dunkel) im nächsten Bericht. Danach Umsetzung in Etappen, jede Etappe als eigener PR mit
-  Vorher/Nachher-Screenshots im Bericht und Rückgängig-Hinweis. Grenzen bleiben: keine Änderung an
-  gespeicherten Daten, Sync oder Backup; keine Funktion ersatzlos entfernen, ohne es im Bericht anzukündigen.
-  Die Ideen zur Körper-Seite (Eintrag 24.11.) ins Gesamtkonzept einbeziehen.
+- (leer – alle Einträge bis 25.11. erledigt, siehe Tagesprotokoll)
+- App-Notizen (`jarvisNotes` im privaten Repo): bisher keine. Zuletzt gelesen: 25.11.2026 08:40.
 
 ## Tagesprotokoll
 
-- (wird vom Arbeits-Lauf gefüllt und vom Bericht-Lauf abgeschlossen)
+Hinweis: Trainings- und Gesundheitszahlen stehen nie hier (öffentliches Repo). Der Bericht-Lauf liest sie selbst aus `kraftwerk-daten`.
+
+### Mi 25.11.2026 – Arbeits-Lauf (Berichtenswert: **ja**)
+
+**Gemergt / live** (alle getestet: node-Syntax, Playwright iPhone 13 hell/dunkel, keine Konsolenfehler, Trainingsdaten unverändert, Pages veröffentlicht)
+- PR #13 https://github.com/Geissi23/Kraftwerk/pull/13 – Bug: Alle Sheets (z. B. ⓘ Übungs-Info) lassen sich nach unten wegwischen.
+  Testen: Training starten → ⓘ → Sheet nach unten ziehen. Kurz ziehen federt zurück, weit ziehen schliesst.
+- PR #14 https://github.com/Geissi23/Kraftwerk/pull/14 – Plan-Update v4 Ganzkörper-Tag (Go 23.11.). Vorher → Nachher:
+  Leg Press 3×10–12 → Bulgarian Split Squat 3×8–10 pro Bein · Chest Fly 2×12–15 → Reverse Fly (Maschine) 3×12–15 ·
+  Russian Twist 3×15 → Liegender Beinbeuger (Maschine) 3×10–12. Eigene Änderungen bleiben erhalten (gezielter Tausch statt Neuaufbau).
+  Dazu Fix: Beim liegenden Beinbeuger wurde «Rumänisches Kreuzheben» als Alternative vorgeschlagen (tabu) → jetzt Beinbeuger stehend.
+  Testen: Plan → Ganzkörper ansehen.
+- PR #15 https://github.com/Geissi23/Kraftwerk/pull/15 – **Neu ohne Rückfrage** (Wunsch 25.11.): Muskelgruppen feiner.
+  Vorher 9 Gruppen mit Einheits-Richtwert 10–20 → Nachher 16 Muskeln in 6 aufklappbaren Hauptgruppen (Brust · Rücken: Latissimus,
+  Oberer, Unterer · Schultern: Seitliche, Hintere, Vordere · Arme: Bizeps, Trizeps, Unterarme · Beine: Quadrizeps, Beinbeuger,
+  Gesäss, Waden, Adduktoren · Rumpf: Bauch), eigene Richtwerte, «indirekt» grau ohne Richtwert. Hauptmuskel 1 Satz, Hilfsmuskel ½.
+  Fix nebenbei: Reverse Fly zählte bisher als Brust. Cockpit-Datei `muskeln.json` mitgezogen.
+  Testen: Fortschritt → Übersicht → Karte Muskelgruppen, «Beine» aufklappen.
+- PR #16 https://github.com/Geissi23/Kraftwerk/pull/16 – P16 Notiz an Jarvis + Geräte-Einstellungen pro Übung (beides Go 23.11.,
+  neue optionale Felder `jarvisNotes` und `gear` mit Migration, Claude-Sync, Jarvis-Sync und Backup getestet).
+  Testen: oben «✎ Jarvis» oder im Training ✎ → Notiz senden. Im Training bei einer Maschine «⚙ Einstellung» → z. B. Sitz 4 · Lehne 2.
+- PR #17 https://github.com/Geissi23/Kraftwerk/pull/17 – **Neu ohne Rückfrage** (Bug aus dem kritischen Blick): Auf «Heute» stand bei
+  Oberkörper «Noch nie gemacht», weil Trainings aus dem alten Plan (alte IDs) nicht zugeordnet wurden. Jetzt korrekt. Folge: Vorschlag
+  «Als Nächstes» ist jetzt **Ganzkörper** statt Oberkörper. Testen: Heute.
+- Rückgängig jeweils mit «PR #X rückgängig».
+
+**Kraftwerk Cockpit** aktualisiert (4 neue Assets, Datensätze auf 25.11. gesetzt, alte Assets gelöscht). Die Muskel-Karte zeigt jetzt
+16 Zeilen; die Ampel-Grenzen der Cockpit-Seite sind noch 10/20 (Seite bewusst nicht angefasst).
+
+**Design (Go 25.11., Jarvis frei):** Befund + Gesamtkonzept «Gym zuerst» mit Mockups hell/dunkel (Beispielwerte) als private Seite:
+https://claude.ai/artifact/EqFvSSNdG3T5MrPtDGFcsV (Training, Heute, Körper). Befund kurz: gut = Farben, Zahlen, Startkarte;
+wirkt alt = alles Karte mit Rand, rote Prozent-Badges strafen bei wenigen Trainings; umständlich = Ziel/Limit als kleine blaue Textzeile
+im Training, 3 Navigationsebenen in Fortschritt, 3 Knöpfe pro Plan-Karte. Etappen: 1 Training → 2 Heute → 3 Fortschritt → 4 Plan →
+5 Körper (braucht P17/P18). Etappe 1 kommt im Lauf am Fr 27.11.
+
+**Neue Pitches** (Körper-Seite, Eintrag 24.11.; je Standard «nicht umsetzen», Frist Mo 30.11.): P17, P18, P19 (siehe «Pitches»).
+Ehrliche Einschätzung Fotos: lohnen sich nur mit gleicher Pose, gleichem Licht und Abstand und frühestens alle 4 Wochen;
+sichtbarer Muskelaufbau braucht eher 8–12 Wochen. Gewicht und Taillenumfang sind die verlässlicheren Zahlen.
+Ein Live-Umriss über der Kamera ist in iPhone-Web-Apps unzuverlässig, darum in P18 die Vorlage vor dem Foto plus Geisterbild-Vergleich danach.
+
+**Kritischer Blick:** «Als Nächstes» auf Heute geprüft → Bug gefunden und behoben (PR #17). Ausserdem Fortschritt-Kacheln:
+Vergleich mit dem Vorzeitraum ist bei wenigen Trainings kaum aussagekräftig und rot → kommt in Etappe 3 (neutraler Pfeil, erst ab 3 Trainings).
+
+**Daueraufgaben** (Zahlen dazu liest der Bericht-Lauf aus dem privaten Repo)
+- Sync-Wächter: Jarvis-Sync aktuell (heute früh). Garmin-Sync läuft, aber GitHub verzögert den geplanten Lauf (04:17 UTC) stark,
+  am 24.11. um rund 10 Stunden. Heute bis 07:50 UTC noch kein Lauf. Kein Push, beobachten.
+- Garmin-Lücken: An mehreren Tagen der letzten Woche fehlen Schlaf und Body Battery (Uhr nicht getragen oder nicht synchronisiert?).
+- Erholung: Empfehlung **normal**; Schlaf ist der Hebel (Details im Bericht).
+- Daten aufräumen: Beim letzten Squat-Training sind Aufwärmsätze als Arbeitssätze erfasst. Das bläht Sätze und Volumen auf und
+  erzeugt einen falschen Rekord. Frage: so lassen? Standard «so lassen» (nichts wird geändert), Frist Mo 30.11.
+  Tipp für den Bericht: Aufwärmsätze über den Knopf «Aufwärmen» abhaken, die zählen nicht.
+- Plan pflegen: Plan v4 eingespielt (s. o.). Kein Monats-Check (erst im ersten Lauf im Dezember, Mi 2.12.), kein Wochenplan (Mittwoch).
+
+**Offene Fragen** (mit Standard und Frist): P17/P18/P19 → «nicht umsetzen» bis Mo 30.11. · Squat-Aufwärmsätze → «so lassen» bis Mo 30.11.
 
 ## Ablauf eines Laufs (Mo, Mi, Fr – Bericht bis ca. 18:00 Uhr)
 
@@ -206,6 +231,18 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - [x] **P15 – Körpergewicht in 2 Sekunden** – Aufwand: klein – genehmigt am 2026-11-23, **live** (PR #11)
   Auf «Heute» erscheint 2× pro Woche eine Mini-Karte mit deinem letzten Gewicht und −/+ 0,1-Knöpfen, ein Tipp speichert.
   Warum: bisher kein einziger Körpergewicht-Eintrag – ohne den sieht man nicht, ob der Muskelaufbau mit genug Essen läuft.
+- [x] **P16 – Notiz an Jarvis** – Go am 2026-11-23, **live** (PR #16)
+
+- [ ] **P17 – Erholung von Garmin auf der Körper-Seite** – Aufwand: mittel – Standard: nicht umsetzen, Frist Mo 30.11.
+  Karte «Erholung» mit Schlaf, HRV-Status, Ruhepuls und Body Battery der letzten Nacht plus 7-Tage-Mini-Kurven, und eine Ampel
+  in der Startkarte auf «Heute». Die App liest `garmin.json` zur Laufzeit mit dem bestehenden Jarvis-Sync-Schlüssel aus dem privaten
+  Repo; nichts davon landet im öffentlichen Code. Warum: Du siehst vor dem Training, ob Vollgas oder lockerer sinnvoll ist.
+- [ ] **P18 – Foto-Pose-Hilfe** – Aufwand: klein bis mittel – Standard: nicht umsetzen, Frist Mo 30.11.
+  Vor dem Foto eine Vorlage (Umriss, Abstand ca. 2 m, Handy auf Brusthöhe, gleiches Licht, morgens), danach legt die App das neue
+  Foto halbtransparent über das letzte, damit du die Pose prüfen kannst. Erinnerung alle 4 Wochen. Fotos bleiben nur auf dem iPhone.
+- [ ] **P19 – Körpermasse (Taille, Brust, Arm)** – Aufwand: klein – Standard: nicht umsetzen, Frist Mo 30.11.
+  Optional alle 2 Wochen drei Masse in cm, mit Trend. Neues optionales Feld (Datenformat, darum Pitch).
+  Warum: Taille stabil + Arm/Brust wächst = sauberer Aufbau. Verlässlicher als Fotos.
 
 ## Backlog
 
@@ -214,19 +251,25 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - [x] Supersatz-Pausen: Janis will es so lassen wie bisher (Pause nach jedem Satz). Entschieden am 2026-11-22.
 - [x] Gewichte im Training einheitlich mit Komma anzeigen – **live** (PR #10), dazu «1 Satz» statt «1 Sätze» beim Aufwärmen.
 
-- [ ] **Bug:** Übungs-Info (ⓘ-Button) lässt sich nicht nach unten wegwischen. Alle Sheets sollen per Wischen nach unten schliessbar sein (gemeldet 23.11.).
-- [ ] **Wunsch von Janis (= Go, 23.11.):** Geräte-Einstellungen pro Übung speichern (Sitzhöhe, Lehne, Pin, Griff usw.).
+- [x] **Bug:** Übungs-Info (ⓘ-Button) lässt sich nicht nach unten wegwischen – **live** (PR #13). Alle Sheets sollen per Wischen nach unten schliessbar sein (gemeldet 23.11.).
+- [x] **live (PR #16)** – **Wunsch von Janis (= Go, 23.11.):** Geräte-Einstellungen pro Übung speichern (Sitzhöhe, Lehne, Pin, Griff usw.).
   Im Training sichtbar, damit er sie sich nicht merken muss. Neues optionales Feld mit Migrationspfad, Sync und Backup testen.
 
-- [ ] **Plan-Update (Go von Janis, 23.11.), Ganzkörper-Tag:** Russian Twist → «Liegender Beinbeuger (Maschine)» 3×10–12;
+- [x] **live (PR #14, PLAN_VER 4)** – **Plan-Update (Go von Janis, 23.11.), Ganzkörper-Tag:** Russian Twist → «Liegender Beinbeuger (Maschine)» 3×10–12;
   Chest Fly → Reverse Fly an der Maschine 3×12–15 (in der Bibliothek gibt es bisher nur «Reverse Flyes (Kurzhantel)», Maschinen-Variante
   ergänzen und Muskel-Zuordnung hintere Schulter); Leg Press → «Bulgarian Split Squat» 3×8–10 pro Bein. Per PLAN_VER-Update
   (aktuell 3) einspielen, ohne Janis' eigene Änderungen zu verlieren. Am Mi 25.11. umsetzen, nicht während eines Trainings.
 
-- [ ] **P16 – Notiz an Jarvis (Go von Janis, 23.11.):** Ein kleiner Knopf in der App, über den Janis im Gym in wenigen
+- [x] **live (PR #16)** – **P16 – Notiz an Jarvis (Go von Janis, 23.11.):** Ein kleiner Knopf in der App, über den Janis im Gym in wenigen
   Sekunden einen Bug oder Wunsch eintippt. Die Notizen werden als neues optionales Feld (z. B. `jarvisNotes: [{t, text}]`) mit dem
   bestehenden Jarvis-Sync nach `kraftwerk-daten` übertragen. Der Arbeits-Lauf liest sie und behandelt sie wie «Eingang».
   Mit Migrationspfad, Sync und Backup testen.
+
+- [x] Muskelgruppen feiner (Wunsch 25.11.) – **live** (PR #15).
+- [x] Bug «Oberkörper – Noch nie gemacht» (alte Plan-IDs) – **live** (PR #17).
+- [ ] **Design-Etappen (Go 25.11., Konzept https://claude.ai/artifact/EqFvSSNdG3T5MrPtDGFcsV):** je eigener PR mit Vorher/Nachher-Bildern.
+  1 Training-Screen (Fr 27.11.) · 2 Heute · 3 Fortschritt · 4 Plan · 5 Körper (wartet auf P17/P18).
+- [ ] Cockpit-Seite: Muskel-Ampel nutzt noch feste Grenzen 10/20 statt `richtwert` (Seite nur auf Wunsch anfassen).
 
 ## Später (wartet auf Janis)
 
@@ -266,3 +309,5 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-23: Janis genehmigt alle 7 Ablauf-Ideen: Team Manager auf Arbeits- und Bericht-Lauf umgestellt, erst machen dann fragen, stille Tage, Wochenplan am Montag, P16 Notiz-Knopf, Monats-Check, Sonntags-Wochenüberblick für beide Apps.
 - 2026-11-23: Leitbild «Immer besser werden» von Janis aufgenommen: kritischer Blick auf Features, auf Jarvis' eigene Arbeit und ehrliches Feedback an Janis. Gilt auch für den Team Manager.
 - 2026-11-23: Aufgeräumt: Team-Manager-Jarvis wird ab jetzt nur in der Team-Manager-Sitzung gepflegt (eigene JARVIS.md, Freeze). Diese Kraftwerk-Sitzung ändert nichts mehr am Team Manager. Der Sonntags-Wochenüberblick liest beide Apps.
+- 2026-11-25: Erster Arbeits-Lauf. PR #13 (Sheets wischen), #14 (Plan v4), #15 (Muskelgruppen fein), #16 (P16 Notizen + Geräte-Einstellungen), #17 (Zuletzt mit alten Plan-IDs) gemergt und live. Cockpit aktualisiert. Design-Konzept mit Mockups veröffentlicht. Neue Pitches P17–P19.
+- 2026-11-25 (selbstkritisch): Den Bug mit den alten Plan-IDs hätte ich beim Plan-Umbau am 22.11. finden müssen; künftig bei Plan-Änderungen «Zuletzt»/Vorschlag mit echtem Verlauf mittesten. Ausserdem: In PR-Texten und JARVIS.md keine Trainings- oder Gesundheitszahlen, auch keine Anzahlen.
