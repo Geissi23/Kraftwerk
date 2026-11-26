@@ -532,3 +532,4 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
   immer den verfügbaren Platz messen (Karte vs. Bereich über der Leiste) und auf dem kleinsten Gerät prüfen.
 - 2026-11-26 (Zusatzlauf Design v3): Etappe 3 Übersicht + Plan live (PR #26). Etappen 4, 5 und Rest von 2 folgen Fr.
 - 2026-11-26 (selbstkritisch): «Starten» aus einem Blatt liess das Blatt offen – nur durch einen Klick-Test gefunden. Neue Knöpfe in Blättern immer per echtem Klick testen, nicht per ACT-Aufruf.
+- 2026-11-26 (abends, Chat): Janis hat die Web-App gelöscht und neu hinzugefügt. Sicherung im Repo war vollständig. Bug gefunden: Verbinden in einer leeren App hätte die Sicherung leer überschrieben → PR #27 (leere App holt beim Verbinden die Sicherung, Auto-Sync überschreibt nie). Sync 19:06 geprüft: alle Daten wieder da. Fortschrittsfotos (nur lokal) verloren.
