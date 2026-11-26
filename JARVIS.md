@@ -102,23 +102,30 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   (Webfonts in der Sandbox nicht prüfbar). Titel «GANZKÖRPER» auf Heute → erledigt in PR #21 (Arbeits-Lauf 25.11. abends).
 - **25.11. 17:58 (Jarvis-Zentrale, Go von Janis):** Problem (b) Garmin-Sync erledigt: zweiter Zeitplan `- cron: "43 6 * * *"` in
   `kraftwerk-daten/.github/workflows/garmin.yml` eingetragen (Commit 7a3f96b, nur diese Zeile). Ab Do 26.11. beobachten, ob die Daten morgens da sind.
-- **25.11. 17:58 (Janis, über die Jarvis-Zentrale): Feedback Design v2: «nicht sehr übersichtlich».** Auftrag für den Arbeits-Lauf
-  **Fr 27.11.**: Übersichtlichkeit von Design v2 gezielt verbessern (Stil und Logo bleiben). Zuerst ehrlicher Befund pro Screen: was
-  ist zu voll, wo fehlt Hierarchie, was findet man nicht auf Anhieb. Dann klare Hauptaktion pro Screen, weniger gleichzeitig sichtbar,
-  Nebensächliches einklappen, grössere Abstände und klare Gruppierung. Im Bericht Vorher/Nachher-Screenshots und Rückgängig-Hinweis.
-- **25.11. 18:00 (Janis, Ergänzung zum Design-Feedback):** «Alles ist sehr vollgepackt.» Ausserdem springen die Schriftgrössen:
-  im aktuellen Satz ist z. B. «80 kg» gross und «82.5» kleiner geschrieben. Gleiche Art von Wert = gleiche Grösse, auch bei
-  Kommazahlen und unterschiedlich langen Zahlen (vermutlich automatische Schriftverkleinerung je nach Textlänge oder unterschiedliche
-  Klassen; prüfen und vereinheitlichen, z. B. feste Grösse mit tabellarischen Ziffern). Alle Screens auf solche Sprünge prüfen.
-  Teil des Auftrags Fr 27.11. (weniger Inhalt pro Screen, ruhigere Typografie).
-  **Stand 26.11.:** Schriftsprünge in der Tafel (Ursache: Verkleinern je nach Zahlenlänge) und Worttrennung der Übungsnamen erledigt
-  in PR #22. **Offen für Fr 27.11.:** Übersichtlichkeit pro Screen (Befund siehe Tagesprotokoll 26.11.) und restliche Screens auf
-  Schriftsprünge prüfen.
+- **Design-Auftrag 25.11. (unübersichtlich, vollgepackt, springende Schriftgrössen) erledigt am 26.11.** auf Wunsch von Janis vorgezogen:
+  PR #22 (Tafel) + PR #23 (alle Screens). Details im Tagesprotokoll 26.11. Feinschliff nur noch nach Janis' Rückmeldung vom iPhone.
 - App-Notizen (`jarvisNotes` im privaten Repo): 2 Notizen vom 25.11. (im Training) → beide erledigt in PR #22. Zuletzt gelesen: 26.11.2026 15:40.
 
 ## Tagesprotokoll
 
 Hinweis: Trainings- und Gesundheitszahlen stehen nie hier (öffentliches Repo). Der Bericht-Lauf liest sie selbst aus `kraftwerk-daten`.
+
+### Do 26.11.2026 – Zusatzlauf «Design jetzt» (Wunsch Janis über die Jarvis-Zentrale, ca. 16:00) (Berichtenswert: **ja**)
+
+**Gemergt / live** (getestet: node, Playwright iPhone 13 hell/dunkel + iPhone SE, alle Tabs und Unter-Tabs, Training komplett inkl.
+Supersatz, keine Konsolenfehler, gespeicherte Daten unverändert)
+- PR #23 https://github.com/Geissi23/Kraftwerk/pull/23 – **Design v2 ruhiger** (Stil und Logo unverändert, keine Funktion entfernt):
+  - Heute: Titel feste Grösse · Erholung als eine Zeile (Skalen/Verlauf im Tab Körper) · Ring + Level + Woche → eine Karte «Diese Woche»
+    (Level/XP weiter unter Fortschritt) · «Anderes Training starten» eingeklappt.
+  - Training: Sätze/Pause in der Kopfzeile, Ziel und Extras nur bei der aktuellen Übung.
+  - Plan: Kennzahlen in einer Zeile. Fortschritt: Zeitraum zuerst, «Einzelne Muskeln» eingeklappt, Rückgang im Vergleich grau statt rot.
+  - Typografie: keine automatische Verkleinerung je nach Länge mehr (Tafel-Zahlen PR #22, Startkarten-Titel PR #23).
+- **Vorher/Nachher-Screenshots** (nur Testdaten): https://github.com/Geissi23/Kraftwerk/blob/main/jarvis/screens/2026-11-26/README.md
+  (Skript: `jarvis/screens/demo-screens.js`). Der Bericht-Lauf Fr zeigt sie.
+- Testen: Heute → kürzer; Training starten; Fortschritt → «Einzelne Muskeln» aufklappen. Rückgängig: «PR #23 rückgängig».
+- Ehrlich offen: Beim ersten Satz einer Übung ist der Knopf in der Tafel auf dem iPhone 13 meist noch unter dem Rand; dann übernimmt der
+  untere Knopf. Wird erst mit echter Schrift auf dem Gerät beurteilt (Rückmeldung von Janis abwarten).
+- Push an Janis: keiner (Arbeits-Lauf, nichts kaputt). Bericht kommt Fr 17:37.
 
 ### Do 26.11.2026 – Arbeits-Lauf (Zusatzlauf, ausserhalb des Rhythmus gestartet, ca. 15:40) (Berichtenswert: **ja**, für den Fr-Bericht)
 
@@ -389,7 +396,7 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - [x] **Design v2 «Das Instrument» + Logo L1 – live (PR #20)**, alle Etappen auf einmal (Wunsch Janis 25.11.). Konzept: https://claude.ai/artifact/3NHhgUsJ1sneHQk9Pk6EBp
   (altes Konzept EqFvSSNdG3T5MrPtDGFcsV verworfen: «zu ähnlich wie jetzt»). Offen: Feinschliff nach Test auf dem iPhone.
 - [x] App-Notizen 25.11.: Satz-Knopf weit unten / «Sprung» zur nächsten Übung (Supersatz) / Schriftsprünge – **live (PR #22)**.
-- [ ] Übersichtlichkeit Design v2 pro Screen (Auftrag Fr 27.11., Befund im Tagesprotokoll 26.11.).
+- [x] Übersichtlichkeit Design v2 pro Screen – **live (PR #23)**, vorgezogen am 26.11.
 - [ ] Cockpit-Seite: Muskel-Ampel nutzt noch feste Grenzen 10/20 statt `richtwert` (Seite nur auf Wunsch anfassen).
 
 ## Später (wartet auf Janis)
@@ -444,3 +451,5 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-25 (Zusatzlauf): «Design v2 mergen» war bereits erledigt (PR #20), geprüft und per Push bestätigt.
 - 2026-11-26 (Zusatz-Arbeits-Lauf Do): App-Notizen erledigt → PR #22 (Satz-Knopf in der Tafel, Supersatz-Hinweis, feste Zahlengrösse), Cockpit aktualisiert, Befund Übersichtlichkeit für Fr notiert.
 - 2026-11-26 (selbstkritisch): Supersätze habe ich beim Plan-Umbau eingebaut, ohne zu prüfen, wie sich der Wechsel im Training anfühlt. Bei Plan-Änderungen künftig ein Training einmal komplett durchklicken.
+- 2026-11-26 (Zusatzlauf Design): PR #23 «Design v2 ruhiger» gemergt (alle Screens), Vorher/Nachher-Screenshots mit Testdaten unter jarvis/screens/2026-11-26.
+- 2026-11-26 (selbstkritisch): Ein Auto-Scroll, der den Tafel-Knopf ins Bild holen sollte, hat den Übungsnamen abgeschnitten – erst im Screenshot bemerkt und zurückgenommen. Visuelle Änderungen immer zuerst im Screenshot prüfen, nicht nur per Messwert.
