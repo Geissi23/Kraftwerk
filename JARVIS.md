@@ -111,11 +111,58 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   Kommazahlen und unterschiedlich langen Zahlen (vermutlich automatische Schriftverkleinerung je nach Textlänge oder unterschiedliche
   Klassen; prüfen und vereinheitlichen, z. B. feste Grösse mit tabellarischen Ziffern). Alle Screens auf solche Sprünge prüfen.
   Teil des Auftrags Fr 27.11. (weniger Inhalt pro Screen, ruhigere Typografie).
-- App-Notizen (`jarvisNotes` im privaten Repo): bisher keine. Zuletzt gelesen: 25.11.2026 17:50.
+  **Stand 26.11.:** Schriftsprünge in der Tafel (Ursache: Verkleinern je nach Zahlenlänge) und Worttrennung der Übungsnamen erledigt
+  in PR #22. **Offen für Fr 27.11.:** Übersichtlichkeit pro Screen (Befund siehe Tagesprotokoll 26.11.) und restliche Screens auf
+  Schriftsprünge prüfen.
+- App-Notizen (`jarvisNotes` im privaten Repo): 2 Notizen vom 25.11. (im Training) → beide erledigt in PR #22. Zuletzt gelesen: 26.11.2026 15:40.
 
 ## Tagesprotokoll
 
 Hinweis: Trainings- und Gesundheitszahlen stehen nie hier (öffentliches Repo). Der Bericht-Lauf liest sie selbst aus `kraftwerk-daten`.
+
+### Do 26.11.2026 – Arbeits-Lauf (Zusatzlauf, ausserhalb des Rhythmus gestartet, ca. 15:40) (Berichtenswert: **ja**, für den Fr-Bericht)
+
+**Gemergt / live** (getestet: node-Syntax, Playwright iPhone 13 hell/dunkel + iPhone SE, Oberkörper mit echtem Datenstand inkl.
+Supersatz durchgeklickt, keine Konsolenfehler, gespeicherte Daten unverändert, Pages auf `bd182a0` veröffentlicht)
+- PR #22 https://github.com/Geissi23/Kraftwerk/pull/22 – **Neu ohne Rückfrage**, aus Janis' zwei App-Notizen vom 25.11. und der
+  Schriftgrössen-Rückmeldung:
+  - «Satz abschliessen» sitzt jetzt in der gelben Tafel direkt unter den Werten. Der Knopf unten erscheint nur noch, wenn die Tafel
+    nicht im Bild ist.
+  - «Springt zur nächsten Übung, obwohl noch 2 Sätze offen»: kein Zufall, sondern der **Supersatz-Wechsel** (Oberkörper: Seated Row ↔
+    Lateral Raise = Supersatz A, Curls ↔ Trizeps = B). Die App zeigte das nicht an. Jetzt: Tafel «Supersatz A · im Wechsel», Hinweis
+    «Supersatz A: weiter mit …», Pause nennt die nächste Übung.
+  - Gewicht und Wiederholungen immer gleich gross (vorher wurde «82,5» kleiner als «80» gezeigt). Übungsnamen ohne Worttrennung.
+  - Testen: Training starten → Knopf in der gelben Tafel. Oberkörper nach Schrägbank → Hinweis Supersatz A. Rückgängig: «PR #22 rückgängig».
+
+**Offene Frage** (neu): Supersätze im Wechsel lassen oder Übungen nacheinander abarbeiten? Standard: **im Wechsel lassen** (jetzt
+klar angezeigt). Frist Mo 30.11. Wer nacheinander will, kann auch einzelne Sätze antippen (Satznummer).
+
+**Befund Übersichtlichkeit für Fr 27.11.** (mit echten Daten, hell/dunkel durchgeklickt):
+- Training: Kopf der Übung hat 5 Textzeilen vor der Tafel (Ziel, Ziel-Zusatz, Letztes Mal, Satz-/Pausen-Zeile, Knöpfe). Vorschlag:
+  Ziel + «Letztes Mal» zu 2 Zeilen zusammenfassen, Satz-/Pausen-Zeile in die Tafel-Kopfzeile, Aufwärmen/Scheiben/Einstellung als
+  kleine Icon-Leiste. Dann ist der Knopf in der Tafel beim ersten Satz ohne Scrollen sichtbar.
+- Heute: 6 Blöcke untereinander (Startkarte, Erholung, Gewicht, Level, Woche, andere Trainings). Hauptaktion = Startkarte; Level
+  und Woche zu einer Zeile zusammenlegen, «Andere Trainings» einklappen.
+- Fortschritt/Übersicht: sehr lang (Kraftkurve, Zeitraum-Kacheln, Muskelbalance mit Radar + Liste + Einzelmuskeln + Legende + Text,
+  Wochenvolumen, Rückblick, Level, Abzeichen). Muskelbalance auf eine Ansicht reduzieren, Level/Abzeichen ans Ende einklappen.
+- Rote Prozent-Badges in den Zeitraum-Kacheln wirken strafend (schon am 25.11. notiert).
+
+**Kritischer Blick:** Supersätze. Der Plan setzt sie ein, aber die App hat den Wechsel nie erklärt → für Janis sah es wie ein Bug aus.
+Verbessert (PR #22). Ausserdem beim Durchklicken gefunden: der untere Knopf verdeckte beim ersten Satz die Tafel nicht, aber man sah den
+Tafel-Knopf erst nach Scrollen → Abhilfe kommt mit dem Befund oben (Fr).
+
+**Kraftwerk Cockpit** aktualisiert (4 neue Assets mit dem Training vom 25.11., Datensätze auf 26.11. gesetzt, alte Assets gelöscht).
+
+**Daueraufgaben** (Zahlen liest der Bericht-Lauf selbst)
+- Sync-Wächter: Jarvis-Sync ok (25.11. abends, nach dem Training, `planVer` 5). Garmin-Sync lief heute erfolgreich, aber erst
+  13:50 UTC. Der zweite Zeitplan (06:43 UTC) hat **keinen eigenen Lauf** erzeugt – GitHub hat offenbar beide verzögert/zusammengelegt.
+  Nicht kritisch (Daten kommen täglich), beobachten. Kein Push.
+- Garmin: Die fehlenden Nächte sind jetzt nachgeliefert (seit Janis' Garmin-Connect-Update vollständig).
+- Erholung: HRV im Normalbereich, leicht sinkend; letzte Nacht gut. Empfehlung **normal**. Nächstes Training: Ganzkörper (Fr/Sa).
+- Daten aufräumen: Training vom 25.11. geprüft, keine Ausreisser, keine neuen Namens-Varianten.
+- Plan pflegen: keine Änderung (Plan v5 frisch). Kein Wochenplan (kein Montag), kein Monats-Check (Mi 2.12.).
+
+**Offene Fragen:** Squat-Aufwärmsätze → «so lassen» bis Mo 30.11. · P20 → «Etappe A umsetzen» bis Mo 30.11. · Supersätze → «im Wechsel lassen» bis Mo 30.11.
 
 ### Mi 25.11.2026 – Arbeits-Lauf (Berichtenswert: **ja**)
 
@@ -341,6 +388,8 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - [x] Bug «Oberkörper – Noch nie gemacht» (alte Plan-IDs) – **live** (PR #17).
 - [x] **Design v2 «Das Instrument» + Logo L1 – live (PR #20)**, alle Etappen auf einmal (Wunsch Janis 25.11.). Konzept: https://claude.ai/artifact/3NHhgUsJ1sneHQk9Pk6EBp
   (altes Konzept EqFvSSNdG3T5MrPtDGFcsV verworfen: «zu ähnlich wie jetzt»). Offen: Feinschliff nach Test auf dem iPhone.
+- [x] App-Notizen 25.11.: Satz-Knopf weit unten / «Sprung» zur nächsten Übung (Supersatz) / Schriftsprünge – **live (PR #22)**.
+- [ ] Übersichtlichkeit Design v2 pro Screen (Auftrag Fr 27.11., Befund im Tagesprotokoll 26.11.).
 - [ ] Cockpit-Seite: Muskel-Ampel nutzt noch feste Grenzen 10/20 statt `richtwert` (Seite nur auf Wunsch anfassen).
 
 ## Später (wartet auf Janis)
@@ -393,3 +442,5 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-25 (Arbeits-Lauf, verspätet ~17:50): PR #21 Titel ohne Worttrennung (neu ohne Rückfrage), Cockpit aktualisiert, Sync/Pages ok.
 - 2026-11-25 (selbstkritisch): Vor der Arbeit erst `git pull` auf JARVIS.md – eine Chat-Sitzung hatte parallel geschrieben. Und Playwright-Route-Filter nicht auf Wörter wie «claude» setzen (trifft auch file://-Pfade).
 - 2026-11-25 (Zusatzlauf): «Design v2 mergen» war bereits erledigt (PR #20), geprüft und per Push bestätigt.
+- 2026-11-26 (Zusatz-Arbeits-Lauf Do): App-Notizen erledigt → PR #22 (Satz-Knopf in der Tafel, Supersatz-Hinweis, feste Zahlengrösse), Cockpit aktualisiert, Befund Übersichtlichkeit für Fr notiert.
+- 2026-11-26 (selbstkritisch): Supersätze habe ich beim Plan-Umbau eingebaut, ohne zu prüfen, wie sich der Wechsel im Training anfühlt. Bei Plan-Änderungen künftig ein Training einmal komplett durchklicken.
