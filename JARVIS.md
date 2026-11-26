@@ -91,6 +91,30 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 
 ## Eingang
 
+- **26.11. 17:40 – AUFTRAG DESIGN v3 UMSETZEN (Go von Janis über die Jarvis-Zentrale: «Nimm B und merge alles»).**
+  Vorlage: `docs/design-v3/` (Mockups + README). Hebt den STOPP vom 26.11. 15:41 auf. Ersetzt Design v2 (#20/#22/#23), Logo bleibt.
+  **Schrift (Vorschlag B «Tempo»):** nur Saira (Google Fonts, variable: kursiv, Breite 62–125). Titel und grosse Zahlen kursiv,
+  schmal (Titel `font-stretch:70%` 900 Grossbuchstaben, Zahlen `80%` 800, `tabular-nums`), Fliesstext Saira normal. Archivo, Big Shoulders
+  und IBM Plex Mono entfernen. **Stufen:** Zahlen nur 48 (Eingabe) / 36 (Hauptwert) / 24 (Kachel) / 16 (Liste); Labels 12, Text 14/16.
+  Abstände nur 8/12/16/24, Radius 12 (Knöpfe) / 16 (Karten). Grau für Kleintext mind. #7D838C. Touch-Ziele mind. 44 px.
+  **Navigation:** 3 Tabs Übersicht · Plan · Fortschritt. Tab «Übungen» entfällt (Bibliothek im Plan). «Heute» wird zur Übersicht.
+  **Training:** Satz antippen → gelbe Karte (Gewicht und Wdh je gross und mittig über −/+, Frage «Wie viele Wdh wären noch gegangen?»
+  0–1 / 2 / 3+, Bestätigen in der Karte) → nächster Satz öffnet sich, Pause läuft unten als Leiste mit schrumpfendem Strich (kein
+  eigener Screen), −15/+15/✕, «Rückgängig». Fertigen Satz antippen = ändern. Sätze hinzufügen/löschen, Aufwärmsatz, Geräte-Einstellung,
+  Übung tauschen, Anleitung, Notiz, Überspringen im Menü ···. Aufwärmsätze automatisch vorschlagen (z. B. 40 % × 10, 60 % × 5),
+  zählen nicht. Gewichtsvorschlag + Steigerungsregel anzeigen. Nach letztem Satz automatisch nächste Übung. Leiste «Training läuft»
+  auf allen Tabs. Abschluss-Screen wie Mockup 5.
+  **Fortschritt:** Umschalter Training/Körper/Rekorde, Zeitraum auf allen drei; Jahreskalender; Muskelgruppen zugeklappt mit
+  Zielbereichen (z. B. 10–20); eine Coach-Empfehlung mit Zahl als Begründung, Rest hinter «weitere»; Rekorde mit Kraftverlauf
+  (geschätztes 1-Wdh-Maximum, z. B. Epley) und Level/Abzeichen klein unten. Körper: Gewicht, Garmin, Körpermasse (ohne BMI), Fotos.
+  **PFLICHT (technisch):** offline speichern + später syncen; Bildschirm bleibt im Training an (Wake Lock, wo verfügbar);
+  Pausen-Timer rechnet mit Zeitstempeln (stimmt nach Hintergrund); bei 0:00 Ton + gelbes Aufblinken (kein Vibrieren, iOS kann das
+  in Web-Apps nicht); Rekord-Regel über geschätztes Maximum; Gewichtsschritte pro Übung/Gerät, Zahl antippen öffnet Tastatur.
+  **Neue Daten (Go von Janis):** RIR pro Satz, Aufwärm-Markierung, Eiweiss (g) und Wasser (l) pro Tag, Körpermasse. Nur als neue
+  optionale Felder mit Migration; bestehende Trainings, Sync, Jarvis-Sync und Backup müssen erhalten bleiben (vorher/nachher prüfen).
+  **Etappen (je eigener PR, testen, mergen, Pages prüfen):** 1 Schrift + Stufen + Navigation · 2 Training (+ Pflicht-Technik) ·
+  3 Übersicht + Plan · 4 Fortschritt · 5 Eiweiss/Wasser + Körpermasse. Im Bericht je Vorher/Nachher-Screenshots und «PR #X rückgängig».
+  Was in einem Lauf nicht fertig wird, im nächsten Lauf weiter. Nach jeder Etappe Push an Janis (eine Zeile).
 - **⛔ 26.11. 15:41 STOPP für den Zusatzlauf von 15:38 (Janis, über die Jarvis-Zentrale):** Design NICHT umsetzen, nichts mergen.
   Janis will das Design zuerst mit der Zentrale im Chat zusammen anschauen (grob, schnell), erst danach wird umgesetzt.
   Falls du schon einen Branch/PR hast: offen lassen, nicht mergen, im Tagesprotokoll vermerken. Erlaubt: nur Befund + Screenshots

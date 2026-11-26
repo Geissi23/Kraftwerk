@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Fortschritt – Training</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:ital,wdth,wght@0,62..125,400..800;1,62..125,400..900&amp;display=swap">
+<style>
+body{margin:0;background:#0B0C0E}
+.n{font-family:Saira,sans-serif;font-style:italic;font-stretch:80%;font-weight:800;font-variant-numeric:tabular-nums}
+.t{font-family:Saira,sans-serif;font-style:italic;font-stretch:70%;font-weight:900;text-transform:uppercase}
+</style>
+</helmet>
+<div style="width:390px;height:1040px;box-sizing:border-box;background:#0B0C0E;color:#F1EFEA;font-family:Saira,sans-serif;display:flex;flex-direction:column">
+  <header style="padding:28px 24px 0;display:flex;flex-direction:column;gap:16px">
+    <h1 style="margin:0;font-family:Saira,sans-serif;font-style:italic;font-stretch:70%;font-weight:900;text-transform:uppercase;font-size:44px;line-height:1">Fortschritt</h1>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:#16181B;border-radius:12px;padding:4px;font-size:14px;font-weight:600;text-align:center">
+      <span style="background:#2A2E34;border-radius:9px;padding:9px 0">Training</span>
+      <a href="Koerper.dc.html" style="color:#8B919A;text-decoration:none;padding:9px 0">Körper</a>
+      <a href="Rekorde.dc.html" style="color:#8B919A;text-decoration:none;padding:9px 0">Rekorde</a>
+    </div>
+    <div style="display:flex;gap:6px;font-size:12px;font-weight:600">
+      <button style="border:0;background:transparent;color:#8B919A;font:600 14px Saira,sans-serif;padding:6px 10px">Training</button>
+      <button style="border:0;background:transparent;color:#8B919A;font:600 14px Saira,sans-serif;padding:6px 10px">Woche</button>
+      <button style="border:0;background:#F1EFEA;color:#111;border-radius:8px;font:600 14px Saira,sans-serif;padding:6px 10px">Monat</button>
+      <button style="border:0;background:transparent;color:#8B919A;font:600 14px Saira,sans-serif;padding:6px 10px">Jahr</button>
+    </div>
+  </header>
+
+  <main style="flex:1;padding:20px 24px 24px;display:flex;flex-direction:column;gap:24px">
+    <section style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+      <div style="display:flex;flex-direction:column;gap:4px"><span class="n" style="font-size:24px;font-weight:600">11</span><span style="font-size:12px;color:#8B919A">Trainings</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><span class="n" style="font-size:24px;font-weight:600">2.8</span><span style="font-size:12px;color:#8B919A">pro Woche</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><span class="n" style="font-size:24px;font-weight:600">7</span><span style="font-size:12px;color:#8B919A">Rekorde</span></div>
+    </section>
+
+    <section style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;font-size:14px"><span style="font-weight:600">Trainingskalender 2026</span><span class="n" style="color:#8B919A">94 Trainings</span></div>
+      <div role="img" aria-label="Jahreskalender: jedes Kästchen ein Tag, gelb mit Training" style="display:grid;grid-template-columns:repeat(53,minmax(0,1fr));grid-template-rows:repeat(7,5px);grid-auto-flow:column;gap:1px">
+        <sc-for list="{{days}}" as="d" hint-placeholder-count="371"><div style="{{d.s}}"></div></sc-for>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:#7D838C"><span>Jan</span><span>Apr</span><span>Jul</span><span>Okt</span><span>Dez</span></div>
+    </section>
+
+    <section style="display:flex;flex-direction:column;gap:2px">
+      <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px"><span style="font-weight:600">Muskelgruppen</span><span style="color:#8B919A">Ø Sätze/Woche · Ziel</span></div>
+      <div style="display:grid;grid-template-columns:92px minmax(0,1fr) 92px;gap:12px;align-items:center;padding:8px 0;font-size:14px"><span>Brust</span><div style="height:6px;border-radius:3px;background:#202328"><div style="width:78%;height:6px;border-radius:3px;background:#3DDC97"></div></div><span class="n" style="text-align:right">12 / 10–20</span></div>
+      <div style="display:grid;grid-template-columns:92px minmax(0,1fr) 92px;gap:12px;align-items:center;padding:8px 0;font-size:14px"><span>Rücken</span><div style="height:6px;border-radius:3px;background:#202328"><div style="width:85%;height:6px;border-radius:3px;background:#3DDC97"></div></div><span class="n" style="text-align:right">14 / 10–20</span></div>
+      <div style="display:grid;grid-template-columns:92px minmax(0,1fr) 92px;gap:12px;align-items:center;padding:8px 0;font-size:14px"><span>Schultern</span><div style="height:6px;border-radius:3px;background:#202328"><div style="width:48%;height:6px;border-radius:3px;background:#FF9F43"></div></div><span class="n" style="text-align:right">6 / 10–20</span></div>
+      <div style="display:grid;grid-template-columns:92px minmax(0,1fr) 92px;gap:12px;align-items:center;padding:8px 0;font-size:14px"><span>Beine</span><div style="height:6px;border-radius:3px;background:#202328"><div style="width:72%;height:6px;border-radius:3px;background:#3DDC97"></div></div><span class="n" style="text-align:right">13 / 12–20</span></div>
+      <div style="display:grid;grid-template-columns:92px minmax(0,1fr) 92px;gap:12px;align-items:center;padding:8px 0;font-size:14px"><span>Arme</span><div style="height:6px;border-radius:3px;background:#202328"><div style="width:65%;height:6px;border-radius:3px;background:#3DDC97"></div></div><span class="n" style="text-align:right">9 / 8–14</span></div>
+      <div style="display:grid;grid-template-columns:92px minmax(0,1fr) 92px;gap:12px;align-items:center;padding:8px 0;font-size:14px"><span>Rumpf</span><div style="height:6px;border-radius:3px;background:#202328"><div style="width:35%;height:6px;border-radius:3px;background:#FF9F43"></div></div><span class="n" style="text-align:right">4 / 6–10</span></div>
+      <span style="font-size:12px;color:#7D838C;margin-top:4px">Gruppe antippen: einzelne Muskeln wie Quadrizeps, Beinbeuger, Waden</span>
+    </section>
+
+    <section style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:8px;background:#202328;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#FFD400">J</div><span style="font-size:16px;font-weight:600">Coach-Empfehlung</span></div>
+      <div style="background:#16181B;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:600;color:#FF9F43">Mehr trainieren</span><span style="font-size:14px;line-height:1.4">Waden: 0 Sätze in 4 Wochen (Ziel 6–10). Vorschlag: Wadenheben stehend 3 × 12 am Unterkörper-Tag.</span></div>
+      <a href="Fortschritt.dc.html" style="color:#8B919A;text-decoration:none;font-size:14px;display:flex;justify-content:space-between;padding:4px 2px">2 weitere Empfehlungen <span aria-hidden="true">›</span></a>
+      <div style="display:flex;gap:8px"><button style="flex:1;height:44px;border:0;border-radius:12px;background:#FFD400;color:#111;font:700 14px Saira,sans-serif">In den Plan übernehmen</button><button style="height:44px;padding:0 16px;border:0;border-radius:12px;background:#16181B;color:#F1EFEA;font:600 14px Saira,sans-serif">Später</button></div>
+    </section>
+  </main>
+
+  <nav style="height:76px;border-top:1px solid #16181B;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));font-size:12px;color:#7D838C;text-align:center">
+    <a href="Main.dc.html" style="color:inherit;text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Übersicht</a>
+    <a href="Plan.dc.html" style="color:inherit;text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"/></svg>Plan</a>
+    <a href="Fortschritt.dc.html" style="color:#F1EFEA;text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 17l5-5 4 3 7-8"/></svg>Fortschritt</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1040}}'>
+class Component extends DCLogic {
+renderVals() {
+  const days = [];
+  for (let i = 0; i < 371; i++) {
+    const wd = i % 7, wk = Math.floor(i / 7);
+    const on = wk < 48 && ((wd === 0 || wd === 2 || wd === 4) && ((i * 7 + wk * 3) % 10) > 2);
+    const future = wk >= 48;
+    const bg = on ? '#FFD400' : (future ? '#121417' : '#1C1F23');
+    days.push({ s: 'height:5px;border-radius:1px;background:' + bg });
+  }
+  return { days };
+}
+}
+</script>
+</body>
+</html>

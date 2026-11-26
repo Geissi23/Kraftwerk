@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Übersicht – Hell</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:ital,wdth,wght@0,62..125,400..800;1,62..125,400..900&amp;display=swap">
+<style>
+body{margin:0;background:#F1F1EE}
+.n{font-family:Saira,sans-serif;font-style:italic;font-stretch:80%;font-weight:800;font-variant-numeric:tabular-nums}
+.t{font-family:Saira,sans-serif;font-style:italic;font-stretch:70%;font-weight:900;text-transform:uppercase}
+</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;background:#F1F1EE;color:#0F1012;font-family:Saira,sans-serif;display:flex;flex-direction:column">
+  <header style="display:flex;justify-content:space-between;align-items:center;padding:20px 24px 0">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:28px;height:28px;border-radius:50%;background:#FFD400;color:#111;display:flex;align-items:center;justify-content:center;font-family:Saira,sans-serif;font-style:italic;font-stretch:70%;font-weight:900;text-transform:uppercase;font-size:16px">K</div>
+      <span style="font-size:16px;color:#5C6168">Do, 26. November</span>
+    </div>
+    <button aria-label="Notiz an Jarvis" style="width:44px;height:44px;border:0;border-radius:12px;background:#FFFFFF;color:#0F1012;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></button>
+  </header>
+
+  <main style="flex:1;padding:24px 24px 0;display:flex;flex-direction:column;gap:12px">
+    <h1 style="margin:0 0 6px;font-family:Saira,sans-serif;font-style:italic;font-stretch:70%;font-weight:900;text-transform:uppercase;font-size:44px;line-height:1">Übersicht</h1>
+
+    <a href="Training.dc.html" style="color:inherit;text-decoration:none;background:#FFFFFF;border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:#5C6168">Heute dran</span><span style="font-size:12px;color:#12805A">Erholung gut · volles Programm</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:24px;font-weight:700">Oberkörper</span>
+        <span style="width:48px;height:48px;border-radius:16px;background:#FFD400;display:flex;align-items:center;justify-content:center" aria-label="Training starten"><svg width="16" height="16" viewBox="0 0 24 24" fill="#111" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg></span>
+      </div>
+      <div style="border-top:1px solid #E6E6E2;padding-top:12px;display:flex;align-items:center;gap:10px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F1012" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>
+        <span style="font-size:14px">Heute schlagen: Bankdrücken <span class="n">82.5 × 8</span></span>
+      </div>
+    </a>
+
+    <section style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+      <div style="background:#FFFFFF;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;color:#5C6168">Diese Woche</span>
+        <span class="n" style="font-size:24px;font-weight:600">1 / 3</span>
+        <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px"><div style="height:5px;border-radius:2px;background:#FFD400"></div><div style="height:5px;border-radius:2px;background:#D6D6D1"></div><div style="height:5px;border-radius:2px;background:#D6D6D1"></div><div style="height:5px;border-radius:2px;background:#D6D6D1"></div><div style="height:5px;border-radius:2px;background:#D6D6D1"></div><div style="height:5px;border-radius:2px;background:#D6D6D1"></div><div style="height:5px;border-radius:2px;background:#D6D6D1"></div></div>
+      </div>
+      <a href="Koerper.dc.html" style="color:inherit;text-decoration:none;background:#FFFFFF;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;color:#5C6168">Gewicht</span>
+        <span class="n" style="font-size:24px;font-weight:600">78.4</span>
+        <span style="font-size:12px;color:#12805A">+0.6 kg / 4 Wo</span>
+      </a>
+      <div style="background:#FFFFFF;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;color:#5C6168">Schlaf</span>
+        <span class="n" style="font-size:24px;font-weight:600">7:20</span>
+        <span style="font-size:12px;color:#5C6168">HRV normal</span>
+      </div>
+      <div style="background:#FFFFFF;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;color:#5C6168">Eiweiss heute</span>
+        <span class="n" style="font-size:24px;font-weight:600">96 g</span>
+        <span style="font-size:12px;color:#A35400">Ziel 150 g</span>
+      </div>
+    </section>
+
+    <section style="border:1px solid #D6D6D1;border-radius:16px;padding:16px;display:flex;gap:12px;align-items:flex-start">
+      <div style="width:28px;height:28px;flex:none;border-radius:8px;background:#E6E6E2;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#0F1012">J</div>
+      <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:12px;color:#5C6168">Jarvis meint</span><span style="font-size:14px;line-height:1.4">Hintere Schulter kam 2 Wochen zu kurz. Ich habe Face Pulls in den Oberkörper gesetzt.</span></div>
+    </section>
+  </main>
+
+  <a href="Training.dc.html" style="margin:0 16px 8px;height:48px;border-radius:12px;background:#FFD400;color:#111;text-decoration:none;display:flex;align-items:center;gap:10px;padding:0 16px;font-size:14px;font-weight:600"><span style="width:8px;height:8px;border-radius:50%;background:#111"></span>Training läuft · Oberkörper<span class="n" style="margin-left:auto">13:55</span><span aria-hidden="true">›</span></a>
+  <nav style="height:76px;border-top:1px solid #FFFFFF;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));font-size:12px;color:#5C6168;text-align:center">
+    <a href="Main.dc.html" style="color:#0F1012;text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Übersicht</a>
+    <a href="Plan.dc.html" style="color:inherit;text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"/></svg>Plan</a>
+    <a href="Fortschritt.dc.html" style="color:inherit;text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 17l5-5 4 3 7-8"/></svg>Fortschritt</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
