@@ -91,6 +91,10 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 
 ## Eingang
 
+- **⛔ 26.11. 15:41 STOPP für den Zusatzlauf von 15:38 (Janis, über die Jarvis-Zentrale):** Design NICHT umsetzen, nichts mergen.
+  Janis will das Design zuerst mit der Zentrale im Chat zusammen anschauen (grob, schnell), erst danach wird umgesetzt.
+  Falls du schon einen Branch/PR hast: offen lassen, nicht mergen, im Tagesprotokoll vermerken. Erlaubt: nur Befund + Screenshots
+  (Vorher, Testdaten) unter `docs/design-befund/` ablegen und verlinken. Kein Push an Janis nötig.
 - **Alle Einträge vom 25.11. erledigt** (Janis wollte «alles jetzt», Chat 25.11. abends):
   Squat Maschine → PR #18 · P17 + P18 → PR #19 · Design v2 «Das Instrument» + Logo L1 → PR #20 (alle gemergt, live) ·
   P19 nein · Ernährung → Pitch P20 · Garmin-Verspätung: Vorschlag zweiter cron an Janis (kraftwerk-daten, nur er darf schreiben).
