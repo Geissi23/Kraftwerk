@@ -2601,11 +2601,19 @@ function ghPayload(){
     summary:{trainings:g.length,lastTraining:g.length?ymd(g[g.length-1].start):null,goal:S.goal,level:levelOf(xpTotal())},
     data:Object.assign({},S,{active:null,deleted:undefined})},null,1);
 }
+/* Schutz (26.11.2026): Eine leere App (z. B. neu auf dem Home-Bildschirm) überschreibt nie eine Sicherung mit Trainings. */
+function ghApplyRemote(o){const d=o&&o.data;
+  if(!o||o.app!=='kraftwerk'||!d||!Array.isArray(d.workouts)||!Array.isArray(d.routines))throw new Error('Datei ungültig');
+  S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();normExtras();dataFixes();persist();pushPlan();S.workouts.forEach(pushWorkout);}
 async function ghPush(manual){
   if(!ghOn()||GH.busy)return false;GH.busy=true;
   try{
     let sha;const g=await ghApi('/contents/'+GH_FILE,{allow404:true});
-    if(g.ok){sha=(await g.json()).sha;}
+    if(g.ok){const j=await g.json();sha=j.sha;
+      if(!(S.workouts||[]).length){let o=null;try{o=JSON.parse(ghFromB64(j.content));}catch(e){}
+        if(o&&o.data&&Array.isArray(o.data.workouts)&&o.data.workouts.length){
+          if(manual){ghApplyRemote(o);GH.last=Date.now();GH.err='';ghSave();closeSheet();render();toast('Deine Daten sind zurück: aus der Sicherung geholt',true);return true;}
+          GH.err='Nicht gespeichert: App leer, Sicherung hat Trainings';ghSave();return false;}}}
     const r=await ghApi('/contents/'+GH_FILE,{method:'PUT',body:JSON.stringify({message:'Kraftwerk-Sync '+new Date().toLocaleString('de-CH'),content:ghB64(ghPayload()),sha})});
     if(!r.ok)throw new Error('Speichern fehlgeschlagen ('+r.status+')');
     GH.last=Date.now();GH.err='';ghSave();if(manual)toast('Mit Jarvis synchronisiert');return true;
@@ -2627,14 +2635,12 @@ ACT.ghsheet=()=>ghSheet();
 ACT.ghconnect=async b=>{
   GH.repo=($('#ghrepo').value||'').trim().replace(/^https:\/\/github\.com\//,'').replace(/\/$/,'');GH.token=($('#ghtok').value||'').trim();GH.err='';ghSave();
   if(!ghOn()){toast('Bitte Repo (Name/Repo) und Schlüssel eintragen.');return;}
-  b.disabled=true;b.textContent='Verbinde…';const ok=await ghPush(true);ghSheet();if(ok)toast('Verbunden. Jarvis sieht jetzt deine Trainings.',true);
+  b.disabled=true;b.textContent='Verbinde…';const had=(S.workouts||[]).length;const ok=await ghPush(true);if(!had&&(S.workouts||[]).length)return;ghSheet();if(ok)toast('Verbunden. Jarvis sieht jetzt deine Trainings.',true);
 };
 ACT.ghoff=b=>{if(!arm(b,'Nochmals tippen zum Ausschalten'))return;GH.token='';GH.last=0;GH.err='';ghSave();ghSheet();toast('Jarvis-Sync ausgeschaltet');};
 ACT.ghrestore=async b=>{
   if(!arm(b,'Ersetzt die Daten hier. Nochmals tippen'))return;
-  try{const r=await ghApi('/contents/'+GH_FILE);const j=await r.json();const o=JSON.parse(ghFromB64(j.content));const d=o.data;
-    if(o.app!=='kraftwerk'||!d||!Array.isArray(d.workouts)||!Array.isArray(d.routines))throw new Error('Datei ungültig');
-    S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();normExtras();dataFixes();persist();pushPlan();S.workouts.forEach(pushWorkout);closeSheet();render();toast('Aus GitHub wiederhergestellt');
+  try{const r=await ghApi('/contents/'+GH_FILE);const j=await r.json();ghApplyRemote(JSON.parse(ghFromB64(j.content)));closeSheet();render();toast('Aus GitHub wiederhergestellt');
   }catch(e){toast((e&&e.message)||'Wiederherstellen fehlgeschlagen');}
 };
 if(ghOn()&&(FIXED_IDS.size||Date.now()-GH.last>6*3600e3))ghSchedule(8000);
