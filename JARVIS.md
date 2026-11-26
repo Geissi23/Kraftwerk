@@ -115,6 +115,9 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   **Etappen (je eigener PR, testen, mergen, Pages prüfen):** 1 Schrift + Stufen + Navigation · 2 Training (+ Pflicht-Technik) ·
   3 Übersicht + Plan · 4 Fortschritt · 5 Eiweiss/Wasser + Körpermasse. Im Bericht je Vorher/Nachher-Screenshots und «PR #X rückgängig».
   Was in einem Lauf nicht fertig wird, im nächsten Lauf weiter. Nach jeder Etappe Push an Janis (eine Zeile).
+  **Stand 26.11. abends:** Etappe 1 live (PR #24) · Etappe 2 Teil 1 live (PR #25). **Offen, nächster Lauf weiter:** Etappe 2 Rest
+  (Aufwärm-Markierung als Datenfeld + automatische Aufwärm-Vorschläge 40 %/60 %, Gewichtsschritte pro Übung/Gerät einstellbar,
+  Abschluss-Screen wie Mockup 5) · Etappe 3 Übersicht + Plan · Etappe 4 Fortschritt (Rekorde dorthin) · Etappe 5 Eiweiss/Wasser + Körpermasse.
 - **⛔ 26.11. 15:41 STOPP für den Zusatzlauf von 15:38 (Janis, über die Jarvis-Zentrale):** Design NICHT umsetzen, nichts mergen.
   Janis will das Design zuerst mit der Zentrale im Chat zusammen anschauen (grob, schnell), erst danach wird umgesetzt.
   Falls du schon einen Branch/PR hast: offen lassen, nicht mergen, im Tagesprotokoll vermerken. Erlaubt: nur Befund + Screenshots
@@ -133,6 +136,41 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 ## Tagesprotokoll
 
 Hinweis: Trainings- und Gesundheitszahlen stehen nie hier (öffentliches Repo). Der Bericht-Lauf liest sie selbst aus `kraftwerk-daten`.
+
+### Do 26.11.2026 – Arbeits-Lauf (geplant, ausserhalb Mo/Mi/Fr gestartet, ca. 17:40) – Design v3 (Berichtenswert: **ja**)
+
+**Gemergt / live** (Pages auf `6b4dff0` veröffentlicht). Getestet: node-Syntax, Playwright iPhone 13 hell/dunkel + iPhone SE mit echtem
+Datenstand (nur lokal), keine Konsolenfehler, alle bisherigen Trainings vorher = nachher.
+- PR #24 https://github.com/Geissi23/Kraftwerk/pull/24 – **Design v3 Etappe 1**: nur noch Saira (Titel kursiv schmal 70 %/900,
+  Zahlen kursiv 80 %/800), Stufen 48/36/24/16, Labels 12 ohne Sperrschrift, runde Ecken (Karten 16, Knöpfe 12), Kleintext-Grau #7D838C,
+  **3 Tabs** Übersicht · Plan · Fortschritt. «Heute» → «Übersicht». Tab «Übungen» weg; unter Plan jetzt «Meine Übungen & Rekorde» ·
+  «Übungsbibliothek» · «Einstellungen». Testen: alle drei Tabs, Plan → Meine Übungen & Rekorde. Rückgängig: «PR #24 rückgängig».
+- PR #25 https://github.com/Geissi23/Kraftwerk/pull/25 – **Design v3 Etappe 2 (Teil 1, Training)**: gelbe Karte mit «letztes Mal»,
+  Frage «Wie viele Wdh wären noch gegangen?» 0–1/2/3+ (neues optionales Feld `rir` pro Satz), «Bestätigen»; Pause als Leiste unten mit
+  schrumpfendem Strich, −15/+15/✕, «Rückgängig», «Danach: …»; bei 0:00 Ton + gelbes Aufblinken (Vibrieren entfernt); fertigen Satz
+  antippen = ändern; Leiste «Training läuft» auf allen Tabs; Menü ··· mit Anleitung, Satz hinzufügen, Überspringen, Notiz.
+  Testen: Training starten → RIR antippen → Bestätigen → Rückgängig ausprobieren → Training schliessen → gelbe Leiste. Rückgängig: «PR #25 rückgängig».
+- Screens (nur Testdaten): `jarvis/screens/2026-11-26-v3-etappe1/README.md` (Vorher/Nachher) und `.../2026-11-26-v3-etappe2/README.md`.
+- Push an Janis nach den Etappen verschickt (eine Nachricht für beide).
+
+**Ehrlich offen / Probleme**
+- Saira konnte in der Sandbox nicht geladen werden (Google Fonts gesperrt) → Screenshots mit Ersatzschrift; die echte Wirkung (Breite 70/80 %)
+  sieht nur Janis auf dem iPhone. Bitte Rückmeldung.
+- iPhone SE (kleiner Bildschirm): Während der Pause liegt «Bestätigen» unter der Pausenleiste (scrollen oder ✕). iPhone 13 passt.
+- Übersicht und Fortschritt haben erst die neue Schrift/Ecken, noch nicht den neuen Aufbau (Etappen 3 und 4).
+
+**Kritischer Blick:** Pausen-Anzeige. Die alte Anzeige (24 Segmente, grosse Zahl, «Weiter») hat die Tafel verdeckt und kein Rückgängig
+gehabt → ersetzt durch die schlanke Leiste aus dem Mockup; die Tafel scrollt jetzt über die Leiste. Vibrieren entfernt (iOS-Web-Apps können es nicht).
+
+**Kraftwerk Cockpit:** nicht aktualisiert, weil seit dem letzten Lauf kein neues Training im Sync ist (Stand unverändert).
+
+**Daueraufgaben**
+- Sync-Wächter: Jarvis-Sync ok (letzter Stand 25.11. abends, seither kein Training). Garmin-Sync lief heute (13:50 UTC), wieder spät. Kein Push nötig.
+- Erholung: keine neue Auswertung nötig (gleiche Daten wie im Lauf um 15:40), Empfehlung bleibt **normal**.
+- Daten aufräumen: keine neuen Daten. Plan pflegen: keine Änderung. Kein Wochenplan (Do), kein Monats-Check (Mi 2.12.).
+- App-Notizen: keine neuen seit 25.11.
+
+**Offene Fragen** unverändert: Squat-Aufwärmsätze → «so lassen» · P20 → «Etappe A umsetzen» (deckt sich mit Etappe 5) · Supersätze → «im Wechsel lassen», alle Frist Mo 30.11.
 
 ### Do 26.11.2026 – Zusatzlauf «Design jetzt» (Wunsch Janis über die Jarvis-Zentrale, ca. 16:00) (Berichtenswert: **ja**)
 
@@ -421,6 +459,7 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
   (altes Konzept EqFvSSNdG3T5MrPtDGFcsV verworfen: «zu ähnlich wie jetzt»). Offen: Feinschliff nach Test auf dem iPhone.
 - [x] App-Notizen 25.11.: Satz-Knopf weit unten / «Sprung» zur nächsten Übung (Supersatz) / Schriftsprünge – **live (PR #22)**.
 - [x] Übersichtlichkeit Design v2 pro Screen – **live (PR #23)**, vorgezogen am 26.11.
+- [x] Design v3 Etappe 1 (PR #24) + Etappe 2 Teil 1 (PR #25) – live. [ ] Rest Etappe 2, Etappen 3–5 (siehe Eingang).
 - [ ] Cockpit-Seite: Muskel-Ampel nutzt noch feste Grenzen 10/20 statt `richtwert` (Seite nur auf Wunsch anfassen).
 
 ## Später (wartet auf Janis)
@@ -477,3 +516,6 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-26 (selbstkritisch): Supersätze habe ich beim Plan-Umbau eingebaut, ohne zu prüfen, wie sich der Wechsel im Training anfühlt. Bei Plan-Änderungen künftig ein Training einmal komplett durchklicken.
 - 2026-11-26 (Zusatzlauf Design): PR #23 «Design v2 ruhiger» gemergt (alle Screens), Vorher/Nachher-Screenshots mit Testdaten unter jarvis/screens/2026-11-26.
 - 2026-11-26 (selbstkritisch): Ein Auto-Scroll, der den Tafel-Knopf ins Bild holen sollte, hat den Übungsnamen abgeschnitten – erst im Screenshot bemerkt und zurückgenommen. Visuelle Änderungen immer zuerst im Screenshot prüfen, nicht nur per Messwert.
+- 2026-11-26 (Arbeits-Lauf abends): Design v3 umgesetzt: Etappe 1 (PR #24) und Etappe 2 Teil 1 Training (PR #25) live, Push an Janis. Rest folgt.
+- 2026-11-26 (selbstkritisch): Die neue Pausenleiste hat die gelbe Karte zuerst verdeckt – erst im Screenshot gesehen. Bei festen Leisten
+  immer den verfügbaren Platz messen (Karte vs. Bereich über der Leiste) und auf dem kleinsten Gerät prüfen.
