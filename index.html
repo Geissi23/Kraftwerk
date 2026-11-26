@@ -204,7 +204,7 @@ svg.chart{width:100%;height:auto;display:block;overflow:visible}
 
 /* ===== heute ===== */
 .nextc{background:var(--s1);padding:16px 18px 18px;--c:18px;display:flex;flex-direction:column;gap:12px;margin-bottom:14px}
-.nextc h2{font-size:var(--nx,56px);font-weight:900;line-height:.86;letter-spacing:0;overflow-wrap:break-word;-webkit-hyphens:auto;hyphens:auto}
+.nextc h2{font-size:48px;font-weight:900;line-height:.88;letter-spacing:0;overflow-wrap:break-word;-webkit-hyphens:manual;hyphens:manual}
 .nextc .eyebrow{display:flex;align-items:center;gap:7px}
 .kv{display:flex;gap:22px;flex-wrap:wrap}
 .kv div{display:flex;flex-direction:column;gap:3px}
@@ -214,7 +214,7 @@ svg.chart{width:100%;height:auto;display:block;overflow:visible}
 .exprev div{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--s2);font-size:14px}
 .exprev div span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .exprev div span:last-child{font-family:var(--mono);font-size:12px;color:var(--mut);white-space:nowrap}
-.nextc .btn{min-height:58px;font-size:23px;width:100%}
+.nextc .btn{min-height:58px;font-size:23px;width:100%;margin-top:4px}
 .nextc p{margin:0;color:var(--mut);font-size:14px}
 .pulse{width:7px;height:7px;background:currentColor;display:inline-block;animation:blink 1.6s ease-in-out infinite;flex:none}
 @keyframes blink{50%{opacity:.25}}
@@ -251,6 +251,20 @@ svg.chart{width:100%;height:auto;display:block;overflow:visible}
 .dot{width:28px;height:28px;display:grid;place-items:center;background:var(--s2);font-size:13px;font-weight:700;color:var(--bg)}
 .dot.done{background:var(--fg)}
 .day.today .dot{box-shadow:inset 0 0 0 2px var(--fg)}
+.wkhd{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px}
+.wkhd .wkn{font-family:var(--disp);font-size:26px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.wkhd .wkn small{font-size:.6em;color:var(--mut);margin-left:1px}
+details.more{margin:4px 0 14px}
+details.more>summary{list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:44px;cursor:pointer;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary .chev{transition:transform .15s}
+details.more[open]>summary .chev{transform:rotate(90deg)}
+details.more>summary:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.card details.more{margin:10px 0 0}
+.recb.mini{gap:0}
+.recb .rq{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) 14px;gap:8px;align-items:end;padding-top:4px}
+.recb .rq b{display:block;font-family:var(--disp);font-size:24px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.recb .rq small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-top:3px}
 .wkline{font-size:13px;color:var(--mut);margin-top:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .wkline .ic{width:15px;height:15px}
 /* andere trainings */
@@ -338,7 +352,7 @@ svg.chart{width:100%;height:auto;display:block;overflow:visible}
 .kpi .k .kl{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);display:flex;align-items:center;gap:5px}
 .kpi .k .kl .ic{width:13px;height:13px}
 .dl{font-family:var(--mono);font-size:11px;font-weight:600;padding:1px 5px;letter-spacing:.02em}
-.dl.up{background:var(--ok-bg);color:var(--ok-t)}.dl.dn{background:var(--bad-bg);color:var(--bad-t)}
+.dl.up{background:var(--ok-bg);color:var(--ok-t)}.dl.dn{background:var(--s2);color:var(--mut)}
 .perh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 0 10px}
 .perh b{font-family:var(--disp);font-size:24px;font-weight:800;text-transform:uppercase;text-align:center;flex:1}
 .perh button{width:44px;height:44px;background:var(--s2);font-size:22px;line-height:1}
@@ -518,13 +532,14 @@ input[type=range].phr{width:100%;margin:12px 0 4px}
 .exh .tools{display:flex;gap:6px;flex:none}
 .ss{display:inline-flex;align-items:center;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;background:var(--fg);color:var(--bg);padding:2px 7px}
 .goal{display:flex;flex-direction:column;gap:3px;margin-top:12px}
+.goal[hidden]{display:none}
 .goal .gv{font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:.02em;text-transform:uppercase;line-height:1}
 .goal .gthen{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--acc-t);line-height:1.35}
 .ex:not(.cur) .goal .gthen{color:var(--mut)}
 .goal .glast{font-size:13px;color:var(--mut)}
 .hint{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-top:6px}
 .pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.pill{min-height:44px;padding:0 13px;background:var(--s1);color:var(--fg);font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:7px;--c:8px;clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));max-width:100%}
+.pill{min-height:40px;padding:0 12px;background:var(--s1);color:var(--fg);font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:7px;--c:8px;clip-path:polygon(var(--c) 0,100% 0,100% calc(100% - var(--c)),calc(100% - var(--c)) 100%,0 100%,0 var(--c));max-width:100%}
 .pill .ic{width:16px;height:16px;color:var(--mut)}
 .pill.on{background:var(--fg);color:var(--bg)}
 .pill.on .ic{color:var(--bg)}
@@ -689,7 +704,7 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--fg);backgro
 #story.y .sbtn .btn{background:#111;color:#FFD400}
 
 @media (max-width:380px){.wkh #wktitle{font-size:20px}}
-@media (max-width:360px){.pghead h1{font-size:44px}.nextc h2{font-size:46px}.nextc .btn{font-size:19px;white-space:nowrap}.exh h3{font-size:30px}.ex.cur .exh h3{font-size:34px}}
+@media (max-width:360px){.pghead h1{font-size:44px}.nextc h2{font-size:44px}.nextc .btn{font-size:19px;white-space:nowrap}.exh h3{font-size:26px}.ex.cur .exh h3{font-size:30px}}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
@@ -1430,7 +1445,7 @@ function viewToday(){
     const last=routineLast(r.id);
     const prev=r.ex.slice(0,2).map(e=>{const ls=lastSession(exKey(e.name));const w=ls?Math.max(0,...ls.rows.map(x=>num(x.w))):0;
       return `<div><span>${esc(e.name)}</span><span>${e.sets} × ${reps(e)}${w>0?' · '+fmtN(w)+' kg':''}</span></div>`;}).join('')+(r.ex.length>2?`<div><span>+ ${r.ex.length-2} weitere</span><span></span></div>`:'');
-    hero=`<section class="nextc cut" aria-label="Nächstes Training"><div class="eyebrow">${today.length?ic('check')+' Heute erledigt · als Nächstes':'Nächstes Training'}</div><h2 style="--nx:${r.name.length<=10?56:r.name.length<=14?46:38}px">${esc(r.name)}</h2>
+    hero=`<section class="nextc cut" aria-label="Nächstes Training"><div class="eyebrow">${today.length?ic('check')+' Heute erledigt · als Nächstes':'Nächstes Training'}</div><h2>${esc(r.name)}</h2>
       <div class="kv"><div><b>${r.ex.length}</b><span>Übungen</span></div><div><b>${estMin(r)}</b><span>Minuten</span></div><div><b>${esc(lastShort(last.t))}</b><span>Zuletzt</span></div></div>
       <div class="exprev">${prev}</div>
       <button class="btn acc" data-act="start" data-id="${r.id}">${ic('play')} Training starten</button></section>`;
@@ -1446,11 +1461,12 @@ function viewToday(){
   const goal=S.goal,xp=xpTotal(),l=levelOf(xp),xa=xpAt(l),xb=xpAt(l+1),pct=(xp-xa)/(xb-xa);
   const st=streakInfo();
   const ringw=`<div class="ringw${gymWeek>=goal?' full':''}" role="img" aria-label="Wochenziel: ${gymWeek} von ${goal} Trainings">${ringSvg(gymWeek,goal)}<div class="c" aria-hidden="true"><span class="num">${gymWeek}/${goal}</span><span class="mono">Woche</span></div></div>`;
-  const weekCard=`<div class="duo">${ringw}<div class="xp"><span class="eyebrow">Level ${l}</span><h3>${esc(titleOf(l))}</h3><div class="leds" role="img" aria-label="Fortschritt zum nächsten Level: ${Math.round(pct*100)} %">${leds(pct)}</div><span class="mono">${xp} / ${xb} XP</span></div></div>
-    <div class="wkblk"><div class="week">${strip}</div>
+  /* Design v2 ruhiger (26.11.): Woche als eine Karte; Level/XP stehen unter Fortschritt */
+  void ringw;void pct;
+  const weekCard=`<div class="wkblk"><div class="wkhd"><span class="eyebrow">Diese Woche</span><span class="wkn num">${gymWeek}<small>/${goal}</small></span></div><div class="week">${strip}</div>
     <div class="wkline">${gymWeek>=goal?ic('trophy')+' Wochenziel erreicht':ic('flame')+' Noch '+(goal-gymWeek)+' bis zum Wochenziel'}${st.streak?` · ${st.streak} Wo. Serie`:''}${weekVol>0?` · ${fmtT(weekVol)}`:''}</div></div>`;
   const rest=S.routines.filter(x=>!r||x.id!==r.id);
-  const others=rest.length?`<div class="h3">Andere Trainings</div><div class="hscroll">${rest.map(x=>`<button class="tcard" data-act="start" data-id="${x.id}"><span class="dotc">${ic(routineIcon(x),'lg')}</span><span class="tn">${esc(x.name)}</span><span class="ts">${ic('clock')} ${estMin(x)} Min.</span></button>`).join('')}</div>`:'';
+  const others=rest.length?`<details class="more"><summary>Anderes Training starten<span class="chev" aria-hidden="true">›</span></summary><div class="hscroll">${rest.map(x=>`<button class="tcard" data-act="start" data-id="${x.id}"><span class="dotc">${ic(routineIcon(x),'lg')}</span><span class="tn">${esc(x.name)}</span><span class="ts">${ic('clock')} ${estMin(x)} Min.</span></button>`).join('')}</div></details>`:'';
   return viewTop()+pageHead(esc(fmtDateLong(now).replace(', ',' · ')),'Heute')+hero+recoveryToday()+bwQuick()+reviewTeaser()+weekCard+others;
 }
 
@@ -1460,7 +1476,7 @@ function viewPlan(){
     const l=routineLast(r.id),sets=r.ex.reduce((a,e)=>a+e.sets,0);
     const names=r.ex.map(e=>e.name.replace(/\s*\(.*\)/,''));
     return `<div class="rc"><div class="rh"><span class="ri">${ic(routineIcon(r),'xl')}</span><div class="rn">${esc(r.name)}</div></div>
-      <div class="rm">${r.rot?`<span class="tag">${ic('repeat')}Vorschlag</span>`:'<span class="tag dim">Extra</span>'}<span>${ic('dumbbell')} ${r.ex.length} Übungen</span><span>${ic('layers')} ${sets} Sätze</span><span>${ic('clock')} ${estMin(r)} Min.</span><span>${ic('history')} ${esc(agoText(l.t).replace('Zuletzt ',''))}</span></div>
+      <div class="rm">${r.rot?`<span class="tag">${ic('repeat')}Vorschlag</span>`:'<span class="tag dim">Extra</span>'}<span>${r.ex.length} Übungen · ${sets} Sätze · ${estMin(r)} Min.</span><span>${ic('history')} ${esc(agoText(l.t).replace('Zuletzt ',''))}</span></div>
       <div class="rx">${esc(names.slice(0,4).join(' · '))}${names.length>4?` · +${names.length-4}`:''}</div>
       <div class="ra"><button class="btn go${nx&&r.id===nx.id?' acc':''}" data-act="start" data-id="${r.id}">${ic('play')} Starten</button><button class="icb cut" data-act="editroutine" data-id="${r.id}" aria-label="${esc(r.name)} bearbeiten">${ic('edit')}</button><button class="icb cut" data-act="duproutine" data-id="${r.id}" aria-label="${esc(r.name)} duplizieren">${ic('copy')}</button></div></div>`;
   }).join('');
@@ -1532,7 +1548,7 @@ function viewStats(){
   const on=BADGES.filter(bd=>bd.ok(t)).length;
   const bicon=['flame','repeat','dumbbell','trophy','star','weight','weight','calendar','sparkle','flame'];
   const badges=`<div class="card"><div class="blkh"><h2>Abzeichen</h2><span class="mono">${on}/${BADGES.length}</span></div><div class="bdgs">${BADGES.map((bd,i)=>{const o=bd.ok(t);return `<div class="bdg ${o?'on':''}" title="${esc(bd.d)}"><i class="cut">${ic(bicon[i%bicon.length],'lg')}</i>${esc(bd.t)}<span class="vh">${o?' (erreicht)':' (noch offen)'}: ${esc(bd.d)}</span></div>`;}).join('')}</div></div>`;
-  return head+strengthCard()+periodCard()+muscleCard()+chart+rev+lvl+badges;
+  return head+periodCard()+strengthCard()+muscleCard()+chart+rev+lvl+badges;
 }
 let CHART='v';
 ACT.statsub=b=>{STATS_SUB=b.dataset.s;render();fadeMain();window.scrollTo(0,0);};
@@ -1676,12 +1692,11 @@ function renderWorkout(){
         ${pr?`<div class="prtag">${r.pr==='weight'?'Gewichtsrekord!':r.pr==='reps'?'Wiederholungsrekord!':'Neue Bestleistung!'}</div>`:''}</div>${sg}`;
     }).join('');
     return `<div class="ex${isCur?' cur':''}${fin?' fin':''}">
-      <div class="exeb"><span class="eyebrow">Übung ${i+1} / ${n}${mg?' · '+esc(mg):''}</span>${ex.ss?`<span class="ss">Supersatz ${esc(ex.ss)}</span>`:''}${fin?`<span class="tag ok">${ic('check')} Fertig</span>`:''}</div>
+      <div class="exeb"><span class="eyebrow">Übung ${i+1}/${n}${mg?' · '+esc(mg):''} · ${ex.sets} × ${ex.repMin===ex.repMax?ex.repMin:ex.repMin+'–'+ex.repMax} · Pause ${fmtClock(ex.rest)}${!isCur&&!fin?` · ${dn}/${ex.rows.length}`:''}</span>${ex.ss?`<span class="ss">Supersatz ${esc(ex.ss)}</span>`:''}${fin?`<span class="tag ok">${ic('check')} Fertig</span>`:''}</div>
       <div class="exh"><div><h3>${esc(ex.name)}</h3></div>
       <div class="tools">${EX_LIB[ex.key]?`<button class="icon" data-act="exinfo" data-i="${i}" aria-label="Übungsinfo zu ${esc(ex.name)}">ⓘ</button>`:''}<button class="icon" data-act="exmenu" data-i="${i}" aria-label="Übung-Optionen">⋯</button></div></div>
-      <div class="goal"><span class="eyebrow">Ziel heute</span><span class="gv" id="gv${i}">${esc(g.head)}</span>${g.then?`<span class="gthen">${esc(g.then)}</span>`:''}${g.last?`<span class="glast">${esc(g.last)}</span>`:''}</div>
-      <div class="hint">${ex.sets} × ${ex.repMin===ex.repMax?ex.repMin:ex.repMin+'–'+ex.repMax} Wdh. · Pause ${fmtClock(ex.rest)} · ${dn}/${ex.rows.length} erledigt</div>
-      ${exExtras(ex,i)}
+      <div class="goal"${isCur?'':' hidden'}><span class="eyebrow">Ziel heute</span><span class="gv" id="gv${i}">${esc(g.head)}</span>${g.then?`<span class="gthen">${esc(g.then)}</span>`:''}${g.last?`<span class="glast">${esc(g.last)}</span>`:''}</div>
+      ${isCur?exExtras(ex,i):''}
       ${rows}
       <button class="addset" data-act="addset" data-i="${i}">+ Satz</button></div>`;
   }).join('')+`<button class="btn ghost full" style="margin-top:14px" data-act="addex">+ Übung hinzufügen</button>`;
@@ -2008,7 +2023,7 @@ function muscleSetsRange(from,to){
   return {cnt,other};
 }
 const MG_OPEN=new Set();
-document.addEventListener('toggle',e=>{const d=e.target;if(d&&d.classList&&d.classList.contains('mggrp')){if(d.open)MG_OPEN.add(d.dataset.g);else MG_OPEN.delete(d.dataset.g);}},true);
+document.addEventListener('toggle',e=>{const d=e.target;if(d&&d.classList&&(d.classList.contains('mggrp')||d.classList.contains('mgall'))){if(d.open)MG_OPEN.add(d.dataset.g);else MG_OPEN.delete(d.dataset.g);}},true);
 function muscleCard(){
   const R=periodRange(STAT_P,STAT_OFF);
   const {cnt,other}=muscleSetsRange(R.from,R.to);
@@ -2045,10 +2060,10 @@ function muscleCard(){
   return `<div class="card"><div class="blkh"><h2>Muskelbalance</h2><span class="mono">${STAT_P==='w'?'Sätze':'Ø Sätze/Woche'}</span></div>
     <div class="bal"><svg class="polar" viewBox="0 0 240 240" role="img" aria-label="Muskelbalance: ${MGROUPS.map((G,i)=>G.g).join(', ')}. Gestrichelter Kreis = Richtwert">${pol}</svg><div class="leg" aria-label="Muskeln im Richtwert pro Gruppe">${leg}</div></div>
     <div class="muted small" style="margin-bottom:6px">${esc(tip)}</div>
-    <div class="h3" style="margin-top:14px">Einzelne Muskeln</div>
+    <details class="more mgall" data-g="__alle"${MG_OPEN.has('__alle')?' open':''}><summary>Einzelne Muskeln<span class="chev" aria-hidden="true">›</span></summary>
     ${rows}
     <div class="mglegend"><span><i style="background:var(--warn)"></i>unter Richtwert</span><span><i style="background:var(--ok)"></i>im Ziel</span><span><i style="background:var(--fg)"></i>darüber</span><span><i style="background:var(--mut)"></i>indirekt</span></div>
-    <div class="muted small" style="margin-top:6px">So wird gezählt: Hauptmuskel 1 Satz, Hilfsmuskel ½ Satz (z. B. Bankdrücken: Brust 1, Trizeps und vordere Schulter je ½). Striche = Richtwert für Muskelaufbau.</div></div>`;
+    <div class="muted small" style="margin-top:6px">So wird gezählt: Hauptmuskel 1 Satz, Hilfsmuskel ½ Satz (z. B. Bankdrücken: Brust 1, Trizeps und vordere Schulter je ½). Striche = Richtwert für Muskelaufbau.</div></details></div>`;
 }
 
 /* ---------- P8: statistik-zentrale ---------- */
@@ -2619,12 +2634,12 @@ function recoveryToday(){
   const tag=R.st==='none'?'<span class="tag dim">Keine Daten</span>':`<span class="tag ${REC_T[R.st]}">● ${REC_L[R.st]}</span>`;
   const info=R.st==='none'?recNone(R):[R.hs?'HRV '+hrvDe(R.hs):'',R.avg!=null?'Ruhepuls Ø 7 Tage '+fmtN(R.avg):''].filter(Boolean).join(' · ');
   const al=R.st==='none'?recNone(R):'Erholung '+REC_L[R.st]+': '+recReason(R);
-  return `<button class="recb" data-act="recov" aria-label="${esc(al)}. Details im Tab Körper">
-    <span class="rh"><span class="eyebrow">Erholung · Garmin</span>${tag}</span>
-    ${row('Schlaf',R.sleepH!=null?fmtHM(R.sleepH):'–','H',R.sleepH,4,10,[7,9])}
-    ${row('HRV',R.hv!=null?String(R.hv):'–','MS',R.hv,hlo,hhi,hb)}
-    ${row('Ruhepuls',R.rhr!=null?String(R.rhr):'–','BPM',R.rhr,rc!=null?rc-12:40,rc!=null?rc+12:80,R.avg!=null?[R.avg-4,R.avg+2]:null)}
-    <span class="rr"><span>${esc(info)}</span><span class="chev" aria-hidden="true">›</span></span></button>`;
+  /* Kompakt (26.11.): drei Werte in einer Zeile, Verlauf und Skalen im Tab Körper */
+  void row;void hlo;void hhi;void rc;
+  const q=(v,lab)=>`<span><b>${v}</b><small>${lab}</small></span>`;
+  return `<button class="recb mini" data-act="recov" aria-label="${esc(al)}${info?'. '+esc(info):''}. Details im Tab Körper">
+    <span class="rh"><span class="eyebrow">Erholung</span>${tag}</span>
+    <span class="rq">${q(R.sleepH!=null?fmtHM(R.sleepH):'–','Schlaf h')}${q(R.hv!=null?String(R.hv):'–','HRV ms')}${q(R.rhr!=null?String(R.rhr):'–','Ruhepuls')}<span class="chev" aria-hidden="true">›</span></span></button>`;
 }
 const gaStand=t=>{const d=new Date(t);return d.getDate()+'.'+(d.getMonth()+1)+'., '+pad(d.getHours())+':'+pad(d.getMinutes());};
 /* Körper: Ablesewerte + 7-Tage-Raster (grün/orange/rot wie die Ampel) */
