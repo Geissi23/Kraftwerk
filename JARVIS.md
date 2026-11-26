@@ -115,9 +115,10 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   **Etappen (je eigener PR, testen, mergen, Pages prüfen):** 1 Schrift + Stufen + Navigation · 2 Training (+ Pflicht-Technik) ·
   3 Übersicht + Plan · 4 Fortschritt · 5 Eiweiss/Wasser + Körpermasse. Im Bericht je Vorher/Nachher-Screenshots und «PR #X rückgängig».
   Was in einem Lauf nicht fertig wird, im nächsten Lauf weiter. Nach jeder Etappe Push an Janis (eine Zeile).
-  **Stand 26.11. abends:** Etappe 1 live (PR #24) · Etappe 2 Teil 1 live (PR #25). **Offen, nächster Lauf weiter:** Etappe 2 Rest
-  (Aufwärm-Markierung als Datenfeld + automatische Aufwärm-Vorschläge 40 %/60 %, Gewichtsschritte pro Übung/Gerät einstellbar,
-  Abschluss-Screen wie Mockup 5) · Etappe 3 Übersicht + Plan · Etappe 4 Fortschritt (Rekorde dorthin) · Etappe 5 Eiweiss/Wasser + Körpermasse.
+  **Stand 26.11. abends:** Etappe 1 live (PR #24) · Etappe 2 Teil 1 live (PR #25) · Etappe 3 live (PR #26).
+  **Offen, nächster Lauf (Fr) weiter:** Etappe 4 Fortschritt (Rekorde dorthin, Tab-Liste «Meine Übungen» unter Plan dann ersetzen) ·
+  Etappe 5 Eiweiss/Wasser + Körpermasse (ersetzt Kachel «Serie» auf der Übersicht durch «Eiweiss heute») · Etappe 2 Rest (Aufwärm-Markierung
+  als Datenfeld + Aufwärm-Vorschläge 40 %/60 %, Gewichtsschritte pro Übung/Gerät, Abschluss-Screen wie Mockup 5).
 - **⛔ 26.11. 15:41 STOPP für den Zusatzlauf von 15:38 (Janis, über die Jarvis-Zentrale):** Design NICHT umsetzen, nichts mergen.
   Janis will das Design zuerst mit der Zentrale im Chat zusammen anschauen (grob, schnell), erst danach wird umgesetzt.
   Falls du schon einen Branch/PR hast: offen lassen, nicht mergen, im Tagesprotokoll vermerken. Erlaubt: nur Befund + Screenshots
@@ -171,6 +172,16 @@ gehabt → ersetzt durch die schlanke Leiste aus dem Mockup; die Tafel scrollt j
 - App-Notizen: keine neuen seit 25.11.
 
 **Offene Fragen** unverändert: Squat-Aufwärmsätze → «so lassen» · P20 → «Etappe A umsetzen» (deckt sich mit Etappe 5) · Supersätze → «im Wechsel lassen», alle Frist Mo 30.11.
+
+**Nachtrag Zusatzlauf «Design v3 umsetzen» (ca. 18:00, über die Jarvis-Zentrale)**
+- PR #26 https://github.com/Geissi23/Kraftwerk/pull/26 – **Design v3 Etappe 3: Übersicht + Plan** (gemergt, Pages auf `ee59330`).
+  Übersicht: Startkarte «Heute dran» mit Erholungs-Hinweis, Start-Knopf, «Heute schlagen: Übung kg × Wdh», 4 Kacheln (Woche, Gewicht,
+  Schlaf, Serie), «Jarvis meint» (Muskel unter Richtwert, letzte 2 Wochen). Plan: «Als Nächstes» gross, übrige Trainings als Zeilen,
+  Antippen öffnet Blatt mit Starten/Bearbeiten/Kopieren. Fix: Starten aus offenem Blatt schliesst das Blatt.
+  Getestet wie oben (iPhone 13 hell/dunkel + SE, echter Datenstand lokal, Trainingsablauf erneut, keine Fehler, Daten unverändert).
+  Testen: Übersicht ansehen, Plan → Zeile antippen. Rückgängig: «PR #26 rückgängig». Push an Janis verschickt.
+- Bewusst gestoppt nach Etappe 3 (lieber sauber). **Nächste Aufgabe (Fr):** Etappe 4, dann 5, dann Rest von 2 (siehe Eingang).
+- **P20 Ernährung:** Etappe A (Eiweiss-Zähler) wird durch Design-v3-Etappe 5 (Eiweiss/Wasser) erledigt; B–D bleiben als Pitch offen.
 
 ### Do 26.11.2026 – Zusatzlauf «Design jetzt» (Wunsch Janis über die Jarvis-Zentrale, ca. 16:00) (Berichtenswert: **ja**)
 
@@ -459,7 +470,7 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
   (altes Konzept EqFvSSNdG3T5MrPtDGFcsV verworfen: «zu ähnlich wie jetzt»). Offen: Feinschliff nach Test auf dem iPhone.
 - [x] App-Notizen 25.11.: Satz-Knopf weit unten / «Sprung» zur nächsten Übung (Supersatz) / Schriftsprünge – **live (PR #22)**.
 - [x] Übersichtlichkeit Design v2 pro Screen – **live (PR #23)**, vorgezogen am 26.11.
-- [x] Design v3 Etappe 1 (PR #24) + Etappe 2 Teil 1 (PR #25) – live. [ ] Rest Etappe 2, Etappen 3–5 (siehe Eingang).
+- [x] Design v3 Etappe 1 (PR #24), Etappe 2 Teil 1 (PR #25), Etappe 3 (PR #26) – live. [ ] Etappe 4, 5 und Rest von 2 (siehe Eingang).
 - [ ] Cockpit-Seite: Muskel-Ampel nutzt noch feste Grenzen 10/20 statt `richtwert` (Seite nur auf Wunsch anfassen).
 
 ## Später (wartet auf Janis)
@@ -519,3 +530,5 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-26 (Arbeits-Lauf abends): Design v3 umgesetzt: Etappe 1 (PR #24) und Etappe 2 Teil 1 Training (PR #25) live, Push an Janis. Rest folgt.
 - 2026-11-26 (selbstkritisch): Die neue Pausenleiste hat die gelbe Karte zuerst verdeckt – erst im Screenshot gesehen. Bei festen Leisten
   immer den verfügbaren Platz messen (Karte vs. Bereich über der Leiste) und auf dem kleinsten Gerät prüfen.
+- 2026-11-26 (Zusatzlauf Design v3): Etappe 3 Übersicht + Plan live (PR #26). Etappen 4, 5 und Rest von 2 folgen Fr.
+- 2026-11-26 (selbstkritisch): «Starten» aus einem Blatt liess das Blatt offen – nur durch einen Klick-Test gefunden. Neue Knöpfe in Blättern immer per echtem Klick testen, nicht per ACT-Aufruf.
