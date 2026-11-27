@@ -824,6 +824,9 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--fg);backgro
 #pvbar{position:fixed;z-index:60;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 4px);background:var(--acc,#FFD400);color:#111;font-size:12px;font-weight:700;padding:4px 12px;border-radius:12px;pointer-events:none;white-space:nowrap}
 /* iPhone SE (320 px): Kalendertage dürfen schmaler als 40 px werden, sonst wird die Seite seitlich verschiebbar (WebKit) */
 @media (max-width:359px){.cal .cd{min-height:0}}
+@media (max-width:359px){.bwq{gap:4px;padding:8px 6px 8px 10px}.bwq .num{min-width:0}}
+/* Sicherheitsnetz: nichts im Inhalt darf die Seite seitlich verschiebbar machen (clip erzeugt keinen Scroll-Container, sticky bleibt) */
+.wrap{overflow-x:clip}
 </style>
 </head>
 <body>
