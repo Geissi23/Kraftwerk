@@ -121,10 +121,15 @@ async function runDevice(browserType, bname, devName, scheme) {
   ok(await p.evaluate(() => S.active.exs[0].rows.every(r => r.done)), label + `: alle ${sets0} Sätze von «${ex0}» abgehakt`);
   const nxt = await p.evaluate(() => { const a = activeSet(S.active); return a ? a.i : -1; });
   ok(nxt > 0, label + ': nächste Übung ist aktiv');
-  // Abschluss
+  // Abschluss (mit einer Neuerung im Test → Daumen-Rückmeldung)
+  await p.evaluate(() => BETA.push({ id: 'testfunktion', name: 'Testfunktion', desc: 'Nur für den Test', since: ymd(new Date()) }));
   await p.locator('#wk [data-act="finish"]').first().click(); await p.waitForTimeout(200);
   await p.locator('[data-act="finishok"]').first().click(); await p.waitForTimeout(600);
   await shot('6-abschluss');
+  ok(await p.isVisible('[data-act="betafb"][data-v="1"]'), label + ': Abschluss fragt nach Neu im Test');
+  await p.click('[data-act="betafb"][data-v="1"]'); await p.waitForTimeout(150);
+  ok(await p.evaluate(() => S.fb.length === 1 && S.fb[0].id === 'testfunktion' && S.fb[0].v === 1 && S.fb[0].w === S.workouts[S.workouts.length - 1].id && JSON.parse(localStorage.getItem('kraftwerk.v1')).fb.length === 1), label + ': Daumen hoch wird gespeichert');
+  await p.evaluate(() => { BETA.length = 0; closeSheet(); }); await p.waitForTimeout(150);
   const after = await p.evaluate(() => ({ active: S.active, n: S.workouts.length, w: JSON.parse(localStorage.getItem('kraftwerk.v1')).workouts }));
   ok(!after.active && after.n === oldWorkouts.length + 1, label + ': Training abgeschlossen und gespeichert');
   ok(JSON.stringify(after.w.slice(0, oldWorkouts.length)) === JSON.stringify(oldWorkouts), label + ': alle bisherigen Trainings unverändert');
