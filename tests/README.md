@@ -11,3 +11,9 @@
 
 Variablen: `BROWSERS=chromium,webkit`, `DEVICES="iPhone 13"`, `TEST_OUT=<ordner>` für Screenshots.
 Läuft automatisch bei jedem Pull Request (`.github/workflows/tests.yml`). WebKit läuft vorerst nur zur Info.
+
+## Vorschau
+
+`.github/workflows/vorschau.yml` kopiert `index.html` eines Branches nach `preview/index.html` (Start per «Run workflow» oder
+Label `vorschau` am PR). Adresse: https://geissi23.github.io/Kraftwerk/preview/ – liest die echten Daten, schreibt nur in
+`kraftwerk.preview:…`, Claude-Sync und Jarvis-Sync sind dort aus, Fotos getrennt. Oben steht «Vorschau».

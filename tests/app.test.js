@@ -147,11 +147,49 @@ async function runDevice(browserType, bname, devName, scheme) {
   await ctx.close(); await b.close();
 }
 
+// Vorschau (/preview/): liest echte Daten, schreibt nie in die echten Schlüssel, kein Jarvis-Sync.
+async function runPreview(browserType, bname) {
+  const label = bname + ' Vorschau';
+  console.log(label);
+  const dir = fs.mkdtempSync(path.join(require('os').tmpdir(), 'kw-'));
+  fs.mkdirSync(path.join(dir, 'preview'));
+  fs.copyFileSync(HTML, path.join(dir, 'index.html'));
+  fs.copyFileSync(HTML, path.join(dir, 'preview', 'index.html'));
+  const b = await browserType.launch();
+  const ctx = await b.newContext({ ...devices['iPhone 13'] });
+  const p = await ctx.newPage(); p.setDefaultTimeout(5000);
+  const errs = []; let puts = 0;
+  p.on('pageerror', e => errs.push('PAGEERR ' + e.message));
+  await p.route(/^https?:\/\//, r => { if (r.request().method() === 'PUT') puts++; return r.fulfill({ status: 404, body: '{}' }); });
+  await p.goto('file://' + path.join(dir, 'index.html')); await p.waitForTimeout(300);
+  await p.evaluate(seed); await p.reload(); await p.waitForTimeout(400);
+  const real = await p.evaluate(snapshot);
+  await p.goto('file://' + path.join(dir, 'preview', 'index.html')); await p.waitForTimeout(500);
+  ok(await p.isVisible('#pvbar'), label + ': Hinweis «Vorschau» sichtbar');
+  const n = JSON.parse(real['kraftwerk.v1']).workouts.length;
+  ok(await p.evaluate(n => S.workouts.length === n, n), label + ': echte Daten werden gelesen');
+  await p.locator('#main [data-act="start"]').first().click(); await p.waitForTimeout(300);
+  await p.locator('#wk [data-act="check"][aria-label$="bestätigen"]').first().click(); await p.waitForTimeout(200);
+  await p.evaluate(() => { stopRest(); ACT.finishok(); }); await p.waitForTimeout(500);
+  await p.evaluate(() => ghPush(true)); await p.waitForTimeout(300);
+  ok(await p.evaluate(n => S.workouts.length === n + 1, n), label + ': Training in der Vorschau gespeichert');
+  const after = await p.evaluate(snapshot);
+  const touched = Object.keys(real).filter(k => after[k] !== real[k]);
+  ok(touched.length === 0, label + ': echte Schlüssel unverändert' + (touched.length ? ' (' + touched.join(', ') + ')' : ''));
+  ok(Object.keys(after).some(k => k.startsWith('kraftwerk.preview:')), label + ': Änderungen im eigenen Namensraum');
+  ok(puts === 0, label + ': kein Jarvis-Sync aus der Vorschau');
+  await p.goto('file://' + path.join(dir, 'index.html')); await p.waitForTimeout(400);
+  ok(await p.evaluate(n => S.workouts.length === n && document.getElementById('pvbar').hidden, n), label + ': echte App unverändert, ohne Hinweis');
+  ok(errs.length === 0, label + ': keine Konsolenfehler' + (errs.length ? ' → ' + errs.join(' | ') : ''));
+  await ctx.close(); await b.close();
+}
+
 (async () => {
   syntaxCheck();
   const types = { chromium, webkit };
   for (const bn of BROWSERS) {
     if (!types[bn]) { ok(false, 'Unbekannter Browser ' + bn); continue; }
+    try { await runPreview(types[bn], bn); } catch (e) { ok(false, `${bn} Vorschau: Abbruch – ${e.message.split('\n')[0]}`); }
     for (const dev of (process.env.DEVICES || 'iPhone 13,iPhone SE').split(',')) for (const scheme of ['light', 'dark']) {
       try { await runDevice(types[bn], bn, dev, scheme); } catch (e) { ok(false, `${bn} ${dev} ${scheme}: Abbruch – ${e.message.split('\n')[0]}`); }
     }

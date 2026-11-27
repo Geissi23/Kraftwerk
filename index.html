@@ -821,9 +821,11 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--fg);backgro
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+#pvbar{position:fixed;z-index:60;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 4px);background:var(--acc,#FFD400);color:#111;font-size:12px;font-weight:700;padding:4px 12px;border-radius:12px;pointer-events:none;white-space:nowrap}
 </style>
 </head>
 <body>
+<div id="pvbar" hidden>Vorschau · echte Daten bleiben unverändert</div>
 <div class="wrap" id="main"></div>
 
 <button id="runbar" data-act="resume" hidden><i aria-hidden="true"></i><span id="runtxt">Training läuft</span><span class="num" id="runtime">0:00</span><span aria-hidden="true">›</span></button>
@@ -866,6 +868,17 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--fg);backgro
 
 <script>
 'use strict';
+/* ---------- Vorschau (27.11.2026) ----------
+   Unter /preview/ läuft eine Test-Version auf derselben Herkunft wie die echte App. Sie liest die echten Daten,
+   schreibt aber nur in einen eigenen Namensraum («kraftwerk.preview:…») und nie in die echten Schlüssel.
+   Claude-Sync, Jarvis-Sync (Schreiben) und Fotos sind in der Vorschau getrennt bzw. aus. */
+const PREVIEW=/\/preview\//.test(location.pathname);
+const LS=(()=>{let ls=null;try{ls=window.localStorage;}catch(e){}
+  const dead={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};if(!ls)return dead;if(!PREVIEW)return ls;
+  const P='kraftwerk.preview:',G='kraftwerk.preview-del:';
+  return {getItem:k=>{const v=ls.getItem(P+k);if(v!==null)return v;return ls.getItem(G+k)?null:ls.getItem(k);},
+    setItem:(k,v)=>{ls.setItem(P+k,String(v));ls.removeItem(G+k);},
+    removeItem:k=>{ls.removeItem(P+k);ls.setItem(G+k,'1');}};})();
 /* ---------- helpers ---------- */
 const $=(s,el=document)=>el.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -995,7 +1008,7 @@ function migratePlan(st,fromVer){
 const KEY='kraftwerk.v1';
 function loadState(){
   try{
-    const s=localStorage.getItem(KEY);
+    const s=LS.getItem(KEY);
     if(s){
       const raw=JSON.parse(s),st=Object.assign(baseState(),raw);
       if(!(raw.planVer>=PLAN_VER))migratePlan(st,raw.planVer);
@@ -1031,8 +1044,8 @@ function dataFixes(){
   });
   return fixed;
 }
-if(dataFixes().length){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+if(dataFixes().length){try{LS.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function persist(){try{LS.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function savePlan(){S.pt=Date.now();persist();schedulePush();ghSchedule();}
 
 /* ---------- optional cloud sync (db capability) ---------- */
@@ -1043,6 +1056,7 @@ async function pushPlan(){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/p
 async function pushWorkout(w){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/w_'+w.id).set({json:JSON.stringify(w),t:Date.now()});}catch(e){}}
 async function dropWorkoutRemote(id){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/w_'+id).delete();}catch(e){}}
 async function syncInit(){
+  if(PREVIEW){Sync.status='Vorschau: Änderungen bleiben nur in der Vorschau';return;}
   try{
     if(!(window.claude&&claude.use))return;
     const [db,user]=await Promise.all([claude.use('db'),claude.use('user')]);
@@ -1091,8 +1105,8 @@ function lastSession(key){
 /* P14: Comeback nach langer Pause (nur Vorschlag, gespeichert wird nichts Neues) */
 const CB_DAYS=14,CB_KEY='kraftwerk.cb';
 function pauseDays(){const g=gymOnly();if(!g.length)return 0;const t=Math.max(...g.map(w=>w.end||w.start));return Math.round((new Date(ymd(new Date()))-new Date(ymd(t)))/864e5);}
-function cbGet(){try{return localStorage.getItem(CB_KEY)||'';}catch(e){return '';}}
-function cbSet(v){try{v?localStorage.setItem(CB_KEY,v):localStorage.removeItem(CB_KEY);}catch(e){}}
+function cbGet(){try{return LS.getItem(CB_KEY)||'';}catch(e){return '';}}
+function cbSet(v){try{v?LS.setItem(CB_KEY,v):LS.removeItem(CB_KEY);}catch(e){}}
 function buildEx(e,cb){
   const key=exKey(e.name),last=lastSession(key);
   let rows=[],hint='',go=false,sets=e.sets;
@@ -2094,8 +2108,8 @@ const rnd=(w,step)=>Math.round(w/step)*step;
 const fmtP=n=>String(Math.round(n*100)/100).replace('.',',');
 const PL_KEY='kraftwerk.plates',PL_ALL=[25,20,15,10,5,2.5,1.25];
 const PL={bar:20,plates:PL_ALL.slice()};
-try{const c=JSON.parse(localStorage.getItem(PL_KEY)||'{}');if([20,15,10].includes(c.bar))PL.bar=c.bar;if(Array.isArray(c.plates)){const p=c.plates.filter(x=>PL_ALL.includes(x));if(p.length)PL.plates=p;}}catch(e){}
-const plSave=()=>{try{localStorage.setItem(PL_KEY,JSON.stringify(PL));}catch(e){}};
+try{const c=JSON.parse(LS.getItem(PL_KEY)||'{}');if([20,15,10].includes(c.bar))PL.bar=c.bar;if(Array.isArray(c.plates)){const p=c.plates.filter(x=>PL_ALL.includes(x));if(p.length)PL.plates=p;}}catch(e){}
+const plSave=()=>{try{LS.setItem(PL_KEY,JSON.stringify(PL));}catch(e){}};
 function plateCalc(total){
   let side=(total-PL.bar)/2;const out=[];
   if(!(side>0))return {out,rest:Math.max(0,side),under:total<PL.bar};
@@ -2461,7 +2475,7 @@ ACT.exhist=b=>{const ex=S.active&&S.active.exs[+b.dataset.i];if(ex)openExDetail(
 
 /* ---------- P9: monats-rückblick ---------- */
 const REV_KEY='kraftwerk.review';
-const revSeen=()=>{try{return JSON.parse(localStorage.getItem(REV_KEY)||'[]');}catch(e){return [];}};
+const revSeen=()=>{try{return JSON.parse(LS.getItem(REV_KEY)||'[]');}catch(e){return [];}};
 function monthData(y,m){
   const from=new Date(y,m,1).getTime(),to=new Date(y,m+1,1).getTime();
   const c=rangeStats(from,to),pf=new Date(y,m-1,1).getTime(),p=rangeStats(pf,from);
@@ -2520,7 +2534,7 @@ function renderStory(){
 ACT.review=b=>{
   const y=+b.dataset.y,m=+b.dataset.m,d=monthData(y,m);
   STORY={d,sl:storySlides(d),i:0};
-  try{const s=revSeen(),id=y+'-'+(m+1);if(!s.includes(id)){s.push(id);localStorage.setItem(REV_KEY,JSON.stringify(s.slice(-24)));}}catch(e){}
+  try{const s=revSeen(),id=y+'-'+(m+1);if(!s.includes(id)){s.push(id);LS.setItem(REV_KEY,JSON.stringify(s.slice(-24)));}}catch(e){}
   $('#story').classList.add('open');renderStory();
 };
 ACT.storynext=()=>{if(!STORY)return;if(STORY.i<STORY.sl.length-1){STORY.i++;renderStory();}};
@@ -2558,7 +2572,7 @@ document.addEventListener('keydown',e=>{if(!STORY)return;if(e.key==='ArrowRight'
 const PH={db:null,list:[],ready:false,urls:{},cmp:{pose:'v',a:null,b:null,mode:'slide',x:50},addD:null};
 const POSES=[['v','Vorne'],['s','Seite'],['h','Hinten']];
 function phOpen(){return new Promise((res,rej)=>{if(PH.db)return res(PH.db);if(!('indexedDB' in window))return rej(new Error('no idb'));
-  const r=indexedDB.open('kraftwerk-photos',1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains('photos'))db.createObjectStore('photos',{keyPath:'id'});};
+  const r=indexedDB.open(PREVIEW?'kraftwerk-photos-preview':'kraftwerk-photos',1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains('photos'))db.createObjectStore('photos',{keyPath:'id'});};
   r.onsuccess=()=>{PH.db=r.result;res(PH.db);};r.onerror=()=>rej(r.error);});}
 function phTx(mode,fn){return phOpen().then(db=>new Promise((res,rej)=>{const tx=db.transaction('photos',mode),st=tx.objectStore('photos');const out=fn(st);tx.oncomplete=()=>res(out&&out.result!==undefined?out.result:out);tx.onerror=()=>rej(tx.error);}));}
 async function phLoad(){
@@ -2731,8 +2745,8 @@ phLoad().then(()=>{if(TAB==='stats')render();});
    Schreibt nur die Datei kraftwerk-daten.json; Fotos werden nie übertragen. */
 const GH_KEY='kraftwerk.ghsync',GH_FILE='kraftwerk-daten.json';
 const GH={repo:'Geissi23/kraftwerk-daten',token:'',last:0,err:'',busy:false,timer:null};
-try{const c=JSON.parse(localStorage.getItem(GH_KEY)||'{}');if(typeof c.repo==='string'&&c.repo)GH.repo=c.repo;if(typeof c.token==='string')GH.token=c.token;if(typeof c.last==='number')GH.last=c.last;if(typeof c.err==='string')GH.err=c.err;}catch(e){}
-const ghSave=()=>{try{localStorage.setItem(GH_KEY,JSON.stringify({repo:GH.repo,token:GH.token,last:GH.last,err:GH.err}));}catch(e){}};
+try{const c=JSON.parse(LS.getItem(GH_KEY)||'{}');if(typeof c.repo==='string'&&c.repo)GH.repo=c.repo;if(typeof c.token==='string')GH.token=c.token;if(typeof c.last==='number')GH.last=c.last;if(typeof c.err==='string')GH.err=c.err;}catch(e){}
+const ghSave=()=>{try{LS.setItem(GH_KEY,JSON.stringify({repo:GH.repo,token:GH.token,last:GH.last,err:GH.err}));}catch(e){}};
 const ghOn=()=>!!(GH.token&&/^[\w.-]+\/[\w.-]+$/.test(GH.repo));
 function ghStatusText(){
   if(!ghOn())return 'Nicht eingerichtet';
@@ -2761,6 +2775,7 @@ function ghApplyRemote(o){const d=o&&o.data;
   if(!o||o.app!=='kraftwerk'||!d||!Array.isArray(d.workouts)||!Array.isArray(d.routines))throw new Error('Datei ungültig');
   S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();normExtras();dataFixes();persist();pushPlan();S.workouts.forEach(pushWorkout);}
 async function ghPush(manual){
+  if(PREVIEW){if(manual)toast('In der Vorschau ist der Jarvis-Sync aus.');return false;}
   if(!ghOn()||GH.busy)return false;GH.busy=true;
   try{
     let sha;const g=await ghApi('/contents/'+GH_FILE,{allow404:true});
@@ -2775,7 +2790,7 @@ async function ghPush(manual){
   }catch(e){GH.err=(e&&e.message)||'Keine Verbindung';ghSave();if(manual)toast(GH.err);return false;}
   finally{GH.busy=false;const el=$('#ghstat');if(el)el.textContent=ghStatusText();}
 }
-function ghSchedule(ms){try{if(!ghOn())return;clearTimeout(GH.timer);GH.timer=setTimeout(()=>ghPush(false),ms||4000);}catch(e){}}
+function ghSchedule(ms){try{if(PREVIEW||!ghOn())return;clearTimeout(GH.timer);GH.timer=setTimeout(()=>ghPush(false),ms||4000);}catch(e){}}
 function ghSheet(){
   openSheet(`<h2>Jarvis-Sync</h2>
     <div class="muted small" style="margin-bottom:12px">Speichert deine Trainingsdaten automatisch in dein privates GitHub-Repo, damit Jarvis sie im Bericht auswerten kann. Fotos werden nie übertragen.</div>
@@ -2806,8 +2821,8 @@ if(ghOn()&&(FIXED_IDS.size||Date.now()-GH.last>6*3600e3))ghSchedule(8000);
    eigenen Schlüssel – nie im App-State S, nicht im Backup, nicht im Jarvis- oder Claude-Sync. */
 const GA_KEY='kraftwerk.garmin',GA_FILE='garmin.json',GA_MAX_AGE=3*3600e3,GA_RETRY=15*60e3;
 const GA={c:null,busy:false};
-try{const c=JSON.parse(localStorage.getItem(GA_KEY)||'null');if(c&&typeof c==='object'&&c.days&&typeof c.days==='object')GA.c=c;}catch(e){}
-const gaSave=()=>{try{localStorage.setItem(GA_KEY,JSON.stringify(GA.c));}catch(e){}};
+try{const c=JSON.parse(LS.getItem(GA_KEY)||'null');if(c&&typeof c==='object'&&c.days&&typeof c.days==='object')GA.c=c;}catch(e){}
+const gaSave=()=>{try{LS.setItem(GA_KEY,JSON.stringify(GA.c));}catch(e){}};
 const gaNum=v=>typeof v==='number'&&isFinite(v)?v:null;
 const gaDay=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v)?v:null;
 const gaAdd=(d,n)=>{const x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return ymd(x);};
@@ -3041,7 +3056,7 @@ ACT.wdel=b=>{
 let BWQ=null;const BWQ_KEY='kraftwerk.bwskip';
 function bwQuick(){
   if(S.active)return '';
-  const today=ymd(new Date());let skip='';try{skip=localStorage.getItem(BWQ_KEY)||'';}catch(e){}
+  const today=ymd(new Date());let skip='';try{skip=LS.getItem(BWQ_KEY)||'';}catch(e){}
   if(skip===today)return '';
   const last=[...S.bodyweight].sort((a,b)=>a.d.localeCompare(b.d)).pop();
   if(last&&(new Date(today)-new Date(last.d))/864e5<3)return '';
@@ -3051,7 +3066,7 @@ function bwQuick(){
 }
 ACT.bwqd=b=>{BWQ=Math.round((BWQ+ +b.dataset.d*0.1)*10)/10;const v=$('#bwqv');if(v)v.textContent=fmtN(BWQ);};
 ACT.bwqsave=()=>{const d=ymd(new Date());if(!(BWQ>=30&&BWQ<=250))return;S.bodyweight=S.bodyweight.filter(x=>x.d!==d);S.bodyweight.push({d,kg:BWQ});BWQ=null;savePlan();toast('Gewicht gespeichert');render();};
-ACT.bwqskip=()=>{try{localStorage.setItem(BWQ_KEY,ymd(new Date()));}catch(e){}render();};
+ACT.bwqskip=()=>{try{LS.setItem(BWQ_KEY,ymd(new Date()));}catch(e){}render();};
 
 /* bodyweight */
 ACT.bwadd=()=>{
@@ -3182,6 +3197,7 @@ function confetti(n){
 })();
 render();
 if(S.active&&Date.now()-S.active.start<12*3600e3)toast('Dein Training läuft noch. Tippe auf «Weiter trainieren».');
+if(PREVIEW){const pv=document.getElementById('pvbar');if(pv)pv.hidden=false;document.title='Vorschau · '+document.title;}
 syncInit();
 </script>
 </body>
