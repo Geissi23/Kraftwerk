@@ -10,7 +10,7 @@
 - keine Konsolenfehler
 
 Variablen: `BROWSERS=chromium,webkit`, `DEVICES="iPhone 13"`, `TEST_OUT=<ordner>` für Screenshots.
-Läuft automatisch bei jedem Pull Request (`.github/workflows/tests.yml`). WebKit läuft vorerst nur zur Info.
+Läuft automatisch bei jedem Pull Request (`.github/workflows/tests.yml`). WebKit (Safari-Engine) ist seit 27.11. ebenfalls Pflicht.
 
 ## Vorschau
 

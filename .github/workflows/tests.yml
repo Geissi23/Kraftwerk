@@ -27,10 +27,9 @@ jobs:
           path: shots
           retention-days: 7
   webkit:
-    name: Tests (WebKit wie Safari, nur Info)
+    name: Tests (WebKit wie Safari, iPhone hell/dunkel)
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
