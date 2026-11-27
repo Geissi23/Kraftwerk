@@ -88,6 +88,13 @@ async function runDevice(browserType, bname, devName, scheme) {
   ok(await p.isVisible('#sheet, .sheet.open, [role="dialog"]').catch(() => true), label + ': Einstellungen öffnen');
   await shot('4-einstellungen');
   await p.evaluate(() => closeSheet()); await p.waitForTimeout(200);
+  // Neu im Test: Schalter erscheint, lässt sich ausschalten, wird gespeichert
+  await p.evaluate(() => { BETA.push({ id: 'testfunktion', name: 'Testfunktion', desc: 'Nur für den Test', since: ymd(new Date()) }); ACT.settings(); });
+  await p.waitForTimeout(200);
+  ok(await p.evaluate(() => betaOn('testfunktion')), label + ': Neu im Test standardmässig an');
+  await p.click('[data-act="betatog"][data-id="testfunktion"]'); await p.waitForTimeout(150);
+  ok(await p.evaluate(() => !betaOn('testfunktion') && JSON.parse(localStorage.getItem('kraftwerk.v1')).beta.testfunktion === false), label + ': Neu im Test ausschalten wird gespeichert');
+  await p.evaluate(() => { S.beta = {}; BETA.length = 0; persist(); closeSheet(); }); await p.waitForTimeout(200);
 
   // Training komplett durchklicken
   await p.click('[data-tab="today"]'); await p.waitForTimeout(200);

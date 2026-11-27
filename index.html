@@ -978,7 +978,7 @@ function defaultPlan(){
 }
 function baseState(){
   const p=defaultPlan();
-  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null,gear:{},jarvisNotes:[],nutri:{},measures:[],heightCm:0};
+  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null,gear:{},jarvisNotes:[],nutri:{},measures:[],heightCm:0,beta:{}};
 }
 
 /* ---------- plan migration ---------- */
@@ -1024,8 +1024,22 @@ let S=loadState();
 /* Optionale Felder (seit 25.11.2026): gear = Geräte-Einstellung pro Übung, jarvisNotes = Notizen an Jarvis */
 function normExtras(){if(!S.gear||typeof S.gear!=='object'||Array.isArray(S.gear))S.gear={};if(!Array.isArray(S.jarvisNotes))S.jarvisNotes=[];
   /* seit 27.11.2026 (Design v3 Etappe 5): nutri, measures, heightCm */
-  if(!S.nutri||typeof S.nutri!=='object'||Array.isArray(S.nutri))S.nutri={};if(!Array.isArray(S.measures))S.measures=[];if(typeof S.heightCm!=='number')S.heightCm=0;}
+  if(!S.nutri||typeof S.nutri!=='object'||Array.isArray(S.nutri))S.nutri={};if(!Array.isArray(S.measures))S.measures=[];if(typeof S.heightCm!=='number')S.heightCm=0;
+  /* seit 27.11.2026: Schalter «Neu im Test» (beta: {id: true/false}) */
+  if(!S.beta||typeof S.beta!=='object'||Array.isArray(S.beta))S.beta={};}
 normExtras();
+/* ---------- Neu im Test (27.11.2026) ----------
+   Grosse Neuerungen, die den Ablauf im Gym verändern, trägt Jarvis hier ein (höchstens 3). Standard: an.
+   Testphase 2 Wochen ab «since», danach fragt Jarvis «behalten oder weg» und entfernt den Eintrag. */
+const BETA=[]; // Beispiel: {id:'xyz',name:'Kurzer Name',desc:'Was es macht',since:'2026-11-27'}
+const BETA_DAYS=14;
+const betaOn=id=>{if(!BETA.some(b=>b.id===id))return false;const v=S.beta&&S.beta[id];return typeof v==='boolean'?v:true;};
+function betaSection(){
+  const rows=BETA.slice(0,3).map(b=>{const on=betaOn(b.id),end=new Date(new Date(b.since+'T12:00:00').getTime()+BETA_DAYS*864e5);
+    return `<div class="row2" style="margin-bottom:12px"><div><div class="t" style="font-weight:600">${esc(b.name)}</div><div class="small muted">${esc(b.desc)} · Test bis ${end.getDate()}.${end.getMonth()+1}.</div></div>
+      <button class="tog ${on?'on':''}" data-act="betatog" data-id="${esc(b.id)}" role="switch" aria-checked="${on}" aria-label="${esc(b.name)}"><i></i></button></div>`;}).join('');
+  return `<div style="margin-bottom:16px"><div class="eyebrow" style="margin-bottom:8px">Neu im Test</div>${rows||'<div class="small muted">Gerade nichts im Test.</div>'}</div>`;
+}
 const CORE_IDS=['r_k1','r_k2','r_k3'];
 function normRot(){(S.routines||[]).forEach(r=>{if(typeof r.rot!=='boolean')r.rot=CORE_IDS.includes(r.id);});}
 normRot();
@@ -1053,7 +1067,7 @@ function savePlan(){S.pt=Date.now();persist();schedulePush();ghSchedule();}
 
 /* ---------- optional cloud sync (db capability) ---------- */
 const Sync={db:null,base:null,status:'Nur auf diesem Gerät gespeichert',timer:null};
-const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer,gear:S.gear,jarvisNotes:S.jarvisNotes,nutri:S.nutri,measures:S.measures,heightCm:S.heightCm});
+const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer,gear:S.gear,jarvisNotes:S.jarvisNotes,nutri:S.nutri,measures:S.measures,heightCm:S.heightCm,beta:S.beta});
 function schedulePush(){clearTimeout(Sync.timer);Sync.timer=setTimeout(pushPlan,1500);}
 async function pushPlan(){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/plan').set({json:JSON.stringify(planPart()),t:Date.now()});}catch(e){}}
 async function pushWorkout(w){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/w_'+w.id).set({json:JSON.stringify(w),t:Date.now()});}catch(e){}}
@@ -1074,7 +1088,7 @@ async function syncInit(){
     if(rp){
       S.deleted=[...new Set([...(S.deleted||[]),...(rp.deleted||[])])];
       if((rp.pt||0)>(S.pt||0)){
-        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer','gear','jarvisNotes','nutri','measures','heightCm'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});normExtras();
+        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer','gear','jarvisNotes','nutri','measures','heightCm','beta'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});normExtras();
         if(!(S.planVer>=PLAN_VER)){migratePlan(S,S.planVer);pushPlan();}
         changed=true;
       }else pushPlan();
@@ -3156,6 +3170,7 @@ ACT.settings=()=>{
     <div style="margin-bottom:16px"><div class="row2" style="margin-bottom:4px"><div class="t" style="font-weight:600">Lautstärke</div><b id="volv">${Math.round(S.soundVol*100)}%</b></div>
       <input type="range" min="0" max="100" step="5" value="${Math.round(S.soundVol*100)}" data-vol aria-label="Lautstärke Weckton"></div>
     <button class="btn ghost full" style="margin-bottom:16px" data-act="testalarm">Weckton testen (Kopfhörer)</button>
+    ${betaSection()}
     <button class="item" data-act="ghsheet" style="margin-bottom:12px;background:var(--s2);padding:12px 14px"><div style="display:flex;gap:12px;align-items:center"><span class="ti2" style="width:38px;height:38px;background:var(--s3)">${ic('repeat')}</span><div><div class="t" style="font-weight:600">Jarvis-Sync</div><div class="small muted">${esc(ghStatusText())}</div></div></div><span class="chev">›</span></button>
     <div class="card" style="margin-bottom:12px"><div class="t" style="font-weight:600">Datensicherung</div><div class="small muted">${esc(Sync.status)}. Zusätzlich kannst du alles als Text sichern.</div></div>
     <div class="btnrow" style="margin-top:0"><button class="btn ghost" data-act="export">Backup anzeigen und kopieren</button><button class="btn ghost" data-act="import">Backup wiederherstellen</button>
@@ -3168,6 +3183,7 @@ ACT.goalm=()=>{S.goal=Math.max(1,S.goal-1);$('#goalv').textContent=S.goal;savePl
 ACT.goalp=()=>{S.goal=Math.min(7,S.goal+1);$('#goalv').textContent=S.goal;savePlan();};
 ACT.sound=b=>{S.sound=!S.sound;b.classList.toggle('on',S.sound);b.setAttribute('aria-checked',S.sound);savePlan();if(S.sound){unlockAudio();beep(1);}};
 ACT.testalarm=()=>{beep(3);};
+ACT.betatog=b=>{const id=b.dataset.id;if(!BETA.some(x=>x.id===id))return;const on=!betaOn(id);S.beta=Object.assign({},S.beta,{[id]:on});b.classList.toggle('on',on);b.setAttribute('aria-checked',on);savePlan();};
 ACT.export=()=>{
   const data=JSON.stringify({app:'kraftwerk',v:1,data:Object.assign({},S,{active:null})});
   openSheet(`<h2>Backup</h2><p class="muted small">Kopiere diesen Text und bewahre ihn z. B. in einer Notiz auf.</p><textarea class="ti" id="bk" readonly>${esc(data)}</textarea>
