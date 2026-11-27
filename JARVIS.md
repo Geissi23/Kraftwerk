@@ -115,10 +115,9 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   **Etappen (je eigener PR, testen, mergen, Pages prüfen):** 1 Schrift + Stufen + Navigation · 2 Training (+ Pflicht-Technik) ·
   3 Übersicht + Plan · 4 Fortschritt · 5 Eiweiss/Wasser + Körpermasse. Im Bericht je Vorher/Nachher-Screenshots und «PR #X rückgängig».
   Was in einem Lauf nicht fertig wird, im nächsten Lauf weiter. Nach jeder Etappe Push an Janis (eine Zeile).
-  **Stand 26.11. abends:** Etappe 1 live (PR #24) · Etappe 2 Teil 1 live (PR #25) · Etappe 3 live (PR #26).
-  **Offen, nächster Lauf (Fr) weiter:** Etappe 4 Fortschritt (Rekorde dorthin, Tab-Liste «Meine Übungen» unter Plan dann ersetzen) ·
-  Etappe 5 Eiweiss/Wasser + Körpermasse (ersetzt Kachel «Serie» auf der Übersicht durch «Eiweiss heute») · Etappe 2 Rest (Aufwärm-Markierung
-  als Datenfeld + Aufwärm-Vorschläge 40 %/60 %, Gewichtsschritte pro Übung/Gerät, Abschluss-Screen wie Mockup 5).
+  **Stand 27.11. morgens:** Etappe 1 (PR #24) · Etappe 2 Teil 1 (PR #25) · Etappe 3 (PR #26) · **Etappe 4 (PR #28)** · **Etappe 5 (PR #29)** live.
+  **Offen, nächster Arbeits-Lauf (Mo 30.11.):** nur noch Etappe 2 Rest (Aufwärm-Markierung als Datenfeld + Aufwärm-Vorschläge 40 %/60 %,
+  Gewichtsschritte pro Übung/Gerät, Abschluss-Screen wie Mockup 5).
 - **⛔ 26.11. 15:41 STOPP für den Zusatzlauf von 15:38 (Janis, über die Jarvis-Zentrale):** Design NICHT umsetzen, nichts mergen.
   Janis will das Design zuerst mit der Zentrale im Chat zusammen anschauen (grob, schnell), erst danach wird umgesetzt.
   Falls du schon einen Branch/PR hast: offen lassen, nicht mergen, im Tagesprotokoll vermerken. Erlaubt: nur Befund + Screenshots
@@ -132,11 +131,54 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
   `kraftwerk-daten/.github/workflows/garmin.yml` eingetragen (Commit 7a3f96b, nur diese Zeile). Ab Do 26.11. beobachten, ob die Daten morgens da sind.
 - **Design-Auftrag 25.11. (unübersichtlich, vollgepackt, springende Schriftgrössen) erledigt am 26.11.** auf Wunsch von Janis vorgezogen:
   PR #22 (Tafel) + PR #23 (alle Screens). Details im Tagesprotokoll 26.11. Feinschliff nur noch nach Janis' Rückmeldung vom iPhone.
-- App-Notizen (`jarvisNotes` im privaten Repo): 2 Notizen vom 25.11. (im Training) → beide erledigt in PR #22. Zuletzt gelesen: 26.11.2026 15:40.
+- App-Notizen (`jarvisNotes` im privaten Repo): 2 Notizen vom 25.11. (im Training) → beide erledigt in PR #22. Zuletzt gelesen: 27.11.2026 08:35 (keine neuen).
 
 ## Tagesprotokoll
 
 Hinweis: Trainings- und Gesundheitszahlen stehen nie hier (öffentliches Repo). Der Bericht-Lauf liest sie selbst aus `kraftwerk-daten`.
+
+### Fr 27.11.2026 – Arbeits-Lauf (08:35) – Design v3 Etappe 4 + 5 (Berichtenswert: **ja**)
+
+**Gemergt / live** (Pages auf `fde657c` veröffentlicht). Getestet: node-Syntax, Playwright iPhone 13 + iPhone SE, hell/dunkel, mit echtem
+Datenstand (nur lokal), keine Konsolenfehler, kein horizontales Scrollen, gespeicherte Daten vorher = nachher.
+- PR #28 https://github.com/Geissi23/Kraftwerk/pull/28 – **Design v3 Etappe 4: Fortschritt.** Umschalter Training · Körper · Rekorde.
+  Training: Zeitraum-Chips, 3 Kennzahlen, Jahreskalender (gelb), darunter zuklappbar Monatsansicht + alle Trainings; Muskelgruppen als 6 Zeilen
+  «Ø/Ziel», antippen = einzelne Muskeln; **Coach-Empfehlung** (eine mit Zahl, Rest hinter «weitere»; prüft auch, ob der Plan die Muskeln
+  abdeckt); Diagramme unter «Mehr Zahlen». Rekorde: 6 Monate/1 Jahr/Alles, 3 Übungs-Chips + «Andere …», geschätztes Maximum gross mit
+  «+x kg seit …», Bestwerte-Liste mit Suche, Level/Abzeichen klein unten. Plan → «Meine Übungen & Rekorde» führt jetzt dorthin.
+  Testen: Fortschritt → alle drei Umschalter, Muskelgruppe antippen, Rekorde → Chip wechseln, Bestwert antippen. Rückgängig: «PR #28 rückgängig».
+- PR #29 https://github.com/Geissi23/Kraftwerk/pull/29 – **Design v3 Etappe 5: Eiweiss & Wasser + Körpermasse** (neue optionale Felder
+  `nutri`, `measures`, `heightCm` mit Migration; Claude-Sync, Jarvis-Sync und Backup getestet, altes Backup lädt weiterhin).
+  Körper: Karte Eiweiss & Wasser (+10 g / +25 g / +0,5 l, «Ändern»), Karte Körpermasse (Taille/Brust/Oberarm, «Messen»). Übersicht:
+  Kachel «Serie» → «Eiweiss heute». Damit ist **P20 Etappe A** erledigt. Testen: Übersicht → Kachel «Eiweiss heute» → +25 g; «Messen».
+  Rückgängig: «PR #29 rückgängig».
+- Screens (nur Testdaten): `jarvis/screens/2026-11-27-v3-etappe4/README.md` und `.../2026-11-27-v3-etappe5/README.md`.
+- Kein Push (Arbeits-Lauf, nichts kaputt). Der Bericht um 17:37 stellt beide Etappen vor.
+
+**Ehrlich offen / Probleme**
+- Saira ist in der Sandbox weiterhin nicht ladbar → Screenshots mit Ersatzschrift.
+- Fortschritt → Körper hat noch keinen eigenen Zeitraum-Umschalter wie im Mockup (das Gewicht hat 30/90/Alle). Bewusst so gelassen.
+- «In den Plan übernehmen» aus dem Mockup bei der Coach-Empfehlung **nicht** gebaut (würde den Plan per Knopf ändern → bräuchte Go). Wäre ein Pitch.
+- Eiweiss-Schnellknöpfe sind fest (+10/+25 g); selbst anlegbare Portionen (P20 A ursprünglich) noch nicht.
+- Der Ganzkörper-Tag (Plan v4/v5) steht in der App als «noch nie gemacht» – stimmt mit den Daten überein.
+
+**Kritischer Blick:** Fortschritt-Tab. Vorher drei Unter-Tabs, Muskel-Radar + Legende + Liste + Einzelmuskeln, 6 Kennzahl-Kacheln mit roten
+Prozent-Badges. Mit echten Daten durchgeklickt: die Radar-Scheibe war doppelt zur Liste, und die roten Badges straften bei wenigen Trainings.
+→ Radar entfernt (Teil des freigegebenen Designs), Badges weg, Zahlen ohne Wertung. Beim Testen selbst gefunden: Die Coach-Empfehlung listete
+anfangs 16 Einzel-Tipps (fast alle Muskeln unter Ziel, weil zu wenig Trainings) → zusammengefasst zu einem Tipp mit den 3 deutlichsten.
+
+**Kraftwerk Cockpit:** nicht aktualisiert, kein neues Training im Sync seit dem letzten Update.
+
+**Daueraufgaben**
+- Sync-Wächter: Jarvis-Sync ok (26.11. abends nach der Neuinstallation, vollständig). Garmin-Sync gestern 2× erfolgreich (13:50 + 17:20 UTC),
+  heute bis 07:35 UTC noch kein Lauf (üblich: Nachmittag). Kein Push.
+- Erholung: HRV im Normalbereich, aber seit 3 Nächten leicht sinkend; letzte erfasste Nacht (25./26.) gut geschlafen. Empfehlung **normal**.
+  Nächstes Training laut App: Ganzkörper.
+- Daten aufräumen: keine neuen Trainings, nichts zu tun. Plan pflegen: keine Änderung. Kein Wochenplan (Fr), kein Monats-Check (Mi 2.12.).
+- App-Notizen: keine neuen.
+
+**Offene Fragen** unverändert: Squat-Aufwärmsätze → «so lassen» · Supersätze → «im Wechsel lassen», Frist Mo 30.11.
+P20 Etappe A ist erledigt (PR #29); B–D bleiben Pitch mit Standard «nicht umsetzen».
 
 ### Do 26.11.2026 – Arbeits-Lauf (geplant, ausserhalb Mo/Mi/Fr gestartet, ca. 17:40) – Design v3 (Berichtenswert: **ja**)
 
@@ -435,7 +477,7 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - ~~P19 – Körpermasse (Taille, Brust, Arm)~~ – **nein (Janis, 25.11.)**
   Optional alle 2 Wochen drei Masse in cm, mit Trend. Neues optionales Feld (Datenformat, darum Pitch).
   Warum: Taille stabil + Arm/Brust wächst = sauberer Aufbau. Verlässlicher als Fotos.
-- [ ] **P20 – Ernährung (Wunsch von Janis, 25.11.)** – Aufwand: gross, darum in Etappen – Standard: Etappe A umsetzen, Frist Mo 30.11.
+- [ ] **P20 – Ernährung (Wunsch von Janis, 25.11.)** – Aufwand: gross, darum in Etappen – **Etappe A live (PR #29, als Design-v3-Etappe 5)**; B–D Standard «nicht umsetzen», Frist Mo 30.11.
   A (klein): Eiweiss-Zähler auf «Heute» – Tagesziel ca. 1,6–2 g pro kg Körpergewicht aus dem letzten Gewicht, Schnell-Knöpfe für
   häufige Portionen (selbst anlegbar, z. B. «Skyr 25 g», «Shake 30 g»), Wochenkurve. Neues optionales Feld mit Migration.
   B (mittel): Kalorien grob dazu (Portion mit kcal), ohne Lebensmittel-Datenbank. C (mittel): Rezepte – eigene Sammlung mit Eiweiss pro
@@ -470,7 +512,7 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
   (altes Konzept EqFvSSNdG3T5MrPtDGFcsV verworfen: «zu ähnlich wie jetzt»). Offen: Feinschliff nach Test auf dem iPhone.
 - [x] App-Notizen 25.11.: Satz-Knopf weit unten / «Sprung» zur nächsten Übung (Supersatz) / Schriftsprünge – **live (PR #22)**.
 - [x] Übersichtlichkeit Design v2 pro Screen – **live (PR #23)**, vorgezogen am 26.11.
-- [x] Design v3 Etappe 1 (PR #24), Etappe 2 Teil 1 (PR #25), Etappe 3 (PR #26) – live. [ ] Etappe 4, 5 und Rest von 2 (siehe Eingang).
+- [x] Design v3 Etappe 1 (PR #24), Etappe 2 Teil 1 (PR #25), Etappe 3 (PR #26), Etappe 4 (PR #28), Etappe 5 (PR #29) – live. [ ] Rest von Etappe 2 (siehe Eingang, Mo 30.11.).
 - [ ] Cockpit-Seite: Muskel-Ampel nutzt noch feste Grenzen 10/20 statt `richtwert` (Seite nur auf Wunsch anfassen).
 
 ## Später (wartet auf Janis)
@@ -533,3 +575,6 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-26 (Zusatzlauf Design v3): Etappe 3 Übersicht + Plan live (PR #26). Etappen 4, 5 und Rest von 2 folgen Fr.
 - 2026-11-26 (selbstkritisch): «Starten» aus einem Blatt liess das Blatt offen – nur durch einen Klick-Test gefunden. Neue Knöpfe in Blättern immer per echtem Klick testen, nicht per ACT-Aufruf.
 - 2026-11-26 (abends, Chat): Janis hat die Web-App gelöscht und neu hinzugefügt. Sicherung im Repo war vollständig. Bug gefunden: Verbinden in einer leeren App hätte die Sicherung leer überschrieben → PR #27 (leere App holt beim Verbinden die Sicherung, Auto-Sync überschreibt nie). Sync 19:06 geprüft: alle Daten wieder da. Fortschrittsfotos (nur lokal) verloren.
+- 2026-11-27 (Arbeits-Lauf): Design v3 Etappe 4 Fortschritt (PR #28) und Etappe 5 Eiweiss/Wasser + Körpermasse (PR #29) live. Nur Rest von Etappe 2 offen.
+- 2026-11-27 (selbstkritisch): Die erste Coach-Empfehlung erzeugte 16 Tipps – mit echten Daten sofort sichtbar. Generierte Listen immer mit echtem,
+  lückenhaftem Datenstand prüfen und begrenzen. Playwright-Klicks scheiterten am festen Umschalter + Navigation → `scroll-padding` gesetzt (hilft auch echten Nutzern).
