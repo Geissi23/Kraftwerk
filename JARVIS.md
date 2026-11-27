@@ -74,6 +74,46 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 (Artifact publish `asset: true`, `url` siehe oben). Danach mit ArtifactData `update` die Datensätze
 `datasets/<name>` auf die neue `source.url` und `updated.at` setzen, alte Assets löschen. Die Seite selbst nicht anfassen.
 
+## Arbeitsweise ab 27.11.2026 (Go von Janis: «ja alles» – gilt vor «Arbeitsrhythmus» und «Ablauf eines Laufs»)
+
+- **Takt:** Arbeits-Lauf täglich 08:34, 13:34, 18:34. Gibt es nichts Sinnvolles zu tun, Lauf nach kurzer Prüfung beenden (nur
+  Log-Zeile). Aufträge von Janis startet die Jarvis-Zentrale zusätzlich sofort. Kein täglicher Abendbericht mehr;
+  Wochenbericht am Montag 17:37 bleibt, Sonntag kommt der Wochenüberblick beider Apps mit Produkt-Review.
+- **Push statt Bericht:** Pro Lauf höchstens EINE Push-Benachrichtigung, nur wenn etwas live ging oder eine Entscheidung ansteht.
+  Inhalt: was live ist (mit «PR #X rückgängig») und alle offenen Fragen gebündelt, jede mit Standard und Frist
+  («Ohne Antwort mache ich um <Zeit/Tag> X»). Antworten von Janis kommen in diesem Lauf-Chat oder über die Zentrale in «Eingang».
+- **Mehr Freiheit:** Jarvis baut und mergt selbst, auch mittlere Features und eigene Ideen, wenn sie zum Produkt-Profil passen
+  und auf der Roadmap unter «Jetzt» stehen. Go per Push nötig nur für: neue grosse Bereiche, Änderungen am gespeicherten
+  Datenformat, Entfernen von Funktionen.
+- **Qualität:** (1) Jeder PR läuft durch die automatischen Tests (GitHub Actions, siehe Eingang) und wird nur bei Grün gemergt.
+  (2) Grössere PRs prüft vor dem Merge ein separater Review-Agent, der die Arbeit nicht gemacht hat (frische Augen; Befunde
+  beheben, dann mergen). (3) Kleine PRs, ein Thema pro PR.
+- **Neu im Test (Schalter):** Grosse Neuerungen, die den Ablauf im Gym verändern, kommen mit einem Schalter unter
+  Einstellungen › «Neu im Test». Höchstens 3 gleichzeitig. Testphase 2 Wochen, dann fragt Jarvis per Push «behalten oder weg»
+  (Standard: behalten → Schalter entfernen; weg → Funktion ausbauen). Kleine Änderungen nie mit Schalter.
+- **Vorschau:** Sichtbare Änderungen zuerst auf der Vorschau (siehe Eingang) mit Push «zum Ausprobieren». Ohne Einwand innert
+  24 h live. Bugfixes direkt live.
+- **Nutzung lernen:** Jarvis wertet aus kraftwerk-daten.json aus, welche Funktionen genutzt werden und welche nie, und schlägt
+  Unbenutztes zum Entfernen vor. Nach einem Training mit Neuem kurz 👍/👎 in der App (siehe Eingang).
+- **Grosses zuerst gemeinsam:** Grössere Design- oder Konzeptfragen zuerst als Mockups mit Janis (über die Zentrale), dann bauen.
+
+## Produkt-Profil (was Janis will – jeder Lauf hält sich daran)
+
+- Ziel: gut funktionierende, moderne, ansprechende App; einfach zu bedienen: wenig Text, klare Icons, wenig Scrollen.
+- Kein «KI-Look» (keine generischen Karten-Stapel, keine Verläufe, keine Emoji-Deko). Ruhig, übersichtlich, nicht vollgepackt.
+- Design v3: Schrift Saira «Tempo» (Titel und grosse Zahlen kursiv/schmal), feste Grössenstufen, gleiche Werte gleich gross,
+  eine Hauptaktion pro Screen (Gelb), 3 Tabs Übersicht · Plan · Fortschritt. Vorlage: `docs/design-v3/`.
+- Training: 3 Kern-Trainings (Oberkörper, Unterkörper, Ganzkörper) + Bonus Schultern & Arme; meist 3×/Woche Gym; Ziel
+  Muskelaufbau. Kein MMA, keine Hip Thrusts, kein Kreuzheben.
+- Ernährung: nur Eiweiss und Wasser, keine Kalorienzählung. Kein BMI.
+- Janis will möglichst wenig am Handy sein: Entscheidungen gebündelt, mit Standard und Frist, keine Rückfragen-Ketten.
+
+## Roadmap (Jetzt · Als Nächstes · Später – Jarvis arbeitet nur an «Jetzt», Janis verschiebt sonntags)
+
+- **Jetzt:** (Jarvis füllt beim ersten Lauf aus Backlog und Pitches, max. 5 Punkte, nach Nutzen für Janis sortiert)
+- **Als Nächstes:** –
+- **Später:** –
+
 ## Arbeitsrhythmus (seit 23.11.2026, Wunsch von Janis: weniger am Handy)
 
 - **Mo, Mi, Fr ca. 08:34 – Arbeits-Lauf:** arbeitet still alles ab («Eingang», genehmigte Pitches, Backlog, Daueraufgaben, Cockpit)
@@ -91,6 +131,22 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 
 ## Eingang
 
+- **27.11. 11:00 – Einrichtung neue Arbeitsweise (Go von Janis, Abschnitt «Arbeitsweise ab 27.11.2026»).** In dieser Reihenfolge,
+  je eigener PR:
+  1. **Automatische Tests:** GitHub-Actions-Workflow für jeden PR: JS-Syntax, Playwright iPhone hell/dunkel durch alle Screens,
+     Training komplett durchklicken (Satz eintragen, Pause, Rückgängig, nächste Übung, Abschluss), keine Konsolenfehler,
+     Daten-Erhalt (vorher/nachher-Vergleich von localStorage, Sync, Backup) mit Testdaten. Nur Testdaten, nie echte.
+  2. **Vorschau:** Vorschau-Version unter `/preview/` auf GitHub Pages (z. B. Workflow, der einen PR-Branch dorthin
+     veröffentlicht). WICHTIG: gleiche Herkunft wie die echte App → die Vorschau darf die echten Daten nur lesen, nie schreiben
+     oder migrieren (eigener localStorage-Namensraum für Änderungen, Sync/Jarvis-Sync in der Vorschau aus). Sichtbarer Hinweis
+     «Vorschau» oben.
+  3. **Schalter «Neu im Test»** in den Einstellungen (Grundgerüst, max. 3, mit Startdatum für die 2-Wochen-Frist).
+  4. **👍/👎 nach dem Training** für Neues im Test (wird in kraftwerk-daten.json mitgesynct, optionales Feld) und Auswertung
+     der Nutzung im Lauf.
+  5. **Roadmap füllen** (Abschnitt oben) und **JARVIS.md entschlacken:** Tagesprotokolle und Log älter als 7 Tage nach
+     `JARVIS-ARCHIV.md`, «Arbeitsrhythmus»/«Ablauf eines Laufs» an die neue Arbeitsweise anpassen, Widersprüche entfernen.
+     Ziel: JARVIS.md deutlich unter 250 Zeilen.
+  Danach eine Push-Nachricht an Janis: was eingerichtet ist und der Vorschau-Link.
 - **26.11. 17:40 – AUFTRAG DESIGN v3 UMSETZEN (Go von Janis über die Jarvis-Zentrale: «Nimm B und merge alles»).**
   Vorlage: `docs/design-v3/` (Mockups + README). Hebt den STOPP vom 26.11. 15:41 auf. Ersetzt Design v2 (#20/#22/#23), Logo bleibt.
   **Schrift (Vorschlag B «Tempo»):** nur Saira (Google Fonts, variable: kursiv, Breite 62–125). Titel und grosse Zahlen kursiv,
