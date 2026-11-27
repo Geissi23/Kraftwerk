@@ -63,7 +63,7 @@
   --r0:#2A2E34;--r1:#0A6F45;--r2:#8C4500;--r3:#6B4FC8;--r4:#0A7F8C;--r5:#A8335D;--r6:#5C6168;--r7:#7A6420;--r-on:#FFFFFF;
   color-scheme:light;
 }
-html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%;background:var(--bg)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-padding-bottom:96px;-webkit-text-size-adjust:100%;background:var(--bg)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -764,6 +764,52 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--fg);backgro
 .rsx{display:flex;flex-direction:column;margin:4px 0 12px}.rsx div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--s2);font-size:14px}
 .plinks button{display:flex;justify-content:space-between;align-items:center;min-height:48px;padding:12px 4px;border-top:1px solid var(--s1);color:var(--mut);font-size:16px;text-align:left}
 .backl{min-height:44px;color:var(--mut);font-size:16px;padding:0 4px}
+/* Design v3 Etappe 4: Fortschritt */
+.pseg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:var(--s1);border-radius:12px;padding:4px;margin:0 0 12px;position:sticky;top:env(safe-area-inset-top,0px);z-index:15}
+.pseg button{min-height:44px;border-radius:9px;font-size:14px;font-weight:600;color:var(--mut)}
+.pseg button.on{background:var(--s3);color:var(--fg)}
+.pchips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px}
+.pchips button{min-height:44px;padding:0 12px;border-radius:8px;font-size:14px;font-weight:600;color:var(--mut)}
+.pchips button.on{background:var(--fg);color:var(--bg)}
+.perh.sm{margin:0 0 12px}.perh.sm b{font-size:16px}
+.k3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 4px}
+.k3>div{display:flex;flex-direction:column;gap:4px;min-width:0}.k3 .num{font-size:36px;line-height:1}
+.k3s{margin:0 0 16px;font-size:12px;color:var(--dim)}
+.lb16{font-size:16px;color:var(--mut)}
+.ygrid{display:grid;grid-template-columns:repeat(53,minmax(0,1fr));grid-template-rows:repeat(7,5px);grid-auto-flow:column;gap:1px;margin-top:2px}
+.ygrid i{background:var(--s2);border-radius:1px}.ygrid i.on{background:var(--acc)}.ygrid i.f{opacity:.45}.ygrid i.x{background:transparent}.ygrid i.td:not(.on){background:var(--dim)}
+.ylab{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-top:8px}
+.calin{margin-top:12px}
+.mgx summary,.mgx .mgs{display:grid;grid-template-columns:80px minmax(24px,1fr) 100px 14px;gap:12px;align-items:center;min-height:44px;font-size:14px;list-style:none;cursor:pointer}
+.mgx .mgs{cursor:default}
+@media (max-width:360px){.mgx summary,.mgx .mgs{grid-template-columns:66px minmax(20px,1fr) 90px 12px;gap:8px}}
+.mgx summary::-webkit-details-marker{display:none}
+.mgx .gb2{height:6px;border-radius:3px;background:var(--s2);overflow:hidden}.mgx .gb2 i{display:block;height:6px;border-radius:3px}
+.mgx .gv{text-align:right;font-size:16px;white-space:nowrap}
+.mgx details[open] .chev{transform:rotate(90deg)}
+.mgx .gin .mgrow{grid-template-columns:104px 1fr 40px;font-size:12px}.mgx .gin .mgrow b{font-size:16px}
+.mgx .gin{padding:0 0 8px 12px;border-left:2px solid var(--s2);margin-left:4px}
+.mghint{display:block;font-size:12px;color:var(--dim);margin-top:4px}
+.coach{margin:0 0 12px}.coach .ch{display:flex;align-items:center;gap:10px;margin-bottom:10px}.coach .cht{font-size:16px;font-weight:600}
+.coach .jb{width:28px;height:28px;flex:none;border-radius:8px;background:var(--s2);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--acc-t)}
+.ctip{background:var(--s1);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:4px;font-size:14px;line-height:1.4;margin-bottom:8px}
+.ck{font-size:12px;font-weight:600;color:var(--mut)}.ck.warn{color:var(--warn-t)}.ck.ok{color:var(--ok-t)}
+.coach details.more summary,.mnum summary{display:flex;justify-content:space-between;align-items:center;min-height:44px;font-size:14px;color:var(--mut);list-style:none;cursor:pointer}
+.mnum summary{color:var(--fg)}.coach summary::-webkit-details-marker,.mnum summary::-webkit-details-marker{display:none}
+.rchips{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px}
+.rchips button,.rsel{min-height:44px;padding:0 14px;border-radius:22px;background:var(--s2);font-size:14px;font-weight:600;color:var(--fg)}
+.rchips button.on,.rsel.on{background:var(--fg);color:var(--bg)}
+.rsel{width:auto;max-width:150px;border:0}
+.rbig{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.rbig .num{font-size:36px;line-height:1}.rbig span:last-child{font-size:14px;color:var(--mut)}
+.rsince{display:block;font-size:12px;color:var(--mut);margin:4px 0 8px}.rsince.up{color:var(--ok-t)}
+.brow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;width:100%;padding:10px 0;border-bottom:1px solid var(--s2);text-align:left;color:inherit;min-height:44px}
+.brow:last-child{border-bottom:0}
+.brow .bn{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brow .num{font-size:16px;text-align:right}
+.brow .bd{font-size:12px;color:var(--mut)}.brow .bd.nw{color:var(--acc-t)}.brow .bm{font-size:12px;color:var(--mut);text-align:right}
+.lvrow{display:flex;align-items:center;gap:12px;width:100%;background:var(--s1);border-radius:16px;padding:16px;margin:0 0 12px;text-align:left;color:inherit}
+.lvc{width:44px;height:44px;border-radius:50%;border:3px solid var(--acc);display:grid;place-items:center;font-size:16px;flex:none}
+.lvt{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}.lvh{display:flex;justify-content:space-between;gap:8px;font-size:14px}.lvh span{color:var(--mut)}
+.lvb{height:5px;border-radius:3px;background:var(--s2);overflow:hidden}.lvb i{display:block;height:5px;background:var(--acc)}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
@@ -1563,7 +1609,7 @@ function viewPlan(){
   const rows=S.routines.filter(r=>!nx||r.id!==nx.id).map(r=>`<button class="prow" data-act="rsheet" data-id="${r.id}"><span class="pr-t"><b>${esc(r.name)}</b><span>${meta(r)} · ${r.rot?esc(ago(r)):'Extra · nur bei guter Erholung'}</span></span><span class="chev" aria-hidden="true">›</span></button>`).join('');
   return viewTop()+pageHead('','Plan',`<button class="btn sm ghost" data-act="newroutine">${ic('plus')} Neu</button>`)+`
     ${top}${rows}${!S.routines.length?'<div class="empty">Noch keine Trainings.</div>':''}
-    <div class="plinks"><button data-act="tab" data-tab="records">Meine Übungen &amp; Rekorde<span aria-hidden="true">›</span></button><button data-act="exlib">Übungsbibliothek<span aria-hidden="true">›</span></button><button data-act="settings">Einstellungen<span aria-hidden="true">›</span></button></div>
+    <div class="plinks"><button data-act="gorec">Meine Übungen &amp; Rekorde<span aria-hidden="true">›</span></button><button data-act="exlib">Übungsbibliothek<span aria-hidden="true">›</span></button><button data-act="settings">Einstellungen<span aria-hidden="true">›</span></button></div>
     <p class="phint">Tippen öffnet das Training: dort Starten, Bearbeiten, Kopieren.</p>`;
 }
 ACT.rsheet=b=>{const r=S.routines.find(x=>x.id===b.dataset.id);if(!r)return;const sets=r.ex.reduce((a,e)=>a+e.sets,0);
@@ -1571,25 +1617,9 @@ ACT.rsheet=b=>{const r=S.routines.find(x=>x.id===b.dataset.id);if(!r)return;cons
     <div class="rsx">${r.ex.map(e=>`<div><span>${esc(e.name)}</span><span class="muted">${e.sets} × ${e.repMin===e.repMax?e.repMin:e.repMin+'–'+e.repMax}</span></div>`).join('')}</div>
     <div class="btnrow">${S.active?'':`<button class="btn acc" data-act="start" data-id="${r.id}">${ic('play')} Starten</button>`}<button class="btn ghost" data-act="editroutine" data-id="${r.id}">${ic('edit')} Bearbeiten</button><button class="btn ghost" data-act="duproutine" data-id="${r.id}">${ic('copy')} Kopieren</button><button class="btn ghost" data-act="closesheet">Schliessen</button></div>`);};
 
-let STATS_SUB='ov',HIST_N=8,BW_R='90';
+let STATS_SUB='tr',HIST_N=8,BW_R='90';
 ACT.histmore=()=>{HIST_N+=15;render();};
 ACT.bwr=b=>{BW_R=b.dataset.r;render();};
-function strengthCard(){
-  const cnt={};gymOnly().forEach(w=>w.exs.forEach(ex=>{if(ex.rows.some(r=>r.done&&num(r.w)>0))cnt[ex.key]=(cnt[ex.key]||0)+1;}));
-  const recs=records().filter(r=>r.e1&&r.e1.v>0&&cnt[r.key]);
-  if(!recs.length)return '';
-  recs.sort((a,b)=>(cnt[b.key]||0)-(cnt[a.key]||0)||b.last-a.last);
-  const key=recs.some(r=>r.key===PROG_KEY)?PROG_KEY:recs[0].key;
-  const ss=exSessions(key).map(x=>({t:x.t,v:Math.max(...x.rows.map(r=>e1(num(r.w),num(r.r))))})).filter(x=>x.v>0);
-  let run=0;ss.forEach(x=>{x.pr=run>0&&x.v>run+0.01;run=Math.max(run,x.v);});
-  let win=ss.filter(x=>x.t>=Date.now()-84*864e5);if(win.length<2)win=ss.slice(-12);
-  const L=win[win.length-1],dv=win.length>1?L.v-win[0].v:0,dr=Math.round(dv*2)/2;
-  const weeks=win.length>1?Math.max(1,Math.round((L.t-win[0].t)/(7*864e5))):0,prs=win.filter(x=>x.pr).length;
-  const sel=`<select class="exsel" data-prog aria-label="Übung für die Kraftkurve">${recs.map(r=>`<option value="${esc(r.key)}"${r.key===key?' selected':''}>${esc(r.name)}</option>`).join('')}</select>`;
-  return `<div class="card"><div class="eyebrow">Kraftkurve · geschätztes 1RM</div>${sel}
-    <div class="kpi1"><span class="num">${fmtN(Math.round(L.v*2)/2)}<small>KG E1RM</small></span>${win.length>1?`<div class="d"><b class="${dr>0?'up':dr<0?'dn':''}">${dr>=0?'+':'−'}${fmtN(Math.abs(dr))} kg</b><span class="mono">${weeks} Woche${weeks===1?'':'n'} · ${prs} PR</span></div>`:''}</div>
-    ${kraftChart(win)}</div>`;
-}
 function weightCard(){
   const all=[...S.bodyweight].sort((x,y)=>x.d.localeCompare(y.d));
   const head=`<div class="blkh"><h2>Körpergewicht</h2><button class="btn sm ghost" data-act="bwadd">${ic('plus')} Eintragen</button></div>`;
@@ -1608,34 +1638,124 @@ function weightCard(){
     <div class="seg" role="group" aria-label="Zeitraum Körpergewicht" style="margin:10px 0 0">${[['30','30 Tage'],['90','90 Tage'],['all','Alle']].map(([k,t])=>`<button class="${BW_R===k?'on':''}" data-act="bwr" data-r="${k}" aria-pressed="${BW_R===k}">${t}</button>`).join('')}</div>
     ${bwInfo}</div>`;
 }
+/* Design v3 Etappe 4 (Mockups 6–8): Fortschritt mit Umschalter Training · Körper · Rekorde */
+let REC_R='180',REC_Q='';
+const statsSeg=()=>`<div class="pseg" role="tablist" aria-label="Fortschritt">${[['tr','Training'],['body','Körper'],['rec','Rekorde']].map(([k,l])=>`<button role="tab" aria-selected="${STATS_SUB===k}" class="${STATS_SUB===k?'on':''}" data-act="statsub" data-s="${k}">${l}</button>`).join('')}</div>`;
+const pchips=(list,cur,act,attr,lab)=>`<div class="pchips" role="group" aria-label="${lab}">${list.map(([k,l])=>`<button class="${cur===k?'on':''}" data-act="${act}" data-${attr}="${k}" aria-pressed="${cur===k}">${l}</button>`).join('')}</div>`;
+function weeksIn(R){const f=Math.max(R.from,(gymOnly()[0]||{}).start||Date.now());return Math.max(1,(Math.min(Date.now(),R.to)-f)/(7*864e5));}
 function viewStats(){
-  const t=totals(),xp=xpTotal(),l=levelOf(xp),a=xpAt(l),b=xpAt(l+1),pct=Math.round((xp-a)/(b-a)*100);
-  const g=gymOnly(),st=streakInfo();
-  const sub=`<div class="subnav" role="tablist" aria-label="Fortschritt">${[['ov','chart','Übersicht'],['cal','calendar','Kalender'],['body','body','Körper']].map(([k,i,lab])=>`<button role="tab" aria-selected="${STATS_SUB===k}" class="${STATS_SUB===k?'on':''}" data-act="statsub" data-s="${k}">${ic(i)} ${lab}</button>`).join('')}</div>`;
-  const head=viewTop()+pageHead('','Fortschritt')+sub;
-  if(STATS_SUB==='cal'){
-    const allH=finished().slice().reverse(),hist=allH.slice(0,HIST_N);
-    const histCard=`<div class="card hist"><h2>Verlauf</h2>${hist.length?hist.map(w=>`<button class="item" data-act="wdetail" data-id="${w.id}"><div style="display:flex;gap:12px;align-items:center;min-width:0"><span class="ws" style="background:${wColor(w)}"></span><div style="min-width:0"><div class="t">${esc(w.kind==='mma'?'MMA':w.name)}${w.prs?` <span class="tag">${ic('star')} ${w.prs}</span>`:''}</div><div class="s">${fmtDate(w.start)}${w.kind==='mma'?'':` · ${fmtDur(w.end-w.start)} · ${doneCount(w)} Sätze`}</div></div></div>${w.kind==='mma'?'<span class="chev">›</span>':`<div class="num" style="font-size:24px;white-space:nowrap">${fmtT(vol(w))}</div>`}</button>`).join(''):'<div class="empty">Noch keine Trainings.</div>'}${allH.length>HIST_N?`<button class="btn ghost full" style="margin-top:10px" data-act="histmore">Mehr anzeigen</button>`:''}</div>`;
-    return head+calendarCard()+histCard;
-  }
+  if(!['tr','body','rec'].includes(STATS_SUB))STATS_SUB=STATS_SUB==='body'?'body':'tr';
+  const head=viewTop()+pageHead('','Fortschritt')+statsSeg();
   if(STATS_SUB==='body')return head+weightCard()+recoveryCard()+photoCard();
-  const lvl=`<div class="card"><div class="lvlc"><span class="lb cut">${l}</span><div style="flex:1;min-width:0"><div class="row2"><b>${esc(titleOf(l))}</b><span class="mono">${xp} XP</span></div><div class="leds" role="img" aria-label="Fortschritt zum nächsten Level: ${pct} %">${leds(pct/100)}</div><div class="muted small" style="margin-top:6px">Noch ${b-xp} XP bis Level ${l+1}</div></div></div></div>`;
+  if(STATS_SUB==='rec')return head+recordsPane();
+  return head+trainingPane();
+}
+function trainingPane(){
+  const R=periodRange(STAT_P,STAT_OFF),c=rangeStats(R.from,R.to);
+  const P=STAT_P!=='a'?periodRange(STAT_P,STAT_OFF+1):null,firstT=(gymOnly()[0]||{}).start||Date.now();
+  const canBack=!!P&&P.to>firstT;
+  const per=STAT_P==='w'?c.n:Math.round(c.n/weeksIn(R)*10)/10;
+  const nav=STAT_P!=='a'?`<div class="perh sm"><button data-act="statoff" data-d="1" aria-label="Früherer Zeitraum" ${canBack?'':'disabled'}>‹</button><b>${esc(R.label)}</b><button data-act="statoff" data-d="-1" aria-label="Späterer Zeitraum" ${STAT_OFF>0?'':'disabled'}>›</button></div>`:'<div class="perh sm"><span></span><b>Seit Beginn</b><span></span></div>';
+  const kpi=`<section class="k3"><div><span class="num">${c.n}</span><span class="lb">Training${c.n===1?'':'s'}</span></div><div><span class="num">${fmtN(per)}</span><span class="lb">pro Woche</span></div><div><span class="num">${c.prs}</span><span class="lb">Rekord${c.prs===1?'':'e'}</span></div></section>
+    <p class="k3s">${c.sets} Sätze · ${fmtT(c.vol)} bewegt${c.dur?` · Ø ${Math.round(c.dur/60000)} Min`:''}</p>`;
+  const y=STAT_P==='y'?new Date(R.from).getFullYear():new Date().getFullYear();
+  const allH=finished().slice().reverse(),hist=allH.slice(0,HIST_N);
+  const histHtml=`<h2 style="margin-top:16px">Verlauf</h2>${hist.length?hist.map(w=>`<button class="item" data-act="wdetail" data-id="${w.id}"><div style="display:flex;gap:12px;align-items:center;min-width:0"><span class="ws" style="background:${wColor(w)}"></span><div style="min-width:0"><div class="t">${esc(w.kind==='mma'?'MMA':w.name)}${w.prs?` <span class="tag">${ic('star')} ${w.prs}</span>`:''}</div><div class="s">${fmtDate(w.start)}${w.kind==='mma'?'':` · ${fmtDur(w.end-w.start)} · ${doneCount(w)} Sätze`}</div></div></div>${w.kind==='mma'?'<span class="chev">›</span>':`<div class="num" style="font-size:16px;white-space:nowrap">${fmtT(vol(w))}</div>`}</button>`).join(''):'<div class="empty">Noch keine Trainings.</div>'}${allH.length>HIST_N?`<button class="btn ghost full" style="margin-top:10px" data-act="histmore">Mehr anzeigen</button>`:''}`;
+  const cal=`<section class="card"><div class="blkh"><h2>Trainingskalender ${y}</h2><span class="num lb16">${yearCount(y)} Training${yearCount(y)===1?'':'s'}</span></div>${yearGrid(y)}
+    <details class="more" data-g="__cal"${MG_OPEN.has('__cal')?' open':''}><summary>Monatsansicht &amp; alle Trainings<span class="chev" aria-hidden="true">›</span></summary>${calendarCard(true)}${histHtml}</details></section>`;
   const now=new Date(),pm=new Date(now.getFullYear(),now.getMonth()-1,1);
   const rev=`<button class="revs" data-act="review" data-y="${pm.getFullYear()}" data-m="${pm.getMonth()}"><span class="ri">${ic('sparkle','lg')}</span><span style="flex:1"><b>Monats-Rückblick</b><span>${MONTHS[pm.getMonth()]} ansehen</span></span><span class="chev" aria-hidden="true">›</span></button>`;
-  const weeks=[],wv=[];const mon=monday(new Date());
+  return pchips([['w','Woche'],['m','Monat'],['y','Jahr'],['a','Gesamt']],STAT_P,'statp','p','Zeitraum')+nav+kpi+cal+muscleCard()+coachCard()+moreNumbers()+rev;
+}
+function yearCount(y){return gymOnly().filter(w=>new Date(w.start).getFullYear()===y).length;}
+/* Jahreskalender: 53 Wochen × 7 Tage, gelb = Training */
+function yearGrid(y){
+  const has=new Set(gymOnly().filter(w=>new Date(w.start).getFullYear()===y).map(w=>ymd(w.start)));
+  const start=monday(new Date(y,0,1)),todayK=ymd(new Date()),now=Date.now();let cells='';
+  for(let i=0;i<53*7;i++){const dt=new Date(start);dt.setDate(start.getDate()+i);const k=ymd(dt);
+    cells+=`<i class="${dt.getFullYear()!==y?'x':has.has(k)?'on':dt.getTime()>now&&k!==todayK?'f':''}${k===todayK?' td':''}"></i>`;}
+  return `<div class="ygrid" role="img" aria-label="Jahreskalender ${y}: jedes Kästchen ein Tag, gelb mit Training, ${has.size} Trainingstage">${cells}</div><div class="ylab" aria-hidden="true"><span>Jan</span><span>Apr</span><span>Jul</span><span>Okt</span><span>Dez</span></div>`;
+}
+/* Coach-Empfehlung: eine Empfehlung mit Zahl als Begründung, der Rest hinter «weitere» (letzte 4 Wochen) */
+function planWeekly(){const cnt=Object.fromEntries(MG.map(g=>[g,0]));S.routines.filter(r=>r.rot).forEach(r=>r.ex.forEach(e=>{const m=muscleOf(e.name);if(!m)return;const n=e.sets||0;m.p.forEach(g=>cnt[g]+=n);m.s.forEach(g=>cnt[g]+=n/2);}));return cnt;}
+function coachTips(){
+  const to=Date.now(),from=to-28*864e5,g=gymOnly(),out=[];
+  if(!g.length)return [{k:'Los geht\'s',c:'',t:'Nach deinem ersten Training erscheinen hier Empfehlungen mit Zahlen.'}];
+  const last=g[g.length-1].start,gap=Math.floor((to-last)/864e5);
+  if(gap>14)out.push({k:'Wieder einsteigen',c:'warn',t:`${gap} Tage seit dem letzten Training. Die App plant fürs nächste Training 90 % der letzten Gewichte und einen Satz weniger ein.`});
+  const n4=g.filter(w=>w.start>=from).length,goal=S.goal||3;
+  if(n4<goal*4&&gap<=14)out.push({k:'Regelmässigkeit',c:'warn',t:`${n4} Training${n4===1?'':'s'} in den letzten 4 Wochen, Ziel ${goal} pro Woche (${goal*4}). Regelmässigkeit bringt gerade am meisten.`});
+  const {cnt}=muscleSetsRange(from,to),pw=planWeekly();
+  const lowM=MG.filter(m=>MG_INFO[m].lo&&cnt[m]/4<MG_INFO[m].lo).sort((a,b)=>cnt[a]/4/MG_INFO[a].lo-cnt[b]/4/MG_INFO[b].lo);
+  if(lowM.length>3){const okPlan=lowM.filter(m=>pw[m]>=MG_INFO[m].lo).length;
+    out.push({k:'Mehr trainieren',c:'warn',t:`${lowM.length} von ${MG.filter(m=>MG_INFO[m].lo).length} Muskeln lagen in den letzten 4 Wochen unter dem Ziel, am deutlichsten ${lowM.slice(0,3).map(m=>`${esc(m)} (${fmtN(Math.round(cnt[m]/4*2)/2)} statt ${MG_INFO[m].lo}–${MG_INFO[m].hi})`).join(', ')}. ${okPlan===lowM.length?'Dein Plan deckt alle ab, wenn du alle Kern-Trainings machst.':`Dein Plan deckt ${okPlan} davon ab, wenn du alle Kern-Trainings machst.`}`});}
+  else lowM.forEach(m=>{const I=MG_INFO[m],v=Math.round(cnt[m]/4*2)/2;
+    const ex=S.routines.filter(r=>r.rot).flatMap(r=>r.ex.map(e=>({e,r}))).find(x=>{const mm=muscleOf(x.e.name);return mm&&mm.p.includes(m);});
+    const how=pw[m]>=I.lo?`Dein Plan bringt ${fmtN(Math.round(pw[m]*2)/2)} Sätze pro Woche, wenn du alle Kern-Trainings machst.`:ex?`Vorschlag: bei «${esc(ex.e.name)}» (${esc(ex.r.name)}) 1 Satz mehr.`:'Vorschlag: eine Übung dafür im Plan ergänzen.';
+    out.push({k:'Mehr trainieren',c:'warn',t:`${esc(m)}: ${fmtN(v)} Sätze pro Woche in den letzten 4 Wochen (Ziel ${I.lo}–${I.hi}). ${how}`});});
+  let np=0;const seen=new Set();g.filter(w=>w.start>=to-56*864e5).forEach(w=>w.exs.forEach(ex=>{if(seen.has(ex.key))return;seen.add(ex.key);const p=plateauInfo({key:ex.key});
+    if(p&&np++<3)out.push({k:'Plateau',c:'',t:`${esc(ex.name)}: seit ${p.streak} Trainings kein neuer Bestwert. Vorschlag: 10 % leichter und neu aufbauen oder den Wdh-Bereich wechseln.`});}));
+  if(!out.length)out.push({k:'Weiter so',c:'ok',t:`Alle Muskeln mit Richtwert liegen in den letzten 4 Wochen im Ziel, ${n4} Trainings. Stark.`});
+  return out;
+}
+function coachCard(){
+  const t=coachTips(),f=t[0],rest=t.slice(1);
+  const tip=x=>`<div class="ctip"><span class="ck ${x.c}">${esc(x.k)}</span><span>${x.t}</span></div>`;
+  return `<section class="coach"><div class="ch"><span class="jb" aria-hidden="true">J</span><b class="cht">Coach-Empfehlung</b></div>${tip(f)}
+    ${rest.length?`<details class="more" data-g="__coach"${MG_OPEN.has('__coach')?' open':''}><summary>${rest.length} weitere Empfehlung${rest.length===1?'':'en'}<span class="chev" aria-hidden="true">›</span></summary>${rest.map(tip).join('')}</details>`:''}</section>`;
+}
+function moreNumbers(){
+  const st=streakInfo(),g=gymOnly(),weeks=[],wv=[];const mon=monday(new Date());
   for(let i=7;i>=0;i--){const d=new Date(mon);d.setDate(d.getDate()-7*i);const e=new Date(d);e.setDate(e.getDate()+7);
     weeks.push({l:pad(d.getDate())+'.'+pad(d.getMonth()+1),v:st.cnt[d.getTime()]||0});
     const v=rangeStats(d.getTime(),e.getTime()).vol;wv.push({l:(i===0||i===7?'KW':'')+isoWeek(d),v:Math.round(v/100)/10,top:v?fmtN(Math.round(v/100)/10):''});}
   const last=g.slice(-10).map(w=>({l:pad(new Date(w.start).getDate())+'.'+pad(new Date(w.start).getMonth()+1),v:Math.round(vol(w)/100)/10,top:fmtN(vol(w)/1000)}));
   const ct={v:['Wochen-Volumen','Tonnen pro Woche'],w:['Trainings pro Woche','Trainings pro Woche'],t:['Tonnen pro Training','Tonnen pro Training']}[CHART]||['Verlauf',''];
-  const chart=`<div class="card"><div class="blkh"><h2>${ct[0]}</h2>${CHART==='v'?`<span class="mono" style="color:var(--fg)">${fmtN(wv[wv.length-1].v)} t</span>`:''}</div>
+  return `<details class="card more mnum" data-g="__num"${MG_OPEN.has('__num')?' open':''}><summary><b>Mehr Zahlen</b><span class="chev" aria-hidden="true">›</span></summary>
+    <div class="blkh"><h2>${ct[0]}</h2>${CHART==='v'?`<span class="num lb16">${fmtN(wv[wv.length-1].v)} t</span>`:''}</div>
     ${CHART==='w'?barChart(weeks,ct[1]):CHART==='t'?barChart(last,ct[1]):barChart(wv,ct[1])}
-    <div class="seg" style="margin:10px 0 0" role="group" aria-label="Diagramm">${[['v','Volumen'],['w','Pro Woche'],['t','Tonnen']].map(([k,tx])=>`<button class="${CHART===k?'on':''}" data-act="chart" data-c="${k}" aria-pressed="${CHART===k}">${tx}</button>`).join('')}</div></div>`;
-  const on=BADGES.filter(bd=>bd.ok(t)).length;
-  const bicon=['flame','repeat','dumbbell','trophy','star','weight','weight','calendar','sparkle','flame'];
-  const badges=`<div class="card"><div class="blkh"><h2>Abzeichen</h2><span class="mono">${on}/${BADGES.length}</span></div><div class="bdgs">${BADGES.map((bd,i)=>{const o=bd.ok(t);return `<div class="bdg ${o?'on':''}" title="${esc(bd.d)}"><i class="cut">${ic(bicon[i%bicon.length],'lg')}</i>${esc(bd.t)}<span class="vh">${o?' (erreicht)':' (noch offen)'}: ${esc(bd.d)}</span></div>`;}).join('')}</div></div>`;
-  return head+periodCard()+strengthCard()+muscleCard()+chart+rev+lvl+badges;
+    <div class="seg" style="margin:10px 0 0" role="group" aria-label="Diagramm">${[['v','Volumen'],['w','Pro Woche'],['t','Tonnen']].map(([k,tx])=>`<button class="${CHART===k?'on':''}" data-act="chart" data-c="${k}" aria-pressed="${CHART===k}">${tx}</button>`).join('')}</div></details>`;
 }
+/* Rekorde: Kraftverlauf (geschätztes Maximum, Epley-ähnlich) + Bestwerte + Level klein unten */
+function recordsPane(){
+  const cnt={};gymOnly().forEach(w=>w.exs.forEach(ex=>{if(ex.rows.some(r=>r.done))cnt[ex.key]=(cnt[ex.key]||0)+1;}));
+  const recs=records().filter(r=>cnt[r.key]);
+  if(!recs.length)return `<div class="empty">Nach deinem ersten Training erscheinen hier Kraftverlauf und Bestwerte.</div>`+levelRow();
+  const wr=recs.filter(r=>r.e1&&r.e1.v>0).sort((a,b)=>cnt[b.key]-cnt[a.key]||b.last-a.last);
+  let top='';
+  if(wr.length){
+    const key=wr.some(r=>r.key===PROG_KEY)?PROG_KEY:wr[0].key,chips=wr.slice(0,3),inChips=chips.some(r=>r.key===key);
+    const short=n=>esc(n.replace(/\s*\(.*\)/,''));
+    const chipH=`<div class="rchips" role="group" aria-label="Übung für den Kraftverlauf">${chips.map(r=>`<button class="${r.key===key?'on':''}" data-act="recex" data-key="${esc(r.key)}" aria-pressed="${r.key===key}">${short(r.name)}</button>`).join('')}${wr.length>3?`<select class="rsel${inChips?'':' on'}" data-prog aria-label="Andere Übung"><option value="">${inChips?'Andere …':''}</option>${wr.slice(3).map(r=>`<option value="${esc(r.key)}"${r.key===key?' selected':''}>${esc(r.name)}</option>`).join('')}</select>`:''}</div>`;
+    const ss=exSessions(key).map(x=>({t:x.t,v:Math.max(...x.rows.map(r=>e1(num(r.w),num(r.r))))})).filter(x=>x.v>0);
+    let run=0;ss.forEach(x=>{x.pr=run>0&&x.v>run+0.01;run=Math.max(run,x.v);});
+    const lim=REC_R==='all'?0:Date.now()-(+REC_R)*864e5;let win=ss.filter(x=>x.t>=lim);if(win.length<2)win=ss.slice(-2);
+    const best=Math.max(...win.map(x=>x.v)),d=win.length>1?Math.round((win[win.length-1].v-win[0].v)*2)/2:0;
+    const since=win.length>1?`${d>0?'+':d<0?'−':'±'}${fmtN(Math.abs(d))} kg seit ${MONTHS[new Date(win[0].t).getMonth()]}`:'';
+    top=`<section class="card rtop">${pchips([['180','6 Monate'],['365','1 Jahr'],['all','Alles']],REC_R,'recr','r','Zeitraum')}${chipH}
+      <div class="rbig"><span class="num">${fmtN(Math.round(best*2)/2)}</span><span>kg geschätztes Maximum (1 Wdh)</span></div>${since?`<span class="rsince ${d>0?'up':''}">${since}</span>`:''}
+      ${kraftChart(win)}</section>`;
+  }
+  const q=REC_Q.trim().toLowerCase(),week=Date.now()-7*864e5;
+  const list=recs.slice().sort((a,b)=>b.last-a.last).filter(r=>!q||r.name.toLowerCase().includes(q));
+  const when=t=>ymd(t)===ymd(Date.now())?'heute':fmtDate(t);
+  const row=r=>{const nw=r.maxW.t>=week;return `<button class="brow" data-act="exdetail" data-key="${esc(r.key)}"><span class="bn">${esc(r.name)}</span><span class="num">${r.maxW.w>0?fmtN(r.maxW.w)+' × '+r.maxW.r:r.maxW.r+' Wdh'}</span><span class="bd${nw?' nw':''}">${esc(when(r.maxW.t))}${nw?' · neu':''}</span><span class="bm">${r.e1&&r.e1.v>0?'Max '+fmtN(Math.round(r.e1.v)):cnt[r.key]+'×'}</span></button>`;};
+  const search=recs.length>8?`<div class="search">${ic('search')}<input class="ti" id="exq" placeholder="Übung suchen" value="${esc(REC_Q)}" autocomplete="off" aria-label="Übung suchen"></div>`:'';
+  return top+`<section class="card"><h2>Bestwerte</h2>${search}<div id="exlist">${list.map(row).join('')||'<div class="empty small">Keine Treffer.</div>'}</div></section>`+levelRow();
+}
+function levelRow(){
+  const t=totals(),xp=xpTotal(),l=levelOf(xp),a=xpAt(l),b=xpAt(l+1),pct=Math.round((xp-a)/(b-a)*100),on=BADGES.filter(bd=>bd.ok(t)).length;
+  return `<button class="lvrow" data-act="badges" aria-label="Level ${l}, ${esc(titleOf(l))}, ${on} Abzeichen. Details öffnen"><span class="lvc num">${l}</span><span class="lvt"><span class="lvh"><b>Level ${l} · ${esc(titleOf(l))}</b><span>${on} Abzeichen</span></span><span class="lvb"><i style="width:${pct}%"></i></span></span></button>`;
+}
+ACT.badges=()=>{
+  const t=totals(),xp=xpTotal(),l=levelOf(xp),b=xpAt(l+1),on=BADGES.filter(bd=>bd.ok(t)).length;
+  const bicon=['flame','repeat','dumbbell','trophy','star','weight','weight','calendar','sparkle','flame'];
+  openSheet(`<h2>Level ${l} · ${esc(titleOf(l))}</h2><p class="muted small">${xp} XP · noch ${b-xp} XP bis Level ${l+1}. XP gibt es pro Training, pro 100 kg Volumen und pro Rekord.</p>
+    <div class="blkh"><h2>Abzeichen</h2><span class="num lb16">${on}/${BADGES.length}</span></div><div class="bdgs">${BADGES.map((bd,i)=>{const o=bd.ok(t);return `<div class="bdg ${o?'on':''}" title="${esc(bd.d)}"><i class="cut">${ic(bicon[i%bicon.length],'lg')}</i>${esc(bd.t)}<span class="vh">${o?' (erreicht)':' (noch offen)'}: ${esc(bd.d)}</span></div>`;}).join('')}</div>
+    <div class="btnrow"><button class="btn ghost" data-act="closesheet">Schliessen</button></div>`);};
+ACT.recex=b=>{PROG_KEY=b.dataset.key;render();};
+ACT.recr=b=>{REC_R=b.dataset.r;render();};
+ACT.gorec=()=>{TAB='stats';STATS_SUB='rec';render();fadeMain();window.scrollTo(0,0);};
 let CHART='v';
 ACT.statsub=b=>{STATS_SUB=b.dataset.s;render();fadeMain();window.scrollTo(0,0);};
 ACT.chart=b=>{CHART=b.dataset.c;render();};
@@ -1850,7 +1970,7 @@ document.addEventListener('input',e=>{
     else{const ex=ED.ex[+t.dataset.i],f=t.dataset.f;ex[f]=['sets','repMin','repMax','rest'].includes(f)?num(t.value):t.value;}
   }
   if(t.id==='exlibq'){LIB_Q=t.value;exLibRefresh();}
-  if(t.id==='exq'){EXQ=t.value;const tmp=document.createElement('div');tmp.innerHTML=viewRecords();const nl=tmp.querySelector('#exlist'),ol=$('#exlist');if(nl&&ol)ol.innerHTML=nl.innerHTML;}
+  if(t.id==='exq'){const rp=TAB==='stats';if(rp)REC_Q=t.value;else EXQ=t.value;const tmp=document.createElement('div');tmp.innerHTML=rp?recordsPane():viewRecords();const nl=tmp.querySelector('#exlist'),ol=$('#exlist');if(nl&&ol)ol.innerHTML=nl.innerHTML;}
 });
 function input(){}
 function updateWk(){
@@ -2133,47 +2253,26 @@ function muscleSetsRange(from,to){
   return {cnt,other};
 }
 const MG_OPEN=new Set();
-document.addEventListener('toggle',e=>{const d=e.target;if(d&&d.classList&&(d.classList.contains('mggrp')||d.classList.contains('mgall'))){if(d.open)MG_OPEN.add(d.dataset.g);else MG_OPEN.delete(d.dataset.g);}},true);
+document.addEventListener('toggle',e=>{const d=e.target;if(d&&d.classList&&(d.classList.contains('mggrp')||d.classList.contains('mgall')||d.classList.contains('mgg')||d.classList.contains('more')||d.classList.contains('mnum'))){if(d.open)MG_OPEN.add(d.dataset.g);else MG_OPEN.delete(d.dataset.g);}},true);
 function muscleCard(){
+  /* Design v3 Etappe 4 (Mockup 6): Gruppen mit Zielbereich, zugeklappt; antippen zeigt die einzelnen Muskeln */
   const R=periodRange(STAT_P,STAT_OFF);
-  const {cnt,other}=muscleSetsRange(R.from,R.to);
-  const wk=STAT_P==='w'?1:Math.max(1,(Math.min(Date.now(),R.to)-R.from)/(7*864e5));
-  const per=g=>cnt[g]/wk,MAX=24;
-  const col=g=>{const v=per(g),I=MG_INFO[g];if(!I.lo)return 'var(--mut)';return v<I.lo?'var(--warn)':v<=I.hi?'var(--ok)':'var(--fg)';};
-  const bar=(g,lab)=>{const v=per(g),I=MG_INFO[g];const rng=I.lo?`Richtwert ${I.lo}–${I.hi}`:'indirekt';
-    return `<div class="mgrow${I.lo?'':' ind'}"><span>${lab||g}</span><div class="mb" role="img" aria-label="${g}: ${fmtN(v)} Sätze pro Woche, ${rng}"><i style="width:${Math.min(100,v/MAX*100).toFixed(1)}%;background:${col(g)}"></i>${I.lo?`<s style="left:${(I.lo/MAX*100).toFixed(1)}%"></s><s style="left:${(I.hi/MAX*100).toFixed(1)}%"></s>`:''}</div><b>${fmtN(v)}</b></div>`;};
-  const rows=MGROUPS.map(G=>{
-    if(G.m.length===1)return `<div class="mggrp single">${bar(G.m[0][0],G.g)}</div>`;
-    const fl=G.m.filter(m=>m[1]>0),ok=fl.filter(m=>{const v=per(m[0]);return v>=m[1]&&v<=m[2];}).length;
-    const dots=G.m.map(m=>`<i style="background:${col(m[0])}" title="${m[0]}"></i>`).join('');
-    return `<details class="mggrp" data-g="${G.g}"${MG_OPEN.has(G.g)?' open':''}><summary><span class="gn">${G.g}</span><span class="gd" aria-hidden="true">${dots}</span><span class="gs">${ok}/${fl.length} im Ziel</span><span class="chev" aria-hidden="true">›</span></summary><div class="gb">${G.m.map(m=>bar(m[0])).join('')}</div></details>`;}).join('');
-  const low=MG.filter(g=>MG_INFO[g].lo&&per(g)<MG_INFO[g].lo);
+  const {cnt}=muscleSetsRange(R.from,R.to);
+  const wk=STAT_P==='w'?1:weeksIn(R);
+  const per=g=>cnt[g]/wk,MAX=24,r5=v=>Math.round(v*2)/2;
+  const colV=(v,lo,hi)=>!lo?'var(--mut)':v<lo?'var(--warn)':v<=hi?'var(--ok)':'var(--fg)';
   const any=MG.some(g=>cnt[g]>0);
-  const tip=!any?'Im gewählten Zeitraum gibt es noch keine Sätze.':(low.length>5?`${low.length} von ${MG.filter(g=>MG_INFO[g].lo).length} Muskeln liegen unter dem Richtwert. Der grösste Hebel ist gerade nicht die Übungswahl, sondern regelmässig 3 Trainings pro Woche.`:low.length?`Noch Luft bei: ${low.join(', ')}.`:'Alle Muskeln im Zielbereich. Stark!');
-  /* Scheibe: pro Gruppe der Schnitt «Sätze / Richtwert» der Muskeln mit Richtwert; gestrichelter Kreis = Richtwert erreicht */
-  const pt=(r,a)=>{const t=(a-90)*Math.PI/180;return [120+r*Math.cos(t),120+r*Math.sin(t)];};
-  const sector=(r0,r1,a0,a1)=>{const p=[pt(r1,a0),pt(r1,a1),pt(r0,a1),pt(r0,a0)].map(q=>q.map(v=>v.toFixed(2)).join(' '));return `M${p[0]}A${r1} ${r1} 0 0 1 ${p[1]}L${p[2]}A${r0} ${r0} 0 0 0 ${p[3]}Z`;};
-  const R0=18,RM=86,rr=x=>R0+Math.min(x,1.5)/1.5*(RM-R0),AB=['BR','RÜ','SCH','AR','BE','RU'];
-  let pol=`<circle class="g" cx="120" cy="120" r="${RM}"/>`,leg='';
-  MGROUPS.forEach((G,i)=>{
-    const tg=G.m.filter(m=>m[1]>0),ratio=tg.length?tg.reduce((a,m)=>a+per(m[0])/m[1],0)/tg.length:0;
-    const under=tg.filter(m=>per(m[0])<m[1]).length,okN=tg.filter(m=>{const v=per(m[0]);return v>=m[1]&&v<=m[2];}).length;
-    const over=tg.length&&tg.every(m=>per(m[0])>m[2]);
-    const cls=!any?'none':under?'low':over?'':'on';
-    const a0=i*60+3,a1=(i+1)*60-3;
-    pol+=`<path class="wbg" d="${sector(R0,RM,a0,a1)}"/>`;
-    if(ratio>0)pol+=`<path class="w ${cls}" d="${sector(R0,rr(ratio),a0,a1)}"/>`;
-    const [lx,ly]=pt(106,(a0+a1)/2);pol+=`<text x="${lx.toFixed(1)}" y="${(ly+5).toFixed(1)}" text-anchor="middle">${AB[i]}</text>`;
-    leg+=`<div class="${cls==='low'?'low':''}"><i style="background:${cls==='low'?'var(--warn)':cls==='on'?'var(--ok)':cls===''?'var(--fg)':'var(--dim)'}"></i><span>${G.g}</span><span>${okN}/${tg.length}${under?' ↓':''}</span></div>`;
-  });
-  pol+=`<circle class="target" cx="120" cy="120" r="${rr(1).toFixed(1)}"/><circle class="hub" cx="120" cy="120" r="10"/>`;
-  return `<div class="card"><div class="blkh"><h2>Muskelbalance</h2><span class="mono">${STAT_P==='w'?'Sätze':'Ø Sätze/Woche'}</span></div>
-    <div class="bal"><svg class="polar" viewBox="0 0 240 240" role="img" aria-label="Muskelbalance: ${MGROUPS.map((G,i)=>G.g).join(', ')}. Gestrichelter Kreis = Richtwert">${pol}</svg><div class="leg" aria-label="Muskeln im Richtwert pro Gruppe">${leg}</div></div>
-    <div class="muted small" style="margin-bottom:6px">${esc(tip)}</div>
-    <details class="more mgall" data-g="__alle"${MG_OPEN.has('__alle')?' open':''}><summary>Einzelne Muskeln<span class="chev" aria-hidden="true">›</span></summary>
-    ${rows}
-    <div class="mglegend"><span><i style="background:var(--warn)"></i>unter Richtwert</span><span><i style="background:var(--ok)"></i>im Ziel</span><span><i style="background:var(--fg)"></i>darüber</span><span><i style="background:var(--mut)"></i>indirekt</span></div>
-    <div class="muted small" style="margin-top:6px">So wird gezählt: Hauptmuskel 1 Satz, Hilfsmuskel ½ Satz (z. B. Bankdrücken: Brust 1, Trizeps und vordere Schulter je ½). Striche = Richtwert für Muskelaufbau.</div></details></div>`;
+  const bar=g=>{const v=per(g),I=MG_INFO[g];const rng=I.lo?`Richtwert ${I.lo}–${I.hi}`:'indirekt';
+    return `<div class="mgrow${I.lo?'':' ind'}"><span>${g}</span><div class="mb" role="img" aria-label="${g}: ${fmtN(r5(v))} Sätze pro Woche, ${rng}"><i style="width:${Math.min(100,v/MAX*100).toFixed(1)}%;background:${colV(v,I.lo,I.hi)}"></i>${I.lo?`<s style="left:${(I.lo/MAX*100).toFixed(1)}%"></s><s style="left:${(I.hi/MAX*100).toFixed(1)}%"></s>`:''}</div><b>${fmtN(r5(v))}</b></div>`;};
+  const rows=MGROUPS.map(G=>{
+    const tg=G.m.filter(m=>m[1]>0),n=tg.length||1;
+    const v=r5(tg.reduce((a,m)=>a+per(m[0]),0)/n),lo=Math.round(tg.reduce((a,m)=>a+m[1],0)/n),hi=Math.round(tg.reduce((a,m)=>a+m[2],0)/n);
+    const inner=`<span class="gn">${G.g}</span><span class="gb2" role="img" aria-label="${G.g}: ${fmtN(v)} Sätze pro Woche, Ziel ${lo}–${hi}"><i style="width:${Math.min(100,v/hi*100).toFixed(1)}%;background:${colV(v,lo,hi)}"></i></span><span class="gv num">${fmtN(v)} / ${lo}–${hi}</span>`;
+    if(G.m.length===1)return `<div class="mgs">${inner}<span></span></div>`;
+    return `<details class="mgg" data-g="${G.g}"${MG_OPEN.has(G.g)?' open':''}><summary>${inner}<span class="chev" aria-hidden="true">›</span></summary><div class="gin">${G.m.map(m=>bar(m[0])).join('')}</div></details>`;}).join('');
+  return `<section class="card mgx"><div class="blkh"><h2>Muskelgruppen</h2><span class="lb">${STAT_P==='w'?'Sätze':'Ø Sätze/Woche'} · Ziel</span></div>
+    ${any?'':'<div class="muted small" style="margin-bottom:6px">Im gewählten Zeitraum gibt es noch keine Sätze.</div>'}${rows}
+    <span class="mghint">Gruppe antippen: einzelne Muskeln wie Quadrizeps, Beinbeuger, Waden. Gezählt: Hauptmuskel 1 Satz, Hilfsmuskel ½ Satz; Gruppe = Schnitt ihrer Muskeln mit Richtwert.</span></section>`;
 }
 
 /* ---------- P8: statistik-zentrale ---------- */
@@ -2225,7 +2324,7 @@ ACT.statoff=b=>{STAT_OFF=Math.max(0,STAT_OFF+(+b.dataset.d));render();};
 
 /* ---------- P7: kalender ---------- */
 let CAL=null;
-function calendarCard(){
+function calendarCard(inner){
   const now=new Date();if(!CAL)CAL={y:now.getFullYear(),m:now.getMonth()};
   const first=new Date(CAL.y,CAL.m,1),days=new Date(CAL.y,CAL.m+1,0).getDate(),lead=(first.getDay()+6)%7;
   const byDay={};finished().forEach(w=>{const k=ymd(w.start);(byDay[k]=byDay[k]||[]).push(w);});
@@ -2243,12 +2342,12 @@ function calendarCard(){
   const leg=[...used].map(id=>id==='mma'?`<span><i style="background:var(--mut)"></i>MMA</span>`:`<span><i style="background:${routineColor(id)}"></i>${esc((S.routines.find(r=>r.id===id)||{}).name||'Gelöschtes Training')}</span>`).join('');
   const isNow=CAL.y===now.getFullYear()&&CAL.m===now.getMonth();
   const firstT=(finished()[0]||{}).start||Date.now();const canBack=new Date(CAL.y,CAL.m,1).getTime()>firstT;
-  return `<div class="card calc">
+  return `<div class="${inner?'calc calin':'card calc'}">
     <div class="perh"><button data-act="calnav" data-d="-1" aria-label="Voriger Monat" ${canBack?'':'disabled'}>‹</button><b>${MONTHS[CAL.m]} ${CAL.y}</b><button data-act="calnav" data-d="1" aria-label="Nächster Monat" ${isNow?'disabled':''}>›</button></div>
     <div class="cal">${cells}</div>
     <div class="wkline">${ic('dumbbell')} ${cnt} Training${cnt===1?'':'s'} im ${MONTHS[CAL.m]}</div>
     ${leg?`<div class="calleg">${leg}</div>`:''}
-    ${yearHeat(CAL.y)}</div>`;
+    ${inner?'':yearHeat(CAL.y)}</div>`;
 }
 function yearHeat(y){
   const cnt={};gymOnly().forEach(w=>{if(new Date(w.start).getFullYear()===y){const k=ymd(w.start);cnt[k]=(cnt[k]||0)+1;}});
