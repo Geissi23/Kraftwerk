@@ -117,7 +117,9 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 ## Eingang
 
 - App-Notizen (`jarvisNotes`): zuletzt gelesen 27.11.2026 11:40 (keine neuen seit 25.11., beide erledigt in PR #22).
-- (leer – Antworten von Janis hier eintragen)
+- **27.11. ca. 11:50 (Janis, Lauf-Chat):** «Jarvis-Sync ist nicht eingerichtet. Mach das.» → Zugangsschlüssel kann nur Janis auf dem
+  iPhone eintragen (Geheimnis, Jarvis hat ihn nicht). Anleitung im Chat geschickt. Vermutlich in der Vorschau/Safari gesehen (eigener
+  Speicher). Letzter Sync der Home-App: 26.11. abends. Nächster Lauf: prüfen, ob ein neuer Sync ankommt; sonst Push.
 
 ## Offene Fragen (Standard gilt ohne Antwort)
 
