@@ -71,7 +71,13 @@ async function runDevice(browserType, bname, devName, scheme) {
   const shot = async n => { if (OUT) await p.screenshot({ path: path.join(OUT, `${bname}-${devName.replace(/\s/g, '')}-${scheme}-${n}.png`) }); };
 
   // Alle Screens
-  const noHScroll = async where => ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), label + ': kein horizontales Scrollen (' + where + ')');
+  const noHScroll = async where => {
+    const r = await p.evaluate(() => { const W = innerWidth; if (document.documentElement.scrollWidth <= W + 1) return '';
+      const bad = [...document.querySelectorAll('#main *')].filter(e => e.getBoundingClientRect().right > W + 1 && getComputedStyle(e).position !== 'fixed')
+        .map(e => (e.className || e.tagName) + ':' + Math.round(e.getBoundingClientRect().right)).slice(-3);
+      return document.documentElement.scrollWidth + 'px > ' + W + 'px ' + bad.join(' '); });
+    ok(!r, label + ': kein horizontales Scrollen (' + where + ')' + (r ? ' → ' + r : ''));
+  };
   await noHScroll('Übersicht'); await shot('1-uebersicht');
   await p.click('[data-tab="plan"]'); await p.waitForTimeout(200); await noHScroll('Plan'); await shot('2-plan');
   await p.click('[data-tab="stats"]'); await p.waitForTimeout(200);
@@ -135,8 +141,7 @@ async function runDevice(browserType, bname, devName, scheme) {
   await p.evaluate(t => { ACT.import(); document.getElementById('bkin').value = t; ACT.doimport(); }, oldBk);
   await p.waitForTimeout(300);
   ok(await p.evaluate(n => S.workouts.length === n && Array.isArray(S.routines), oldWorkouts.length), label + ': altes Backup (ohne neue Felder) lädt');
-  await p.click('[data-tab="stats"]'); await p.waitForTimeout(200);
-  await p.click('[data-tab="today"]'); await p.waitForTimeout(200);
+  await p.evaluate(() => { ACT.tab({ dataset: { tab: 'stats' } }); ACT.tab({ dataset: { tab: 'today' } }); }); await p.waitForTimeout(200);
 
   ok(errs.length === 0, label + ': keine Konsolenfehler' + (errs.length ? ' → ' + errs.slice(0, 5).join(' | ') : ''));
   await ctx.close(); await b.close();
