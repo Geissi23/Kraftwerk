@@ -23,7 +23,7 @@
 :root{
   --bg:#0B0C0E;--s1:#16181B;--s2:#202328;--s3:#2A2E34;
   --fg:#F1EFEA;--mut:#8B919A;--dim:#7D838C;
-  --acc:#FFD400;--on-acc:#111111;--acc-t:#FFD400;
+  --acc:#FFD400;--on-acc:#111111;--acc-t:#FFD400;--water:#5ED0DC;
   --ok:#3DDC97;--warn:#FF9F43;--bad:#FF5F5F;
   --ok-t:#3DDC97;--warn-t:#FF9F43;--bad-t:#FF6B6B;
   --ok-bg:#183A2C;--warn-bg:#3B2A18;--bad-bg:#40201F;
@@ -43,7 +43,7 @@
   :root:not([data-theme="dark"]){
     --bg:#F1F1EE;--s1:#FFFFFF;--s2:#E6E6E2;--s3:#D6D6D1;
     --fg:#0F1012;--mut:#5C6168;--dim:#70757C;
-    --acc:#FFD400;--on-acc:#111111;--acc-t:#6E5800;
+    --acc:#FFD400;--on-acc:#111111;--acc-t:#6E5800;--water:#1C8C99;
     --ok:#0E8F5A;--warn:#B45A00;--bad:#C62828;
     --ok-t:#12805A;--warn-t:#A35400;--bad-t:#B01F1F;
     --ok-bg:#D6EEE2;--warn-bg:#F6E3CF;--bad-bg:#F7D9D9;
@@ -55,7 +55,7 @@
 :root[data-theme="light"]{
   --bg:#F1F1EE;--s1:#FFFFFF;--s2:#E6E6E2;--s3:#D6D6D1;
   --fg:#0F1012;--mut:#5C6168;--dim:#70757C;
-  --acc:#FFD400;--on-acc:#111111;--acc-t:#6E5800;
+  --acc:#FFD400;--on-acc:#111111;--acc-t:#6E5800;--water:#1C8C99;
   --ok:#0E8F5A;--warn:#B45A00;--bad:#C62828;
   --ok-t:#12805A;--warn-t:#A35400;--bad-t:#B01F1F;
   --ok-bg:#D6EEE2;--warn-bg:#F6E3CF;--bad-bg:#F7D9D9;
@@ -810,6 +810,14 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--fg);backgro
 .lvc{width:44px;height:44px;border-radius:50%;border:3px solid var(--acc);display:grid;place-items:center;font-size:16px;flex:none}
 .lvt{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}.lvh{display:flex;justify-content:space-between;gap:8px;font-size:14px}.lvh span{color:var(--mut)}
 .lvb{height:5px;border-radius:3px;background:var(--s2);overflow:hidden}.lvb i{display:block;height:5px;background:var(--acc)}
+/* Design v3 Etappe 5: Eiweiss/Wasser, Körpermasse */
+.nb{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.nbh{display:flex;justify-content:space-between;font-size:14px}.nbh .num{font-size:16px}
+.nbb{height:6px;border-radius:3px;background:var(--s2);overflow:hidden}.nbb i{display:block;height:6px;border-radius:3px}.nbb i.p{background:var(--acc)}.nbb i.w{background:var(--water)}
+.nq{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.nq button{min-height:44px;border-radius:12px;background:var(--s2);font-size:14px;font-weight:600;color:var(--fg)}
+.nhint{margin:10px 0 0;font-size:12px;color:var(--dim)}
+.mrow{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--s2);font-size:14px}.mrow .num{font-size:16px}.mrow small{font-size:12px;color:var(--mut)}.mrow small.up{color:var(--ok-t)}
+.meas .btn{margin-top:12px}
+.fl{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--mut);margin-bottom:12px}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
@@ -954,7 +962,7 @@ function defaultPlan(){
 }
 function baseState(){
   const p=defaultPlan();
-  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null,gear:{},jarvisNotes:[]};
+  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null,gear:{},jarvisNotes:[],nutri:{},measures:[],heightCm:0};
 }
 
 /* ---------- plan migration ---------- */
@@ -998,7 +1006,9 @@ function loadState(){
 }
 let S=loadState();
 /* Optionale Felder (seit 25.11.2026): gear = Geräte-Einstellung pro Übung, jarvisNotes = Notizen an Jarvis */
-function normExtras(){if(!S.gear||typeof S.gear!=='object'||Array.isArray(S.gear))S.gear={};if(!Array.isArray(S.jarvisNotes))S.jarvisNotes=[];}
+function normExtras(){if(!S.gear||typeof S.gear!=='object'||Array.isArray(S.gear))S.gear={};if(!Array.isArray(S.jarvisNotes))S.jarvisNotes=[];
+  /* seit 27.11.2026 (Design v3 Etappe 5): nutri, measures, heightCm */
+  if(!S.nutri||typeof S.nutri!=='object'||Array.isArray(S.nutri))S.nutri={};if(!Array.isArray(S.measures))S.measures=[];if(typeof S.heightCm!=='number')S.heightCm=0;}
 normExtras();
 const CORE_IDS=['r_k1','r_k2','r_k3'];
 function normRot(){(S.routines||[]).forEach(r=>{if(typeof r.rot!=='boolean')r.rot=CORE_IDS.includes(r.id);});}
@@ -1027,7 +1037,7 @@ function savePlan(){S.pt=Date.now();persist();schedulePush();ghSchedule();}
 
 /* ---------- optional cloud sync (db capability) ---------- */
 const Sync={db:null,base:null,status:'Nur auf diesem Gerät gespeichert',timer:null};
-const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer,gear:S.gear,jarvisNotes:S.jarvisNotes});
+const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer,gear:S.gear,jarvisNotes:S.jarvisNotes,nutri:S.nutri,measures:S.measures,heightCm:S.heightCm});
 function schedulePush(){clearTimeout(Sync.timer);Sync.timer=setTimeout(pushPlan,1500);}
 async function pushPlan(){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/plan').set({json:JSON.stringify(planPart()),t:Date.now()});}catch(e){}}
 async function pushWorkout(w){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/w_'+w.id).set({json:JSON.stringify(w),t:Date.now()});}catch(e){}}
@@ -1047,7 +1057,7 @@ async function syncInit(){
     if(rp){
       S.deleted=[...new Set([...(S.deleted||[]),...(rp.deleted||[])])];
       if((rp.pt||0)>(S.pt||0)){
-        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer','gear','jarvisNotes'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});normExtras();
+        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer','gear','jarvisNotes','nutri','measures','heightCm'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});normExtras();
         if(!(S.planVer>=PLAN_VER)){migratePlan(S,S.planVer);pushPlan();}
         changed=true;
       }else pushPlan();
@@ -1575,7 +1585,7 @@ function viewToday(){
     <div class="tl"><span class="lb">Diese Woche</span><span class="num tv2">${gymWeek} / ${goal}</span><span class="wbars" role="img" aria-label="${gymWeek} von ${goal} Trainings diese Woche">${bars}</span></div>
     ${tile('Gewicht',bl?fmtN(bl.kg):'–',bwSub,'bwadd',bl?'':'acc')}
     ${tile('Schlaf',sleepV,sleepSub,R.st==='setup'?'ghsheet':'recov')}
-    ${tile('Serie',st.streak?st.streak+' Wo':'–',st.streak?'Wochenziel in Folge':'Wochenziel '+goal+'× erreichen','')}
+    ${tile('Eiweiss heute',fmtN(nutriDay(ymd(now)).p)+' g','Ziel '+protGoal()+' g','gonutri','')}
   </section>`;
   const jm=jarvisMeint();
   const jcard=jm?`<section class="jmeint"><span class="jb" aria-hidden="true">J</span><div><span class="lb">Jarvis meint</span><p>${jm}</p></div></section>`:'';
@@ -1646,7 +1656,7 @@ function weeksIn(R){const f=Math.max(R.from,(gymOnly()[0]||{}).start||Date.now()
 function viewStats(){
   if(!['tr','body','rec'].includes(STATS_SUB))STATS_SUB=STATS_SUB==='body'?'body':'tr';
   const head=viewTop()+pageHead('','Fortschritt')+statsSeg();
-  if(STATS_SUB==='body')return head+weightCard()+recoveryCard()+photoCard();
+  if(STATS_SUB==='body')return head+weightCard()+nutriCard()+recoveryCard()+measureCard()+photoCard();
   if(STATS_SUB==='rec')return head+recordsPane();
   return head+trainingPane();
 }
@@ -2275,6 +2285,52 @@ function muscleCard(){
     <span class="mghint">Gruppe antippen: einzelne Muskeln wie Quadrizeps, Beinbeuger, Waden. Gezählt: Hauptmuskel 1 Satz, Hilfsmuskel ½ Satz; Gruppe = Schnitt ihrer Muskeln mit Richtwert.</span></section>`;
 }
 
+/* ---------- Design v3 Etappe 5: Eiweiss & Wasser pro Tag, Körpermasse (Go Janis 26.11.2026) ----------
+   Neue optionale Felder: nutri = {'JJJJ-MM-TT': {p: Gramm Eiweiss, w: Liter Wasser}}, measures = [{d, taille, brust, arm}] in cm, heightCm */
+const lastBw=()=>{const a=[...(S.bodyweight||[])].sort((x,y)=>x.d.localeCompare(y.d));return a.length?a[a.length-1].kg:0;};
+const protGoal=()=>{const kg=lastBw();return kg?Math.round(kg*1.8/5)*5:140;};
+const WATER_GOAL=3;
+const nutriDay=k=>(S.nutri&&S.nutri[k])||{p:0,w:0};
+function nutriAdd(f,v){const k=ymd(new Date()),d=Object.assign({p:0,w:0},nutriDay(k));d[f]=Math.max(0,Math.round((d[f]+v)*100)/100);S.nutri[k]=d;
+  const keys=Object.keys(S.nutri).sort();if(keys.length>400)keys.slice(0,keys.length-400).forEach(x=>delete S.nutri[x]);savePlan();}
+function nutriCard(){
+  const k=ymd(new Date()),d=nutriDay(k),pg=protGoal();
+  let sum=0,n=0;for(let i=1;i<=7;i++){const x=S.nutri[ymd(new Date(Date.now()-i*864e5))];if(x&&x.p>0){sum+=x.p;n++;}}
+  const bar=(lab,v,goal,unit,cls)=>`<div class="nb"><div class="nbh"><span>${lab}</span><span class="num">${fmtN(v)} / ${fmtN(goal)} ${unit}</span></div><div class="nbb" role="img" aria-label="${lab}: ${fmtN(v)} von ${fmtN(goal)} ${unit}"><i class="${cls}" style="width:${Math.min(100,v/goal*100).toFixed(1)}%"></i></div></div>`;
+  return `<section class="card nutri" id="nutri"><div class="blkh"><h2>Eiweiss &amp; Wasser heute</h2><button class="btn sm ghost" data-act="nutriedit">Ändern</button></div>
+    ${bar('Eiweiss',d.p,pg,'g','p')}${bar('Wasser',d.w,WATER_GOAL,'l','w')}
+    <div class="nq"><button data-act="nadd" data-f="p" data-v="10">+ 10 g</button><button data-act="nadd" data-f="p" data-v="25">+ 25 g</button><button data-act="nadd" data-f="w" data-v="0.5">+ 0,5 l</button></div>
+    <p class="nhint">Ziel ${pg} g = rund 1,8 g pro kg Körpergewicht${lastBw()?'':' (ohne Gewicht: 140 g)'}.${n?` Ø letzte 7 Tage: ${Math.round(sum/n)} g (${n} Tag${n===1?'':'e'} erfasst).`:''}</p></section>`;
+}
+ACT.nadd=b=>{nutriAdd(b.dataset.f,+b.dataset.v);const v=b.dataset.f==='p'?`+${b.dataset.v} g Eiweiss`:'+0,5 l Wasser';render();toast(v);};
+ACT.nutriedit=()=>{const d=nutriDay(ymd(new Date()));
+  openSheet(`<h2>Heute korrigieren</h2><label class="fl">Eiweiss (g)<input class="ti" id="nup" inputmode="numeric" value="${d.p||''}" placeholder="0"></label><label class="fl">Wasser (l)<input class="ti" id="nuw" inputmode="decimal" value="${d.w?String(d.w).replace('.',','):''}" placeholder="0"></label>
+    <div class="btnrow"><button class="btn acc" data-act="nutrisave">Speichern</button><button class="btn ghost" data-act="closesheet">Abbrechen</button></div>`);};
+ACT.nutrisave=()=>{const p=Math.max(0,Math.round(num($('#nup').value))),w=Math.max(0,Math.round(num(String($('#nuw').value).replace(',','.'))*100)/100),k=ymd(new Date());
+  if(p||w)S.nutri[k]={p,w};else delete S.nutri[k];savePlan();closeSheet();render();toast('Gespeichert');};
+const MEAS=[['taille','Taille'],['brust','Brust'],['arm','Oberarm']];
+function measureCard(){
+  const m=(S.measures||[]).slice().sort((a,b)=>a.d.localeCompare(b.d)),L=m[m.length-1];
+  const vals=f=>m.filter(x=>x[f]>0).map(x=>x[f]);
+  const prevOf=f=>{const v=vals(f);return v.length>1?v[v.length-2]:0;};
+  const lastOf=f=>{const v=vals(f);return v.length?v[v.length-1]:0;};
+  const days=L?Math.round((new Date(ymd(new Date())+'T12:00:00')-new Date(L.d+'T12:00:00'))/864e5):0;
+  const due=!L?'alle 4 Wochen messen':days>=28?'wieder messen':`nächstes Mal in ${28-days} Tag${28-days===1?'':'en'}`;
+  const rows=MEAS.map(([f,lab])=>{const v=lastOf(f),p=prevOf(f),dd=v&&p?Math.round((v-p)*10)/10:null;
+    return `<div class="mrow"><span>${lab}</span><span class="num">${v?fmtN(v)+' cm':'–'}${dd!==null?` <small class="${dd>0&&f!=='taille'||dd<0&&f==='taille'?'up':''}">${dd>0?'+':dd<0?'−':'±'}${fmtN(Math.abs(dd))}</small>`:''}</span></div>`;}).join('');
+  return `<section class="card meas"><div class="blkh"><h2>Körpermasse</h2><span class="lb">${due}</span></div>${rows}${S.heightCm?`<div class="mrow"><span>Grösse</span><span class="num">${fmtN(S.heightCm)} cm</span></div>`:''}
+    ${L?`<p class="nhint">Zuletzt gemessen: ${esc(fmtDate(new Date(L.d+'T12:00:00').getTime()))} · Taille morgens, entspannt, auf Höhe Bauchnabel.</p>`:'<p class="nhint">Taille stabil und Brust/Arm wachsen = sauberer Aufbau. Morgens messen, gleiche Stelle.</p>'}
+    <button class="btn ${L&&days<28?'ghost':'acc'} full" data-act="measadd">${ic('plus')} Messen</button></section>`;
+}
+ACT.measadd=()=>{const m=(S.measures||[]).slice().sort((a,b)=>a.d.localeCompare(b.d)),L=m[m.length-1]||{},today=ymd(new Date()),T=m.find(x=>x.d===today)||{};
+  openSheet(`<h2>Körpermasse heute</h2><p class="muted small">In Zentimetern. Leer lassen, was du nicht misst.</p>${MEAS.map(([f,lab])=>`<label class="fl">${lab}<input class="ti" id="ms_${f}" inputmode="decimal" value="${T[f]?String(T[f]).replace('.',','):''}" placeholder="${L[f]?String(L[f]).replace('.',','):'cm'}"></label>`).join('')}
+    <label class="fl">Grösse (einmalig)<input class="ti" id="ms_h" inputmode="numeric" value="${S.heightCm||''}" placeholder="cm"></label>
+    <div class="btnrow"><button class="btn acc" data-act="meassave">Speichern</button><button class="btn ghost" data-act="closesheet">Abbrechen</button></div>`);};
+ACT.meassave=()=>{const today=ymd(new Date()),e={d:today};let any=false;
+  MEAS.forEach(([f])=>{const v=Math.round(num(String($('#ms_'+f).value).replace(',','.'))*10)/10;if(v>20&&v<250){e[f]=v;any=true;}});
+  const h=Math.round(num($('#ms_h').value));if(h>100&&h<250)S.heightCm=h;
+  S.measures=(S.measures||[]).filter(x=>x.d!==today);if(any)S.measures.push(e);savePlan();closeSheet();render();toast(any?'Masse gespeichert':'Gespeichert');};
+ACT.gonutri=()=>{TAB='stats';STATS_SUB='body';render();fadeMain();setTimeout(()=>{const e=$('#nutri');if(e)e.scrollIntoView({block:'start'});},30);};
 /* ---------- P8: statistik-zentrale ---------- */
 let STAT_P='m',STAT_OFF=0;
 const MONTHS=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
