@@ -177,6 +177,8 @@ async function runPreview(browserType, bname) {
   const touched = Object.keys(real).filter(k => after[k] !== real[k]);
   ok(touched.length === 0, label + ': echte Schlüssel unverändert' + (touched.length ? ' (' + touched.join(', ') + ')' : ''));
   ok(Object.keys(after).some(k => k.startsWith('kraftwerk.preview:')), label + ': Änderungen im eigenen Namensraum');
+  const fresh = Object.keys(after).filter(k => !(k in real) && !k.startsWith('kraftwerk.preview'));
+  ok(fresh.length === 0, label + ': keine neuen echten Schlüssel' + (fresh.length ? ' (' + fresh.join(', ') + ')' : ''));
   ok(puts === 0, label + ': kein Jarvis-Sync aus der Vorschau');
   await p.goto('file://' + path.join(dir, 'index.html')); await p.waitForTimeout(400);
   ok(await p.evaluate(n => S.workouts.length === n && document.getElementById('pvbar').hidden, n), label + ': echte App unverändert, ohne Hinweis');

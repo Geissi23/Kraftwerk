@@ -872,13 +872,16 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--fg);backgro
    Unter /preview/ läuft eine Test-Version auf derselben Herkunft wie die echte App. Sie liest die echten Daten,
    schreibt aber nur in einen eigenen Namensraum («kraftwerk.preview:…») und nie in die echten Schlüssel.
    Claude-Sync, Jarvis-Sync (Schreiben) und Fotos sind in der Vorschau getrennt bzw. aus. */
-const PREVIEW=/\/preview\//.test(location.pathname);
+const PREVIEW=/\/preview\/(index\.html)?$/.test(location.pathname),PREVIEW_BUILD='dev'; // PREVIEW_BUILD setzt der Workflow «Vorschau»
 const LS=(()=>{let ls=null;try{ls=window.localStorage;}catch(e){}
   const dead={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};if(!ls)return dead;if(!PREVIEW)return ls;
-  const P='kraftwerk.preview:',G='kraftwerk.preview-del:';
+  const P='kraftwerk.preview:',G='kraftwerk.preview-del:',M='kraftwerk.preview-meta';
+  /* Neue Vorschau-Version: alten Vorschau-Stand wegräumen, damit wieder die echten Daten gelesen werden (spart auch Speicher) */
+  try{if(ls.getItem(M)!==PREVIEW_BUILD){const ks=[];for(let i=0;i<ls.length;i++){const k=ls.key(i);if(k&&(k.startsWith(P)||k.startsWith(G)))ks.push(k);}
+    ks.forEach(k=>ls.removeItem(k));ls.setItem(M,PREVIEW_BUILD);}}catch(e){}
   return {getItem:k=>{const v=ls.getItem(P+k);if(v!==null)return v;return ls.getItem(G+k)?null:ls.getItem(k);},
     setItem:(k,v)=>{ls.setItem(P+k,String(v));ls.removeItem(G+k);},
-    removeItem:k=>{ls.removeItem(P+k);ls.setItem(G+k,'1');}};})();
+    removeItem:k=>{ls.setItem(G+k,'1');ls.removeItem(P+k);}};})();
 /* ---------- helpers ---------- */
 const $=(s,el=document)=>el.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2775,7 +2778,7 @@ function ghApplyRemote(o){const d=o&&o.data;
   if(!o||o.app!=='kraftwerk'||!d||!Array.isArray(d.workouts)||!Array.isArray(d.routines))throw new Error('Datei ungültig');
   S=Object.assign(baseState(),d,{active:null,pt:Date.now()});normRot();normExtras();dataFixes();persist();pushPlan();S.workouts.forEach(pushWorkout);}
 async function ghPush(manual){
-  if(PREVIEW){if(manual)toast('In der Vorschau ist der Jarvis-Sync aus.');return false;}
+  if(PREVIEW)return manual?ghPreviewLoad():false;
   if(!ghOn()||GH.busy)return false;GH.busy=true;
   try{
     let sha;const g=await ghApi('/contents/'+GH_FILE,{allow404:true});
@@ -2789,6 +2792,13 @@ async function ghPush(manual){
     GH.last=Date.now();GH.err='';ghSave();if(manual)toast('Mit Jarvis synchronisiert');return true;
   }catch(e){GH.err=(e&&e.message)||'Keine Verbindung';ghSave();if(manual)toast(GH.err);return false;}
   finally{GH.busy=false;const el=$('#ghstat');if(el)el.textContent=ghStatusText();}
+}
+/* Vorschau: nur lesen. Auf dem iPhone hat Safari einen anderen Speicher als die Home-Bildschirm-App,
+   darum kann die Vorschau die Sicherung aus dem privaten Repo laden (nie hochladen). */
+async function ghPreviewLoad(){
+  if(!ghOn())return false;
+  try{const r=await ghApi('/contents/'+GH_FILE);const j=await r.json();ghApplyRemote(JSON.parse(ghFromB64(j.content)));GH.err='';ghSave();closeSheet();render();toast('Vorschau: Daten aus der Sicherung geladen (nur lesen)',true);return true;}
+  catch(e){GH.err=(e&&e.message)||'Keine Verbindung';ghSave();toast(GH.err);return false;}
 }
 function ghSchedule(ms){try{if(PREVIEW||!ghOn())return;clearTimeout(GH.timer);GH.timer=setTimeout(()=>ghPush(false),ms||4000);}catch(e){}}
 function ghSheet(){
@@ -3197,7 +3207,7 @@ function confetti(n){
 })();
 render();
 if(S.active&&Date.now()-S.active.start<12*3600e3)toast('Dein Training läuft noch. Tippe auf «Weiter trainieren».');
-if(PREVIEW){const pv=document.getElementById('pvbar');if(pv)pv.hidden=false;document.title='Vorschau · '+document.title;}
+if(PREVIEW){const pv=document.getElementById('pvbar');if(pv)pv.hidden=false;document.title='Vorschau · '+document.title;const at=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(at)at.content='KW Vorschau';}
 syncInit();
 </script>
 </body>

@@ -17,3 +17,8 @@ Läuft automatisch bei jedem Pull Request (`.github/workflows/tests.yml`). WebKi
 `.github/workflows/vorschau.yml` kopiert `index.html` eines Branches nach `preview/index.html` (Start per «Run workflow» oder
 Label `vorschau` am PR). Adresse: https://geissi23.github.io/Kraftwerk/preview/ – liest die echten Daten, schreibt nur in
 `kraftwerk.preview:…`, Claude-Sync und Jarvis-Sync sind dort aus, Fotos getrennt. Oben steht «Vorschau».
+
+Hinweise: Die Vorschau prüft im Workflow, dass der Branch den Schutz enthält (sonst Abbruch) und setzt eine Build-Kennung;
+bei einer neuen Vorschau-Version wird der alte Vorschau-Stand gelöscht. Auf dem iPhone hat Safari einen anderen Speicher als
+die Home-Bildschirm-App: Dann in der Vorschau unter Einstellungen › Jarvis-Sync verbinden, die Sicherung wird nur gelesen.
+Es gibt nur eine Vorschau gleichzeitig (der letzte Start gewinnt).
