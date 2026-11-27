@@ -106,9 +106,11 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 
 - **Jetzt:**
   1. **Design v3 Etappe 2 Rest** (Go 26.11.): Aufwärm-Markierung als Datenfeld + Aufwärm-Vorschläge 40 %/60 %, Gewichtsschritte pro
-     Übung/Gerät, Abschluss-Screen wie Mockup 5. Je eigener PR, über die Vorschau.
+     Übung/Gerät. Je eigener PR, über die Vorschau. (Abschluss-Screen: PR #36 in der Vorschau.)
   2. **Nutzung lernen – erste Auswertung:** welche Bereiche (Fotos, Rückblick, Level/Abzeichen, Körpermasse, Notizen, Geräte-Einstellungen,
-     Scheibenrechner) werden genutzt? Ergebnis als Push-Frage «entfernen?» mit Standard «behalten».
+     Scheibenrechner) werden genutzt? Erste Sicht 27.11.: Körpermasse/Zielgewicht noch nie, Notizen und Geräte-Einstellungen ja,
+     Eiweiss/Wasser erst seit heute live. Fotos, Rückblick, Level, Scheibenrechner hinterlassen keine Spur → Nutzungszähler (Frage offen).
+     Entfernen-Fragen erst mit genug Daten (frühestens Mitte Dezember).
   3. **Eiweiss-Portionen selbst anlegen** (P20 A Rest, z. B. «Skyr 25 g»), klein.
 - **Als Nächstes:** Körper-Tab Zeitraum-Umschalter wie Mockup · «In den Plan übernehmen» bei der Coach-Empfehlung (ändert den Plan
   per Knopf → nur mit Go) · Cockpit-Muskel-Ampel mit `richtwert` statt 10/20.
@@ -116,16 +118,16 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 
 ## Eingang
 
-- App-Notizen (`jarvisNotes`): zuletzt gelesen 27.11.2026 11:40 (keine neuen seit 25.11., beide erledigt in PR #22).
-- **27.11. ca. 11:50 (Janis, Lauf-Chat):** «Jarvis-Sync ist nicht eingerichtet. Mach das.» → Zugangsschlüssel kann nur Janis auf dem
-  iPhone eintragen (Geheimnis, Jarvis hat ihn nicht). Anleitung im Chat geschickt. Vermutlich in der Vorschau/Safari gesehen (eigener
-  Speicher). Letzter Sync der Home-App: 26.11. abends. Nächster Lauf: prüfen, ob ein neuer Sync ankommt; sonst Push.
+- App-Notizen 27.11. 13:35 geprüft: keine neuen. Jarvis-Sync läuft (neuer Sync 27.11. 13:21) → Punkt «Jarvis-Sync einrichten» erledigt.
 
 ## Offene Fragen (Standard gilt ohne Antwort)
 
 - Squat-Aufwärmsätze vom 23.11. als Arbeitssätze erfasst → Standard **so lassen**, Frist Mo 30.11.
 - Supersätze im Wechsel oder nacheinander → Standard **im Wechsel lassen**, Frist Mo 30.11.
 - P20 Ernährung B–D → Standard **nicht umsetzen**, Frist Mo 30.11.
+- PR #36 Abschluss-Screen (Vorschau) → Standard **live**, Frist Sa 28.11. 13:34.
+- Nutzungszähler (neues optionales Feld `use` in der Sicherung: wie oft Fotos, Rückblick, Level, Scheibenrechner usw. geöffnet werden;
+  nur Zähler) → Standard **einbauen**, Frist Mo 30.11. 18:34.
 
 ## Tagesprotokoll
 
@@ -153,6 +155,16 @@ Safari durch, weil lokal nur Chromium läuft. Jetzt prüft WebKit in der CI mit 
 
 **Daueraufgaben:** Sync-Wächter ok (Jarvis-Sync 26.11. abends, Garmin-Sync gestern 2×, heute noch nicht – üblich Nachmittag).
 Erholung unverändert seit dem Morgen, Empfehlung **normal**. Daten aufräumen / Plan pflegen: nichts Neues. Cockpit: erledigt im Morgenlauf.
+
+### Fr 27.11.2026 – Arbeits-Lauf 13:34
+
+- PR #36 https://github.com/Geissi23/Kraftwerk/pull/36 – Abschluss-Screen wie Mockup 5 (Vollbild: Name, Training der Woche, Dauer/Sätze/
+  Ø Wdh im Tank, Rekorde mit bestem Satz, Vergleich zum letzten Mal). Tests grün, Vorschau steht. Testen: in der Vorschau ein Training
+  beenden. Ohne Einwand live am Sa 28.11. ab 13:34.
+- Kritischer Blick: alter Abschluss hatte 4 Kacheln plus 3 Textzeilen (XP, Prozent, «so viel wie …») – zu viel Text für den Moment nach
+  dem Training. Jetzt eine Aussage pro Zeile.
+- Daueraufgaben: Jarvis-Sync ok (heute 13:21), Garmin-Sync heute noch nicht (üblich Nachmittag), Erholung unverändert → **normal**.
+  Keine neuen Trainings → Daten aufräumen / Plan pflegen nichts. Cockpit: Morgenlauf.
 
 ## Backlog
 
@@ -194,3 +206,6 @@ Erholung unverändert seit dem Morgen, Empfehlung **normal**. Daten aufräumen /
   `git reset --hard origin/main`. Und CSS-Fixes «auf Verdacht» ohne Messung (Kalender) kosten einen CI-Durchgang: erst Diagnose, dann Fix.
 - 2026-11-27 (zweiter Sofort-Lauf, gleicher Auftrag): Einrichtung war schon erledigt → nur PR #34 (SE-Breite) fertig und gemergt, PR #35 WebKit Pflicht.
 - 2026-11-27 (selbstkritisch): Beim ersten Versuch auf Verdacht am Kalender gedreht; das Sicherheitsnetz `overflow-x:clip` plus Messung hätte gleich gereicht.
+- 2026-11-27 (Arbeits-Lauf 13:34): PR #36 Abschluss-Screen v3 in die Vorschau, Nutzung erste Sicht, Jarvis-Sync bestätigt.
+- 2026-11-27 (selbstkritisch): Der Titel brach auf dem SE mitten im Wort («OBERKÖRP-ER») – nur im Screenshot gesehen. Grosse Titel immer
+  mit `min(…, vw)` begrenzen und auf dem SE ansehen; und keine Review-Runde, weil klein – beim nächsten sichtbaren PR wieder Review-Agent.
