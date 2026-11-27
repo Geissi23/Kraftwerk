@@ -1036,7 +1036,7 @@ function normExtras(){if(!S.gear||typeof S.gear!=='object'||Array.isArray(S.gear
   if(!Array.isArray(S.fb))S.fb=[];
   /* seit 27.11.2026: eigener Gewichtsschritt pro Übung (wstep: {key: kg}), sonst Standard je Gerät */
   if(!S.wstep||typeof S.wstep!=='object'||Array.isArray(S.wstep))S.wstep={};
-  Object.keys(S.wstep).forEach(k=>{const v=+S.wstep[k];if(!(v>0&&v<=50))delete S.wstep[k];});}
+  Object.keys(S.wstep).forEach(k=>{if(![1,1.25,2,2.5,4.5,5,10].includes(+S.wstep[k]))delete S.wstep[k];});}
 normExtras();
 /* ---------- Neu im Test (27.11.2026) ----------
    Grosse Neuerungen, die den Ablauf im Gym verändern, trägt Jarvis hier ein (höchstens 3). Standard: an.
@@ -1155,15 +1155,15 @@ function buildEx(e,cb){
       const rd=w=>w>0?Math.max(inc,Math.round(w*0.9/inc)*inc):w;
       for(let j=0;j<sets;j++){const b=last.rows[j]||last.rows[last.rows.length-1];
         rows.push({w:rd(num(b.w)),r:Math.max(e.repMin,Math.min(e.repMax,num(b.r))),done:false});}
-      hint+='\nComeback: '+sets+' × '+fmtN(rows[0].w)+' kg (90 %), sauber und ohne Muskelversagen.';go=true;
+      hint+='\nComeback: '+sets+' × '+fmtP(rows[0].w)+' kg (90 %), sauber und ohne Muskelversagen.';go=true;
     }else if(allMax){
       for(let j=0;j<sets;j++){const b=last.rows[j]||last.rows[last.rows.length-1];rows.push({w:num(b.w)+inc,r:e.repMin,done:false});}
-      hint+='\nZiel: '+fmtN(top+inc)+' kg × '+e.repMin+' – alle Sätze am Limit geschafft!';go=true;
+      hint+='\nZiel: '+fmtP(top+inc)+' kg × '+e.repMin+' – alle Sätze am Limit geschafft!';go=true;
     }else{
       /* P13: doppelte Progression – pro Satz +1 Wdh. bis zum oberen Ende, dann mehr Gewicht */
       for(let j=0;j<sets;j++){const b=last.rows[j]||last.rows[last.rows.length-1];rows.push({w:num(b.w),r:Math.min(num(b.r)+1,e.repMax),done:false});}
       const lim=last.rows.filter(r=>num(r.r)>=e.repMax).length;
-      hint+='\nZiel: '+rows.map(r=>r.r).join('·')+' Wdh. bei '+fmtN(top)+' kg · '+lim+'/'+e.sets+' am Limit · ab '+e.sets+'×'+e.repMax+' → '+fmtN(top+inc)+' kg';go=true;
+      hint+='\nZiel: '+rows.map(r=>r.r).join('·')+' Wdh. bei '+fmtN(top)+' kg · '+lim+'/'+e.sets+' am Limit · ab '+e.sets+'×'+e.repMax+' → '+fmtP(top+inc)+' kg';go=true;
     }
   }else{
     for(let j=0;j<e.sets;j++)rows.push({w:'',r:e.repMin,done:false});
@@ -1186,9 +1186,9 @@ function suggestNext(ex){
   const step=wStep(ex);
   const maxDelta=w*0.10;
   const clamped=Math.max(-maxDelta,Math.min(maxDelta,raw-w));
-  const newW=Math.round((w+Math.round(clamped/step)*step)*10)/10;
+  const newW=Math.round((w+Math.round(clamped/step)*step)*100)/100;
   if(newW===w||!(newW>0))return null;
-  return {rowIdx:lastDone,w:newW,delta:Math.round((newW-w)*10)/10};
+  return {rowIdx:lastDone,w:newW,delta:Math.round((newW-w)*100)/100};
 }
 
 /* PR check: compare a set with all earlier data */
@@ -1960,7 +1960,7 @@ function renderWorkout(){
     const dn=ex.rows.filter(r=>r.done).length,isCur=!!act&&act.i===i,fin=ex.rows.length>0&&dn===ex.rows.length;
     const g=goalInfo(ex),mg=mgOf(ex.name),sug=suggestNext(ex);
     const rows=ex.rows.map((r,j)=>{
-      const sg=sug&&sug.rowIdx===j?`<div class="sugg">Nächster Satz: ${fmtN(sug.w)} kg (${sug.delta>=0?'+':''}${fmtN(sug.delta)})<button data-act="applysuggest" data-i="${i}">Übernehmen</button></div>`:'';
+      const sg=sug&&sug.rowIdx===j?`<div class="sugg">Nächster Satz: ${fmtP(sug.w)} kg (${sug.delta>=0?'+':''}${fmtP(sug.delta)})<button data-act="applysuggest" data-i="${i}">Übernehmen</button></div>`:'';
       if(isCur&&act.j===j)return tafelHtml(ex,i,j)+sg;
       const pr=r.pr&&r.pr!=='first';
       return `<div class="row ${r.done?'done':''} ${pr?'pr':''}">
@@ -2244,7 +2244,7 @@ function plateauHtml(ex,i){
   }else{
     const step=wStep(ex),dl=Math.max(step,rnd(p.top*.9,step));
     const lowRange=ex.repMax<=8;
-    ideas=[`Deload: Gewicht 10 % runter auf ${fmtN(dl)} kg und in 2–3 Wochen sauber wieder hocharbeiten.<br><button class="pa" data-act="pltdl" data-i="${i}" data-w="${dl}">${fmtN(dl)} kg für heute übernehmen</button>`,
+    ideas=[`Deload: Gewicht 10 % runter auf ${fmtP(dl)} kg und in 2–3 Wochen sauber wieder hocharbeiten.<br><button class="pa" data-act="pltdl" data-i="${i}" data-w="${dl}">${fmtP(dl)} kg für heute übernehmen</button>`,
       lowRange?`Wdh.-Bereich wechseln: ein paar Wochen 10–12 Wdh. mit ca. 15 % weniger Gewicht, danach zurück zu ${ex.repMin}–${ex.repMax}.`
               :`Wdh.-Bereich wechseln: ein paar Wochen 6–8 Wdh. mit etwas mehr Gewicht, danach zurück zu ${ex.repMin}–${ex.repMax}.`];
   }

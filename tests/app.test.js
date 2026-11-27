@@ -104,9 +104,10 @@ async function runDevice(browserType, bname, devName, scheme) {
   // Gewichtsschritt pro Übung: im Übungsmenü 5 kg wählen, «+» springt um 5 kg, gespeichert; danach zurück auf Standard
   const w00 = await p.evaluate(() => S.active.exs[0].rows[0].w);
   await p.evaluate(() => { S.active.exs[0].rows[0].w = 20; renderWorkout(); ACT.wstepedit({ dataset: { i: '0' } }); }); await p.waitForTimeout(200);
-  await p.click('#sheet [data-act="wstepset"][data-v="5"]'); await p.waitForTimeout(200);
+  const own = await p.evaluate(() => wStepStd(S.active.exs[0]) === 10 ? 5 : 10);
+  await p.click(`#sheet [data-act="wstepset"][data-v="${own}"]`); await p.waitForTimeout(200);
   await p.locator('#wk .tafel [data-act="step"][data-f="w"][data-d="1"]').first().click(); await p.waitForTimeout(400);
-  ok(await p.evaluate(() => num(S.active.exs[0].rows[0].w) === 25 && JSON.parse(localStorage.getItem('kraftwerk.v1')).wstep[S.active.exs[0].key] === 5), label + ': eigener Gewichtsschritt wirkt und wird gespeichert');
+  ok(await p.evaluate(o => num(S.active.exs[0].rows[0].w) === 20 + o && JSON.parse(localStorage.getItem('kraftwerk.v1')).wstep[S.active.exs[0].key] === o, own), label + ': eigener Gewichtsschritt wirkt und wird gespeichert');
   await p.evaluate(() => { const ex = S.active.exs[0], std = wStepStd(ex); ACT.wstepedit({ dataset: { i: '0' } }); return std; }); await p.waitForTimeout(200);
   await shot('5a-gewichtsschritt');
   await p.click('#sheet [data-act="wstepset"][data-v="0"]'); await p.waitForTimeout(200);
