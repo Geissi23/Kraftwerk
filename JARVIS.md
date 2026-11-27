@@ -80,7 +80,7 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 ## Werkzeuge (eingerichtet am 27.11.2026)
 
 - **Automatische Tests** (`tests/app.test.js`, Workflow «Tests», PR #30): bei jedem PR. Chromium ist Pflicht (Merge nur bei Grün),
-  WebKit (Safari-Engine) läuft vorerst nur zur Info, bis die iPhone-SE-Breite behoben ist (dann Pflicht machen). Lokal:
+  WebKit (Safari-Engine) ist seit PR #35 ebenfalls Pflicht. Lokal:
   `DEVICES="iPhone 13" node tests/app.test.js` (Bash bricht nach 2 Min. ab, darum Geräte einschränken). WebKit gibt es nur in der CI.
 - **Vorschau** https://geissi23.github.io/Kraftwerk/preview/ (PR #31): Actions › «Vorschau» › Run workflow mit Branch (oder Label
   `vorschau` am PR); Branch `main` setzt zurück. Liest echte Daten, schreibt nur `kraftwerk.preview:…`, Sync aus, Fotos getrennt.
@@ -105,14 +105,11 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 ## Roadmap (Jetzt · Als Nächstes · Später – Jarvis arbeitet nur an «Jetzt», Janis verschiebt sonntags)
 
 - **Jetzt:**
-  1. **iPhone-SE-Breite** (Bug, PR #34): Übersicht/Fortschritt in WebKit 3–7 px zu breit. Befund WebKit: Übersicht → Knopf «×» der Körpergewicht-
-     Karte (`.bwq .x`) steht 7 px über; Fortschritt → kein Element steht über (Pseudo-Element `::before/::after`, Schatten oder
-     `transform` prüfen). Kalender-Fix in #34 allein reicht nicht. Danach WebKit-Tests zur Pflicht machen.
-  2. **Design v3 Etappe 2 Rest** (Go 26.11.): Aufwärm-Markierung als Datenfeld + Aufwärm-Vorschläge 40 %/60 %, Gewichtsschritte pro
+  1. **Design v3 Etappe 2 Rest** (Go 26.11.): Aufwärm-Markierung als Datenfeld + Aufwärm-Vorschläge 40 %/60 %, Gewichtsschritte pro
      Übung/Gerät, Abschluss-Screen wie Mockup 5. Je eigener PR, über die Vorschau.
-  3. **Nutzung lernen – erste Auswertung:** welche Bereiche (Fotos, Rückblick, Level/Abzeichen, Körpermasse, Notizen, Geräte-Einstellungen,
+  2. **Nutzung lernen – erste Auswertung:** welche Bereiche (Fotos, Rückblick, Level/Abzeichen, Körpermasse, Notizen, Geräte-Einstellungen,
      Scheibenrechner) werden genutzt? Ergebnis als Push-Frage «entfernen?» mit Standard «behalten».
-  4. **Eiweiss-Portionen selbst anlegen** (P20 A Rest, z. B. «Skyr 25 g»), klein.
+  3. **Eiweiss-Portionen selbst anlegen** (P20 A Rest, z. B. «Skyr 25 g»), klein.
 - **Als Nächstes:** Körper-Tab Zeitraum-Umschalter wie Mockup · «In den Plan übernehmen» bei der Coach-Empfehlung (ändert den Plan
   per Knopf → nur mit Go) · Cockpit-Muskel-Ampel mit `richtwert` statt 10/20.
 - **Später:** P20 B–D (Kalorien, Rezepte, Konfigurator; Standard «nicht umsetzen») · Sprach-Assistent auf einem PC (Janis meldet sich).
@@ -144,8 +141,10 @@ Hinweis: Trainings- und Gesundheitszahlen stehen nie hier (öffentliches Repo).
 - PR #33 https://github.com/Geissi23/Kraftwerk/pull/33 – Daumen hoch/runter im Abschluss-Screen, nur wenn etwas im Test ist. Feld `fb`.
 - Testen: Einstellungen → Zeile «Neu im Test · Gerade nichts im Test.» Sonst nichts Sichtbares. (Morgenlauf 27.11. steht im Archiv.)
 
-**Offen:** PR #34 (iPhone-SE-Breite) – die WebKit-Tests haben gefunden, dass Übersicht und Fortschritt auf dem iPhone SE seitlich
-leicht verschiebbar sind. Erster Fix (Kalender) reichte nicht; Diagnose verbessert, weiter im nächsten Lauf.
+**Nachtrag (zweiter Sofort-Lauf, ca. 11:40):** PR #34 https://github.com/Geissi23/Kraftwerk/pull/34 gemergt – iPhone SE: Übersicht und
+Fortschritt liessen sich in Safari 3–7 px seitwärts schieben. Gewichtskarte schmaler, Kalendertage dürfen schmaler werden, Inhalt seitlich
+begrenzt (`overflow-x:clip`, Umschalter bleibt oben haften – geprüft). WebKit-Tests jetzt grün → PR #35 macht sie zur Pflicht.
+Rückgängig: «PR #34 rückgängig». Kein weiterer Push (keine neue Entscheidung).
 
 **Kritischer Blick:** Testbarkeit der App selbst. Bisher hat jeder Lauf von Hand durchgeklickt; dabei gingen Dinge wie die SE-Breite in
 Safari durch, weil lokal nur Chromium läuft. Jetzt prüft WebKit in der CI mit – und hat direkt einen echten Fehler gefunden.
@@ -191,3 +190,5 @@ Erholung unverändert seit dem Morgen, Empfehlung **normal**. Daten aufräumen /
   JARVIS.md entschlackt, Roadmap gefüllt.
 - 2026-11-27 (selbstkritisch): Den lokalen `main`-Zweig nicht geprüft – er war veraltet, erst `git log` hat es gezeigt. Zu Beginn immer
   `git reset --hard origin/main`. Und CSS-Fixes «auf Verdacht» ohne Messung (Kalender) kosten einen CI-Durchgang: erst Diagnose, dann Fix.
+- 2026-11-27 (zweiter Sofort-Lauf, gleicher Auftrag): Einrichtung war schon erledigt → nur PR #34 (SE-Breite) fertig und gemergt, PR #35 WebKit Pflicht.
+- 2026-11-27 (selbstkritisch): Beim ersten Versuch auf Verdacht am Kalender gedreht; das Sicherheitsnetz `overflow-x:clip` plus Messung hätte gleich gereicht.
