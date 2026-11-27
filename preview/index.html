@@ -171,6 +171,29 @@ textarea.ti{min-height:110px;padding:10px 12px;font-size:14px;font-family:var(--
 .stat .v{font-family:var(--disp);font-style:italic;font-stretch:80%;font-size:36px;font-weight:800;line-height:.95;font-variant-numeric:tabular-nums}
 .stat .l{font-family:var(--mono);font-size:12px;color:var(--mut);margin-top:6px}
 .sum{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:12px 0}
+/* Design v3 Mockup 5: Abschluss-Screen */
+#sheet.full{max-height:100%;height:100%;border-radius:0;padding-top:calc(12px + env(safe-area-inset-top,0px))}
+.fin{display:flex;flex-direction:column;gap:24px;min-height:calc(100% - 40px)}
+.fin .fh{display:flex;flex-direction:column;gap:6px;padding-top:24px}
+.fin .fh .k{font-size:14px;color:var(--acc-t);font-weight:600}
+.fin .fh h1{font-size:min(48px,11.5vw);line-height:.95;overflow-wrap:break-word}
+.fin .fh .d{font-size:14px;color:var(--mut)}
+.fin .ft{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.fin .ft>div{background:var(--s2);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.fin .ft .num{font-size:24px;font-weight:600;white-space:nowrap}
+@media (max-width:360px){.fin .ft>div{padding:12px}}
+.fin .ft span:last-child{font-size:12px;color:var(--mut)}
+.fin .fs{display:flex;flex-direction:column;gap:10px}
+.fin .fs>b{font-size:14px;font-weight:600}
+.fin .fpr{display:flex;align-items:center;gap:12px;background:var(--s2);border-radius:16px;padding:16px;font-size:16px}
+.fin .fpr .ic{color:var(--acc-t);flex:none}
+.fin .fpr span:nth-child(2){flex:1;min-width:0}
+.fin .fpr .num,.fin .fcmp .num{font-size:16px;white-space:nowrap}
+.fin .fcmp{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:14px;border-bottom:1px solid var(--s2)}
+.fin .fcmp:last-child{border-bottom:0}
+.fin .fcmp .up{color:var(--ok-t)}.fin .fcmp .eq{color:var(--mut)}
+.fin .fend{margin-top:auto}
+
 .bar{height:8px;background:var(--s2);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--fg)}
 .leds{display:flex;gap:2px}
@@ -414,7 +437,7 @@ details.more>summary:focus-visible{outline:2px solid var(--fg);outline-offset:2p
 .bdg.on{color:var(--fg)}
 /* kalender */
 .card.calc{padding-left:10px;padding-right:10px}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;text-align:center}
 .cal .wd{font-family:var(--mono);font-size:12px;color:var(--mut);padding-bottom:4px}
 .cal .cd{position:relative;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--disp);font-style:italic;font-stretch:80%;font-size:16px;font-weight:700;background:var(--s2);min-height:40px;color:var(--fg)}
 .cal .cd.has{color:var(--r-on);font-weight:800}
@@ -822,6 +845,11 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--fg);backgro
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
 #pvbar{position:fixed;z-index:60;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 4px);background:var(--acc,#FFD400);color:#111;font-size:12px;font-weight:700;padding:4px 12px;border-radius:12px;pointer-events:none;white-space:nowrap}
+/* iPhone SE (320 px): Kalendertage dürfen schmaler als 40 px werden, sonst wird die Seite seitlich verschiebbar (WebKit) */
+@media (max-width:359px){.cal .cd{min-height:0}}
+@media (max-width:359px){.bwq{gap:4px;padding:8px 6px 8px 10px}.bwq .num{min-width:0}}
+/* Sicherheitsnetz: nichts im Inhalt darf die Seite seitlich verschiebbar machen (clip erzeugt keinen Scroll-Container, sticky bleibt) */
+.wrap{overflow-x:clip}
 </style>
 </head>
 <body>
@@ -872,7 +900,7 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--fg);backgro
    Unter /preview/ läuft eine Test-Version auf derselben Herkunft wie die echte App. Sie liest die echten Daten,
    schreibt aber nur in einen eigenen Namensraum («kraftwerk.preview:…») und nie in die echten Schlüssel.
    Claude-Sync, Jarvis-Sync (Schreiben) und Fotos sind in der Vorschau getrennt bzw. aus. */
-const PREVIEW=/\/preview\/(index\.html)?$/.test(location.pathname),PREVIEW_BUILD='821f2ed'; // PREVIEW_BUILD setzt der Workflow «Vorschau»
+const PREVIEW=/\/preview\/(index\.html)?$/.test(location.pathname),PREVIEW_BUILD='e456670'; // PREVIEW_BUILD setzt der Workflow «Vorschau»
 const LS=(()=>{let ls=null;try{ls=window.localStorage;}catch(e){}
   const dead={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};if(!ls)return dead;if(!PREVIEW)return ls;
   const P='kraftwerk.preview:',G='kraftwerk.preview-del:',M='kraftwerk.preview-meta';
@@ -978,7 +1006,7 @@ function defaultPlan(){
 }
 function baseState(){
   const p=defaultPlan();
-  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null,gear:{},jarvisNotes:[],nutri:{},measures:[],heightCm:0};
+  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null,gear:{},jarvisNotes:[],nutri:{},measures:[],heightCm:0,beta:{},fb:[]};
 }
 
 /* ---------- plan migration ---------- */
@@ -1024,8 +1052,32 @@ let S=loadState();
 /* Optionale Felder (seit 25.11.2026): gear = Geräte-Einstellung pro Übung, jarvisNotes = Notizen an Jarvis */
 function normExtras(){if(!S.gear||typeof S.gear!=='object'||Array.isArray(S.gear))S.gear={};if(!Array.isArray(S.jarvisNotes))S.jarvisNotes=[];
   /* seit 27.11.2026 (Design v3 Etappe 5): nutri, measures, heightCm */
-  if(!S.nutri||typeof S.nutri!=='object'||Array.isArray(S.nutri))S.nutri={};if(!Array.isArray(S.measures))S.measures=[];if(typeof S.heightCm!=='number')S.heightCm=0;}
+  if(!S.nutri||typeof S.nutri!=='object'||Array.isArray(S.nutri))S.nutri={};if(!Array.isArray(S.measures))S.measures=[];if(typeof S.heightCm!=='number')S.heightCm=0;
+  /* seit 27.11.2026: Schalter «Neu im Test» (beta: {id: true/false}) */
+  if(!S.beta||typeof S.beta!=='object'||Array.isArray(S.beta))S.beta={};
+  /* seit 27.11.2026: Rückmeldung zu «Neu im Test» nach dem Training (fb: [{t,id,v:1|-1,w}]) */
+  if(!Array.isArray(S.fb))S.fb=[];}
 normExtras();
+/* ---------- Neu im Test (27.11.2026) ----------
+   Grosse Neuerungen, die den Ablauf im Gym verändern, trägt Jarvis hier ein (höchstens 3). Standard: an.
+   Testphase 2 Wochen ab «since», danach fragt Jarvis «behalten oder weg» und entfernt den Eintrag. */
+const BETA=[]; // Beispiel: {id:'xyz',name:'Kurzer Name',desc:'Was es macht',since:'2026-11-27'}
+const BETA_DAYS=14;
+const betaOn=id=>{if(!BETA.some(b=>b.id===id))return false;const v=S.beta&&S.beta[id];return typeof v==='boolean'?v:true;};
+/* Nach dem Training: kurz Daumen hoch/runter zu jeder eingeschalteten Neuerung (wertet Jarvis aus) */
+const THUMB='<path d="M7 11v9H4v-9zM7 11l4-7c1.5 0 2.5 1 2.2 2.6L12.6 10H19a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 17.8 20H7"/>';
+function betaFbRows(wid){
+  const on=BETA.slice(0,3).filter(b=>betaOn(b.id));if(!on.length)return '';
+  return `<div class="card" style="margin-top:8px"><div class="eyebrow">Neu im Test · wie war's?</div>${on.map(b=>`<div class="row2" style="margin-top:8px" data-fbrow="${esc(b.id)}"><div class="t" style="font-weight:600">${esc(b.name)}</div>
+    <div style="display:flex;gap:8px"><button class="btn ghost" style="width:48px;padding:0" data-act="betafb" data-id="${esc(b.id)}" data-w="${esc(wid)}" data-v="1" aria-label="${esc(b.name)}: gut"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${THUMB}</svg></button>
+    <button class="btn ghost" style="width:48px;padding:0" data-act="betafb" data-id="${esc(b.id)}" data-w="${esc(wid)}" data-v="-1" aria-label="${esc(b.name)}: nicht gut"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" style="transform:rotate(180deg)">${THUMB}</svg></button></div></div>`).join('')}</div>`;
+}
+function betaSection(){
+  const rows=BETA.slice(0,3).map(b=>{const on=betaOn(b.id),end=new Date(new Date(b.since+'T12:00:00').getTime()+BETA_DAYS*864e5);
+    return `<div class="row2" style="margin-bottom:12px"><div><div class="t" style="font-weight:600">${esc(b.name)}</div><div class="small muted">${esc(b.desc)} · Test bis ${end.getDate()}.${end.getMonth()+1}.</div></div>
+      <button class="tog ${on?'on':''}" data-act="betatog" data-id="${esc(b.id)}" role="switch" aria-checked="${on}" aria-label="${esc(b.name)}"><i></i></button></div>`;}).join('');
+  return `<div style="margin-bottom:16px"><div class="eyebrow" style="margin-bottom:8px">Neu im Test</div>${rows||'<div class="small muted">Gerade nichts im Test.</div>'}</div>`;
+}
 const CORE_IDS=['r_k1','r_k2','r_k3'];
 function normRot(){(S.routines||[]).forEach(r=>{if(typeof r.rot!=='boolean')r.rot=CORE_IDS.includes(r.id);});}
 normRot();
@@ -1053,7 +1105,7 @@ function savePlan(){S.pt=Date.now();persist();schedulePush();ghSchedule();}
 
 /* ---------- optional cloud sync (db capability) ---------- */
 const Sync={db:null,base:null,status:'Nur auf diesem Gerät gespeichert',timer:null};
-const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer,gear:S.gear,jarvisNotes:S.jarvisNotes,nutri:S.nutri,measures:S.measures,heightCm:S.heightCm});
+const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer,gear:S.gear,jarvisNotes:S.jarvisNotes,nutri:S.nutri,measures:S.measures,heightCm:S.heightCm,beta:S.beta,fb:S.fb});
 function schedulePush(){clearTimeout(Sync.timer);Sync.timer=setTimeout(pushPlan,1500);}
 async function pushPlan(){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/plan').set({json:JSON.stringify(planPart()),t:Date.now()});}catch(e){}}
 async function pushWorkout(w){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/w_'+w.id).set({json:JSON.stringify(w),t:Date.now()});}catch(e){}}
@@ -1074,7 +1126,7 @@ async function syncInit(){
     if(rp){
       S.deleted=[...new Set([...(S.deleted||[]),...(rp.deleted||[])])];
       if((rp.pt||0)>(S.pt||0)){
-        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer','gear','jarvisNotes','nutri','measures','heightCm'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});normExtras();
+        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer','gear','jarvisNotes','nutri','measures','heightCm','beta','fb'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});normExtras();
         if(!(S.planVer>=PLAN_VER)){migratePlan(S,S.planVer);pushPlan();}
         changed=true;
       }else pushPlan();
@@ -1420,8 +1472,8 @@ ACT.exlib=()=>{LIB_Q='';LIB_BP='';libStack=[];libCurrent=null;showExLib();};
 ACT.exlibbp=b=>{LIB_BP=b.dataset.bp;exLibRefresh();};
 
 function toast(msg,gold){const t=$('#toast');t.textContent=msg;t.className='show'+(gold?' gold':'')+($('#rest').classList.contains('on')?' above-rest':'');clearTimeout(toast.t);toast.t=setTimeout(()=>t.className='',2600);}
-function openSheet(html){const sh=$('#sheet');sh.style.transform='';sh.classList.remove('drag','snap');$('#sheetbg').style.background='';$('#sheetc').innerHTML=html;$('#sheetbg').classList.add('open');sh.scrollTop=0;}
-function closeSheet(){$('#sheetbg').classList.remove('open');const sh=$('#sheet');sh.style.transform='';sh.classList.remove('drag','snap');$('#sheetbg').style.background='';}
+function openSheet(html){const sh=$('#sheet');sh.style.transform='';sh.classList.remove('drag','snap','full');$('#sheetbg').style.background='';$('#sheetc').innerHTML=html;$('#sheetbg').classList.add('open');sh.scrollTop=0;}
+function closeSheet(){$('#sheetbg').classList.remove('open');const sh=$('#sheet');sh.style.transform='';sh.classList.remove('drag','snap','full');$('#sheetbg').style.background='';}
 $('#sheetbg').addEventListener('click',e=>{if(e.target.id==='sheetbg')closeSheet();});
 /* Sheets per Wischen nach unten schliessen (nur wenn ganz oben gescrollt) */
 (function(){
@@ -3018,9 +3070,37 @@ ACT.finish=()=>{
   openSheet(`<h2>Training beenden?</h2><p class="muted">${open?open+' Sätze sind noch offen und werden nicht gezählt.':'Alle Sätze sind abgehakt. Sauber!'}</p><div class="btnrow"><button class="btn" data-act="finishok">Ja, beenden</button><button class="btn ghost" data-act="closesheet">Weitermachen</button></div>`);
 };
 ACT.discard=()=>{S.active=null;persist();stopRest();closeSheet();try{if(wl)wl.release();}catch(e){}wl=null;$('#wk').classList.remove('open');render();};
+/* Abschluss-Vergleich: bester Satz (höchstes Gewicht, dann Wdh) */
+const bestSet=rows=>rows.reduce((b,r)=>{const w=num(r.w),n=num(r.r);return !b||w>b.w||(w===b.w&&n>b.r)?{w,r:n}:b;},null);
+function finCompare(ex,last){
+  const a=bestSet(ex.rows),b=last&&bestSet(last.rows);if(!a||!b)return null;
+  if(a.w>b.w)return {c:'up',t:'+'+fmtN(Math.round((a.w-b.w)*100)/100)+' kg'};
+  if(a.w===b.w&&a.r>b.r)return {c:'up',t:'+'+(a.r-b.r)+' Wdh'};
+  if(a.w===b.w&&a.r===b.r)return {c:'eq',t:'gleich'};
+  return {c:'eq',t:a.w<b.w?'−'+fmtN(Math.round((b.w-a.w)*100)/100)+' kg':'−'+(b.r-a.r)+' Wdh'};
+}
+function finishView(A,o){
+  const n=doneCount(A),rirs=A.exs.flatMap(ex=>ex.rows.map(r=>r.rir)).filter(x=>[1,2,3].includes(x));
+  const avg=rirs.length?rirs.reduce((s,x)=>s+(x===1?.5:x),0)/rirs.length:null;
+  const sec=Math.max(0,Math.round((A.end-A.start)/1000)),m=Math.floor(sec/60),dur=m>=60?Math.floor(m/60)+':'+pad(m%60)+' h':m+':'+pad(sec%60);
+  const tiles=[[dur,'Dauer'],[n,n===1?'Satz':'Sätze'],avg!=null?['Ø '+fmtN(Math.round(avg)),'Wdh im Tank']:[fmtKg(vol(A)),'kg bewegt']];
+  const prs=A.exs.filter(ex=>ex.rows.some(r=>r.pr&&r.pr!=='first')).map(ex=>({name:ex.name,b:bestSet(ex.rows.filter(r=>r.pr&&r.pr!=='first'))}));
+  const cmp=A.exs.filter(ex=>!prs.some(p=>p.name===ex.name)).map(ex=>({name:ex.name,c:finCompare(ex,o.last[ex.key])})).filter(x=>x.c).slice(0,5);
+  const setTxt=b=>b.w>0?fmtN(b.w)+' × '+b.r:b.r+' Wdh';
+  return `<div class="fin">
+    <section class="fh"><span class="k">Training fertig</span><h1>${esc(A.name)}</h1><span class="d">${esc(fmtDateLong(A.start))} · ${o.nth}. Training der Woche</span></section>
+    <section class="ft">${tiles.map(([v,l])=>`<div><span class="num">${v}</span><span>${l}</span></div>`).join('')}</section>
+    ${prs.length?`<section class="fs"><b>${prs.length===1?'1 neuer Rekord':prs.length+' neue Rekorde'}</b>${prs.map(p=>`<div class="fpr">${ic('trophy')}<span>${esc(p.name)}</span><span class="num">${setTxt(p.b)}</span></div>`).join('')}</section>`:''}
+    ${cmp.length?`<section class="fs" style="gap:2px"><b style="margin-bottom:6px">Vergleich zum letzten Mal</b>${cmp.map(x=>`<div class="fcmp"><span>${esc(x.name)}</span><span class="num ${x.c.c}">${x.c.t}</span></div>`).join('')}</section>`:''}
+    ${o.lvUp?`<div class="card"><div class="eyebrow">Neues Level</div><b>Level ${o.lvUp} erreicht: ${esc(titleOf(o.lvUp))}</b></div>`:''}
+    ${betaFbRows(A.id)}
+    <div class="btnrow fend"><button class="btn" data-act="closesheet">Fertig</button></div></div>`;
+}
 ACT.finishok=()=>{
   const A=S.active;if(!A)return;
-  const before=xpTotal(),lvBefore=levelOf(before),prevSame=gymOnly().filter(w=>w.routineId===A.routineId).pop();
+  const before=xpTotal(),lvBefore=levelOf(before);
+  const last={};A.exs.forEach(ex=>{last[ex.key]=lastSession(ex.key);});
+  const wk=monday(new Date()).getTime(),nth=gymOnly().filter(w=>w.start>=wk).length+1;
   A.end=Date.now();
   A.exs.forEach(ex=>{ex.rows=ex.rows.filter(r=>r.done).map(r=>{const o={w:num(r.w),r:num(r.r),done:true,pr:r.pr||null};if([1,2,3].includes(r.rir))o.rir=r.rir;return o;});});
   A.exs=A.exs.filter(ex=>ex.rows.length);
@@ -3031,20 +3111,9 @@ ACT.finishok=()=>{
   S.workouts.push(A);S.active=null;persist();pushWorkout(A);ghSchedule(500);
   stopRest();closeSheet();$('#wk').classList.remove('open');
   try{if(wl)wl.release();}catch(e){}
-  const after=xpTotal(),lv=levelOf(after),v=vol(A);
-  let cmp='';
-  if(prevSame){const pv=vol(prevSame),d=pv?Math.round((v-pv)/pv*100):0;cmp=`<p style="margin:0 0 6px"><b>${d>=0?'+':''}${d} %</b> Gesamtgewicht gegenüber deinem letzten «${esc(A.name)}» (${fmtKg(pv)} kg).</p>`;}
-  const wc=weightCompare(v,A.id);
+  const lv=levelOf(xpTotal());
   render();
-  openSheet(`<h2>Geschafft!</h2><div class="sum">
-    <div class="stat"><div class="v">${fmtKg(v)}</div><div class="l">Gesamtgewicht kg</div></div>
-    <div class="stat"><div class="v">${fmtDur(A.end-A.start).replace(' min','')}</div><div class="l">Minuten</div></div>
-    <div class="stat"><div class="v">${doneCount(A)}</div><div class="l">Sätze</div></div>
-    <div class="stat"><div class="v">+${after-before}</div><div class="l">XP</div></div></div>${cmp}
-    ${wc?`<p class="muted small" style="margin:0 0 6px">${esc(wc)}</p>`:''}
-    ${prList.length?`<div class="card" style="margin-top:8px"><div class="eyebrow" style="color:var(--acc-t)">Neue Rekorde</div><div style="margin-top:4px;font-weight:600">${prList.map(esc).join(', ')}</div></div>`:''}
-    ${lv>lvBefore?`<div class="card"><div class="eyebrow">Neues Level</div><b>Level ${lv} erreicht: ${esc(titleOf(lv))}</b></div>`:''}
-    <div class="btnrow"><button class="btn" data-act="closesheet">Fertig</button></div>`);
+  openSheet(finishView(A,{last,nth,lvUp:lv>lvBefore?lv:0}));$('#sheet').classList.add('full');
   confetti(prList.length||lv>lvBefore?120:60);
 };
 
@@ -3156,6 +3225,7 @@ ACT.settings=()=>{
     <div style="margin-bottom:16px"><div class="row2" style="margin-bottom:4px"><div class="t" style="font-weight:600">Lautstärke</div><b id="volv">${Math.round(S.soundVol*100)}%</b></div>
       <input type="range" min="0" max="100" step="5" value="${Math.round(S.soundVol*100)}" data-vol aria-label="Lautstärke Weckton"></div>
     <button class="btn ghost full" style="margin-bottom:16px" data-act="testalarm">Weckton testen (Kopfhörer)</button>
+    ${betaSection()}
     <button class="item" data-act="ghsheet" style="margin-bottom:12px;background:var(--s2);padding:12px 14px"><div style="display:flex;gap:12px;align-items:center"><span class="ti2" style="width:38px;height:38px;background:var(--s3)">${ic('repeat')}</span><div><div class="t" style="font-weight:600">Jarvis-Sync</div><div class="small muted">${esc(ghStatusText())}</div></div></div><span class="chev">›</span></button>
     <div class="card" style="margin-bottom:12px"><div class="t" style="font-weight:600">Datensicherung</div><div class="small muted">${esc(Sync.status)}. Zusätzlich kannst du alles als Text sichern.</div></div>
     <div class="btnrow" style="margin-top:0"><button class="btn ghost" data-act="export">Backup anzeigen und kopieren</button><button class="btn ghost" data-act="import">Backup wiederherstellen</button>
@@ -3168,6 +3238,10 @@ ACT.goalm=()=>{S.goal=Math.max(1,S.goal-1);$('#goalv').textContent=S.goal;savePl
 ACT.goalp=()=>{S.goal=Math.min(7,S.goal+1);$('#goalv').textContent=S.goal;savePlan();};
 ACT.sound=b=>{S.sound=!S.sound;b.classList.toggle('on',S.sound);b.setAttribute('aria-checked',S.sound);savePlan();if(S.sound){unlockAudio();beep(1);}};
 ACT.testalarm=()=>{beep(3);};
+ACT.betafb=b=>{const id=b.dataset.id,v=+b.dataset.v===1?1:-1,w=b.dataset.w||'';if(!BETA.some(x=>x.id===id))return;
+  S.fb=(S.fb||[]).filter(f=>!(f.id===id&&f.w===w)).concat({t:Date.now(),id,v,w}).slice(-200);savePlan();
+  const row=b.closest('[data-fbrow]');if(row)row.lastElementChild.innerHTML=`<span class="small muted">${v>0?'Gut':'Nicht gut'} · danke</span>`;};
+ACT.betatog=b=>{const id=b.dataset.id;if(!BETA.some(x=>x.id===id))return;const on=!betaOn(id);S.beta=Object.assign({},S.beta,{[id]:on});b.classList.toggle('on',on);b.setAttribute('aria-checked',on);savePlan();};
 ACT.export=()=>{
   const data=JSON.stringify({app:'kraftwerk',v:1,data:Object.assign({},S,{active:null})});
   openSheet(`<h2>Backup</h2><p class="muted small">Kopiere diesen Text und bewahre ihn z. B. in einer Notiz auf.</p><textarea class="ti" id="bk" readonly>${esc(data)}</textarea>
