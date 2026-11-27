@@ -73,9 +73,9 @@ async function runDevice(browserType, bname, devName, scheme) {
   // Alle Screens
   const noHScroll = async where => {
     const r = await p.evaluate(() => { const W = innerWidth; if (document.documentElement.scrollWidth <= W + 1) return '';
-      const clipped = e => { for (let a = e.parentElement; a && a.id !== 'main'; a = a.parentElement) if (getComputedStyle(a).overflowX !== 'visible') return true; return false; };
-      const bad = [...document.querySelectorAll('#main *')].filter(e => e.getBoundingClientRect().right > W + 1 && getComputedStyle(e).position !== 'fixed' && !clipped(e))
-        .map(e => ((typeof e.className === 'string' && e.className) || e.tagName) + ':' + Math.round(e.getBoundingClientRect().right)).slice(-3);
+      const clipped = e => { for (let a = e.parentElement; a && a !== document.body; a = a.parentElement) if (getComputedStyle(a).overflowX !== 'visible') return true; return false; };
+      const bad = [...document.querySelectorAll('body *')].filter(e => e.getBoundingClientRect().right > W + 1 && !clipped(e)).sort((x, y) => y.getBoundingClientRect().right - x.getBoundingClientRect().right)
+        .slice(0, 4).map(e => (e.id ? '#' + e.id : '') + '.' + ((typeof e.className === 'string' && e.className) || e.tagName) + (getComputedStyle(e).position === 'fixed' ? '[fixed]' : '') + ':' + Math.round(e.getBoundingClientRect().right));
       return document.documentElement.scrollWidth + 'px > ' + W + 'px ' + bad.join(' '); });
     ok(!r, label + ': kein horizontales Scrollen (' + where + ')' + (r ? ' → ' + r : ''));
   };
