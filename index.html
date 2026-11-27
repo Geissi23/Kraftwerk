@@ -414,7 +414,7 @@ details.more>summary:focus-visible{outline:2px solid var(--fg);outline-offset:2p
 .bdg.on{color:var(--fg)}
 /* kalender */
 .card.calc{padding-left:10px;padding-right:10px}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;text-align:center}
 .cal .wd{font-family:var(--mono);font-size:12px;color:var(--mut);padding-bottom:4px}
 .cal .cd{position:relative;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--disp);font-style:italic;font-stretch:80%;font-size:16px;font-weight:700;background:var(--s2);min-height:40px;color:var(--fg)}
 .cal .cd.has{color:var(--r-on);font-weight:800}
@@ -822,6 +822,8 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--fg);backgro
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
 #pvbar{position:fixed;z-index:60;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 4px);background:var(--acc,#FFD400);color:#111;font-size:12px;font-weight:700;padding:4px 12px;border-radius:12px;pointer-events:none;white-space:nowrap}
+/* iPhone SE (320 px): Kalendertage dürfen schmaler als 40 px werden, sonst wird die Seite seitlich verschiebbar (WebKit) */
+@media (max-width:359px){.cal .cd{min-height:0}}
 </style>
 </head>
 <body>
