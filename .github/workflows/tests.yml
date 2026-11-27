@@ -1,0 +1,41 @@
+name: Tests
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths: ['index.html', 'tests/**', '.github/workflows/tests.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  chromium:
+    name: Tests (Chromium, iPhone hell/dunkel)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-save --no-package-lock playwright@1.63.0
+      - run: npx playwright install --with-deps chromium
+      - run: mkdir -p shots && TEST_OUT=shots BROWSERS=chromium node tests/app.test.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screens-chromium
+          path: shots
+          retention-days: 7
+  webkit:
+    name: Tests (WebKit wie Safari, nur Info)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-save --no-package-lock playwright@1.63.0
+      - run: npx playwright install --with-deps webkit
+      - run: BROWSERS=webkit node tests/app.test.js
