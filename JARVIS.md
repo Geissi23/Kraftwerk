@@ -105,8 +105,9 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 ## Roadmap (Jetzt · Als Nächstes · Später – Jarvis arbeitet nur an «Jetzt», Janis verschiebt sonntags)
 
 - **Jetzt:**
-  1. **iPhone-SE-Breite** (Bug, PR #34): Übersicht/Fortschritt in WebKit 3–7 px zu breit. Ursache noch nicht gefunden (Kalender war es
-     nicht allein); die Test-Diagnose nennt jetzt das Element. Danach WebKit-Tests zur Pflicht machen.
+  1. **iPhone-SE-Breite** (Bug, PR #34): Übersicht/Fortschritt in WebKit 3–7 px zu breit. Befund WebKit: Übersicht → Knopf «×» der Körpergewicht-
+     Karte (`.bwq .x`) steht 7 px über; Fortschritt → kein Element steht über (Pseudo-Element `::before/::after`, Schatten oder
+     `transform` prüfen). Kalender-Fix in #34 allein reicht nicht. Danach WebKit-Tests zur Pflicht machen.
   2. **Design v3 Etappe 2 Rest** (Go 26.11.): Aufwärm-Markierung als Datenfeld + Aufwärm-Vorschläge 40 %/60 %, Gewichtsschritte pro
      Übung/Gerät, Abschluss-Screen wie Mockup 5. Je eigener PR, über die Vorschau.
   3. **Nutzung lernen – erste Auswertung:** welche Bereiche (Fotos, Rückblick, Level/Abzeichen, Körpermasse, Notizen, Geräte-Einstellungen,
