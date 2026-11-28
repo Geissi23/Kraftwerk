@@ -171,6 +171,29 @@ textarea.ti{min-height:110px;padding:10px 12px;font-size:14px;font-family:var(--
 .stat .v{font-family:var(--disp);font-style:italic;font-stretch:80%;font-size:36px;font-weight:800;line-height:.95;font-variant-numeric:tabular-nums}
 .stat .l{font-family:var(--mono);font-size:12px;color:var(--mut);margin-top:6px}
 .sum{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:12px 0}
+/* Design v3 Mockup 5: Abschluss-Screen */
+#sheet.full{max-height:100%;height:100%;border-radius:0;padding-top:calc(12px + env(safe-area-inset-top,0px))}
+.fin{display:flex;flex-direction:column;gap:24px;min-height:calc(100% - 40px)}
+.fin .fh{display:flex;flex-direction:column;gap:6px;padding-top:24px}
+.fin .fh .k{font-size:14px;color:var(--acc-t);font-weight:600}
+.fin .fh h1{font-size:min(48px,11.5vw);line-height:.95;overflow-wrap:break-word}
+.fin .fh .d{font-size:14px;color:var(--mut)}
+.fin .ft{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.fin .ft>div{background:var(--s2);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.fin .ft .num{font-size:24px;font-weight:600;white-space:nowrap}
+@media (max-width:360px){.fin .ft>div{padding:12px}}
+.fin .ft span:last-child{font-size:12px;color:var(--mut)}
+.fin .fs{display:flex;flex-direction:column;gap:10px}
+.fin .fs>b{font-size:14px;font-weight:600}
+.fin .fpr{display:flex;align-items:center;gap:12px;background:var(--s2);border-radius:16px;padding:16px;font-size:16px}
+.fin .fpr .ic{color:var(--acc-t);flex:none}
+.fin .fpr span:nth-child(2){flex:1;min-width:0}
+.fin .fpr .num,.fin .fcmp .num{font-size:16px;white-space:nowrap}
+.fin .fcmp{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:14px;border-bottom:1px solid var(--s2)}
+.fin .fcmp:last-child{border-bottom:0}
+.fin .fcmp .up{color:var(--ok-t)}.fin .fcmp .eq{color:var(--mut)}
+.fin .fend{margin-top:auto}
+
 .bar{height:8px;background:var(--s2);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--fg)}
 .leds{display:flex;gap:2px}
@@ -1452,8 +1475,8 @@ ACT.exlib=()=>{LIB_Q='';LIB_BP='';libStack=[];libCurrent=null;showExLib();};
 ACT.exlibbp=b=>{LIB_BP=b.dataset.bp;exLibRefresh();};
 
 function toast(msg,gold){const t=$('#toast');t.textContent=msg;t.className='show'+(gold?' gold':'')+($('#rest').classList.contains('on')?' above-rest':'');clearTimeout(toast.t);toast.t=setTimeout(()=>t.className='',2600);}
-function openSheet(html){const sh=$('#sheet');sh.style.transform='';sh.classList.remove('drag','snap');$('#sheetbg').style.background='';$('#sheetc').innerHTML=html;$('#sheetbg').classList.add('open');sh.scrollTop=0;}
-function closeSheet(){$('#sheetbg').classList.remove('open');const sh=$('#sheet');sh.style.transform='';sh.classList.remove('drag','snap');$('#sheetbg').style.background='';}
+function openSheet(html){const sh=$('#sheet');sh.style.transform='';sh.classList.remove('drag','snap','full');$('#sheetbg').style.background='';$('#sheetc').innerHTML=html;$('#sheetbg').classList.add('open');sh.scrollTop=0;}
+function closeSheet(){$('#sheetbg').classList.remove('open');const sh=$('#sheet');sh.style.transform='';sh.classList.remove('drag','snap','full');$('#sheetbg').style.background='';}
 $('#sheetbg').addEventListener('click',e=>{if(e.target.id==='sheetbg')closeSheet();});
 /* Sheets per Wischen nach unten schliessen (nur wenn ganz oben gescrollt) */
 (function(){
@@ -3063,9 +3086,37 @@ ACT.finish=()=>{
   openSheet(`<h2>Training beenden?</h2><p class="muted">${open?open+' Sätze sind noch offen und werden nicht gezählt.':'Alle Sätze sind abgehakt. Sauber!'}</p><div class="btnrow"><button class="btn" data-act="finishok">Ja, beenden</button><button class="btn ghost" data-act="closesheet">Weitermachen</button></div>`);
 };
 ACT.discard=()=>{S.active=null;persist();stopRest();closeSheet();try{if(wl)wl.release();}catch(e){}wl=null;$('#wk').classList.remove('open');render();};
+/* Abschluss-Vergleich: bester Satz (höchstes Gewicht, dann Wdh) */
+const bestSet=rows=>rows.reduce((b,r)=>{const w=num(r.w),n=num(r.r);return !b||w>b.w||(w===b.w&&n>b.r)?{w,r:n}:b;},null);
+function finCompare(ex,last){
+  const a=bestSet(ex.rows),b=last&&bestSet(last.rows);if(!a||!b)return null;
+  if(a.w>b.w)return {c:'up',t:'+'+fmtN(Math.round((a.w-b.w)*100)/100)+' kg'};
+  if(a.w===b.w&&a.r>b.r)return {c:'up',t:'+'+(a.r-b.r)+' Wdh'};
+  if(a.w===b.w&&a.r===b.r)return {c:'eq',t:'gleich'};
+  return {c:'eq',t:a.w<b.w?'−'+fmtN(Math.round((b.w-a.w)*100)/100)+' kg':'−'+(b.r-a.r)+' Wdh'};
+}
+function finishView(A,o){
+  const n=doneCount(A),rirs=A.exs.flatMap(ex=>ex.rows.map(r=>r.rir)).filter(x=>[1,2,3].includes(x));
+  const avg=rirs.length?rirs.reduce((s,x)=>s+(x===1?.5:x),0)/rirs.length:null;
+  const sec=Math.max(0,Math.round((A.end-A.start)/1000)),m=Math.floor(sec/60),dur=m>=60?Math.floor(m/60)+':'+pad(m%60)+' h':m+':'+pad(sec%60);
+  const tiles=[[dur,'Dauer'],[n,n===1?'Satz':'Sätze'],avg!=null?['Ø '+fmtN(Math.round(avg)),'Wdh im Tank']:[fmtKg(vol(A)),'kg bewegt']];
+  const prs=A.exs.filter(ex=>ex.rows.some(r=>r.pr&&r.pr!=='first')).map(ex=>({name:ex.name,b:bestSet(ex.rows.filter(r=>r.pr&&r.pr!=='first'))}));
+  const cmp=A.exs.filter(ex=>!prs.some(p=>p.name===ex.name)).map(ex=>({name:ex.name,c:finCompare(ex,o.last[ex.key])})).filter(x=>x.c).slice(0,5);
+  const setTxt=b=>b.w>0?fmtN(b.w)+' × '+b.r:b.r+' Wdh';
+  return `<div class="fin">
+    <section class="fh"><span class="k">Training fertig</span><h1>${esc(A.name)}</h1><span class="d">${esc(fmtDateLong(A.start))} · ${o.nth}. Training der Woche</span></section>
+    <section class="ft">${tiles.map(([v,l])=>`<div><span class="num">${v}</span><span>${l}</span></div>`).join('')}</section>
+    ${prs.length?`<section class="fs"><b>${prs.length===1?'1 neuer Rekord':prs.length+' neue Rekorde'}</b>${prs.map(p=>`<div class="fpr">${ic('trophy')}<span>${esc(p.name)}</span><span class="num">${setTxt(p.b)}</span></div>`).join('')}</section>`:''}
+    ${cmp.length?`<section class="fs" style="gap:2px"><b style="margin-bottom:6px">Vergleich zum letzten Mal</b>${cmp.map(x=>`<div class="fcmp"><span>${esc(x.name)}</span><span class="num ${x.c.c}">${x.c.t}</span></div>`).join('')}</section>`:''}
+    ${o.lvUp?`<div class="card"><div class="eyebrow">Neues Level</div><b>Level ${o.lvUp} erreicht: ${esc(titleOf(o.lvUp))}</b></div>`:''}
+    ${betaFbRows(A.id)}
+    <div class="btnrow fend"><button class="btn" data-act="closesheet">Fertig</button></div></div>`;
+}
 ACT.finishok=()=>{
   const A=S.active;if(!A)return;
-  const before=xpTotal(),lvBefore=levelOf(before),prevSame=gymOnly().filter(w=>w.routineId===A.routineId).pop();
+  const before=xpTotal(),lvBefore=levelOf(before);
+  const last={};A.exs.forEach(ex=>{last[ex.key]=lastSession(ex.key);});
+  const wk=monday(new Date()).getTime(),nth=gymOnly().filter(w=>w.start>=wk).length+1;
   A.end=Date.now();
   A.exs.forEach(ex=>{ex.rows=ex.rows.filter(r=>r.done).map(r=>{const o={w:num(r.w),r:num(r.r),done:true,pr:r.pr||null};if([1,2,3].includes(r.rir))o.rir=r.rir;return o;});});
   A.exs=A.exs.filter(ex=>ex.rows.length);
@@ -3076,21 +3127,9 @@ ACT.finishok=()=>{
   S.workouts.push(A);S.active=null;persist();pushWorkout(A);ghSchedule(500);
   stopRest();closeSheet();$('#wk').classList.remove('open');
   try{if(wl)wl.release();}catch(e){}
-  const after=xpTotal(),lv=levelOf(after),v=vol(A);
-  let cmp='';
-  if(prevSame){const pv=vol(prevSame),d=pv?Math.round((v-pv)/pv*100):0;cmp=`<p style="margin:0 0 6px"><b>${d>=0?'+':''}${d} %</b> Gesamtgewicht gegenüber deinem letzten «${esc(A.name)}» (${fmtKg(pv)} kg).</p>`;}
-  const wc=weightCompare(v,A.id);
+  const lv=levelOf(xpTotal());
   render();
-  openSheet(`<h2>Geschafft!</h2><div class="sum">
-    <div class="stat"><div class="v">${fmtKg(v)}</div><div class="l">Gesamtgewicht kg</div></div>
-    <div class="stat"><div class="v">${fmtDur(A.end-A.start).replace(' min','')}</div><div class="l">Minuten</div></div>
-    <div class="stat"><div class="v">${doneCount(A)}</div><div class="l">Sätze</div></div>
-    <div class="stat"><div class="v">+${after-before}</div><div class="l">XP</div></div></div>${cmp}
-    ${wc?`<p class="muted small" style="margin:0 0 6px">${esc(wc)}</p>`:''}
-    ${prList.length?`<div class="card" style="margin-top:8px"><div class="eyebrow" style="color:var(--acc-t)">Neue Rekorde</div><div style="margin-top:4px;font-weight:600">${prList.map(esc).join(', ')}</div></div>`:''}
-    ${betaFbRows(A.id)}
-    ${lv>lvBefore?`<div class="card"><div class="eyebrow">Neues Level</div><b>Level ${lv} erreicht: ${esc(titleOf(lv))}</b></div>`:''}
-    <div class="btnrow"><button class="btn" data-act="closesheet">Fertig</button></div>`);
+  openSheet(finishView(A,{last,nth,lvUp:lv>lvBefore?lv:0}));$('#sheet').classList.add('full');
   confetti(prList.length||lv>lvBefore?120:60);
 };
 

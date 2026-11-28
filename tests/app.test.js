@@ -139,10 +139,12 @@ async function runDevice(browserType, bname, devName, scheme) {
   await p.locator('#wk [data-act="finish"]').first().click(); await p.waitForTimeout(200);
   await p.locator('[data-act="finishok"]').first().click(); await p.waitForTimeout(600);
   await shot('6-abschluss');
+  ok(await p.evaluate(() => { const h = document.querySelector('#sheet.full .fin h1'); return !!h && h.textContent === S.workouts[S.workouts.length - 1].name; }), label + ': Abschluss-Screen mit Trainingsname');
   ok(await p.isVisible('[data-act="betafb"][data-v="1"]'), label + ': Abschluss fragt nach Neu im Test');
   await p.click('[data-act="betafb"][data-v="1"]'); await p.waitForTimeout(150);
   ok(await p.evaluate(() => S.fb.length === 1 && S.fb[0].id === 'testfunktion' && S.fb[0].v === 1 && S.fb[0].w === S.workouts[S.workouts.length - 1].id && JSON.parse(localStorage.getItem('kraftwerk.v1')).fb.length === 1), label + ': Daumen hoch wird gespeichert');
   await p.evaluate(() => { BETA.length = 0; closeSheet(); }); await p.waitForTimeout(150);
+  ok(await p.evaluate(() => !document.getElementById('sheet').classList.contains('full')), label + ': Abschluss schliesst sauber');
   const after = await p.evaluate(() => ({ active: S.active, n: S.workouts.length, w: JSON.parse(localStorage.getItem('kraftwerk.v1')).workouts }));
   ok(!after.active && after.n === oldWorkouts.length + 1, label + ': Training abgeschlossen und gespeichert');
   ok(JSON.stringify(after.w.slice(0, oldWorkouts.length)) === JSON.stringify(oldWorkouts), label + ': alle bisherigen Trainings unverändert');

@@ -466,6 +466,31 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - [x] Übersichtlichkeit Design v2 pro Screen – **live (PR #23)**, vorgezogen am 26.11.
 - [x] Design v3 Etappe 1 (PR #24), Etappe 2 Teil 1 (PR #25), Etappe 3 (PR #26), Etappe 4 (PR #28), Etappe 5 (PR #29) – live. [ ] Rest von Etappe 2 (siehe Eingang, Mo 30.11.).
 
+## Log 25.–26.11.2026
+
+- 2026-11-25: Erster Arbeits-Lauf. PR #13 (Sheets wischen), #14 (Plan v4), #15 (Muskelgruppen fein), #16 (P16 Notizen + Geräte-Einstellungen), #17 (Zuletzt mit alten Plan-IDs) gemergt und live. Cockpit aktualisiert. Design-Konzept mit Mockups veröffentlicht. Neue Pitches P17–P19.
+- 2026-11-25 (selbstkritisch): Den Bug mit den alten Plan-IDs hätte ich beim Plan-Umbau am 22.11. finden müssen; künftig bei Plan-Änderungen «Zuletzt»/Vorschlag mit echtem Verlauf mittesten. Ausserdem: In PR-Texten und JARVIS.md keine Trainings- oder Gesundheitszahlen, auch keine Anzahlen.
+- 2026-11-25 (Bericht): Gesundheits-Check ok, Bericht und Push zu PR #13–#17 verschickt. Plan v4 im Sync noch nicht sichtbar (Sync lief vor dem Merge) → nächster Lauf prüft.
+- 2026-11-25: Bericht 25.11. vorgezogen verschickt (Nachtrag 15:25 mit Empfehlung fürs Training heute Abend).
+- 2026-11-25: Antwort von Janis im Eingang: P17/P18 ja, P19 nein, neue Designphilosophie (neues Konzept Fr), Idee Ernährung (Pitch P20), Squat 23.11. war Maschine (Korrektur Fr).
+- 2026-11-25 (selbstkritisch): Den Squat-«Rekord» habe ich ungeprüft gemeldet. An der Maschine war das kein Rekord. Künftig Rekorde gegen Varianten derselben Übung gegenprüfen und bei neuen Übungsnamen nachfragen.
+- 2026-11-25 (Bericht-Lauf 17:37): stiller Tag. Pages ok, `planVer` 5 im Sync, PR #19 (P17/P18) offen → Fr prüfen und mergen.
+- 2026-11-25 (abends, Chat): Alles sofort umgesetzt: PR #18 Squat Maschine, PR #19 P17 Erholung + P18 Foto-Pose, PR #20 Design v2 «Das Instrument» + Logo L1 (alle getestet und gemergt). P20 Ernährung gepitcht.
+- 2026-11-25 (selbstkritisch): Merge- und PR-Aufruf nie parallel schicken; GitHub-API war mehrfach 500/502, geduldig wiederholen.
+- 2026-11-25 (Arbeits-Lauf, verspätet ~17:50): PR #21 Titel ohne Worttrennung (neu ohne Rückfrage), Cockpit aktualisiert, Sync/Pages ok.
+- 2026-11-25 (selbstkritisch): Vor der Arbeit erst `git pull` auf JARVIS.md – eine Chat-Sitzung hatte parallel geschrieben. Und Playwright-Route-Filter nicht auf Wörter wie «claude» setzen (trifft auch file://-Pfade).
+- 2026-11-25 (Zusatzlauf): «Design v2 mergen» war bereits erledigt (PR #20), geprüft und per Push bestätigt.
+- 2026-11-26 (Zusatz-Arbeits-Lauf Do): App-Notizen erledigt → PR #22 (Satz-Knopf in der Tafel, Supersatz-Hinweis, feste Zahlengrösse), Cockpit aktualisiert, Befund Übersichtlichkeit für Fr notiert.
+- 2026-11-26 (selbstkritisch): Supersätze habe ich beim Plan-Umbau eingebaut, ohne zu prüfen, wie sich der Wechsel im Training anfühlt. Bei Plan-Änderungen künftig ein Training einmal komplett durchklicken.
+- 2026-11-26 (Zusatzlauf Design): PR #23 «Design v2 ruhiger» gemergt (alle Screens), Vorher/Nachher-Screenshots mit Testdaten unter jarvis/screens/2026-11-26.
+- 2026-11-26 (selbstkritisch): Ein Auto-Scroll, der den Tafel-Knopf ins Bild holen sollte, hat den Übungsnamen abgeschnitten – erst im Screenshot bemerkt und zurückgenommen. Visuelle Änderungen immer zuerst im Screenshot prüfen, nicht nur per Messwert.
+- 2026-11-26 (Arbeits-Lauf abends): Design v3 umgesetzt: Etappe 1 (PR #24) und Etappe 2 Teil 1 Training (PR #25) live, Push an Janis. Rest folgt.
+- 2026-11-26 (selbstkritisch): Die neue Pausenleiste hat die gelbe Karte zuerst verdeckt – erst im Screenshot gesehen. Bei festen Leisten
+  immer den verfügbaren Platz messen (Karte vs. Bereich über der Leiste) und auf dem kleinsten Gerät prüfen.
+- 2026-11-26 (Zusatzlauf Design v3): Etappe 3 Übersicht + Plan live (PR #26). Etappen 4, 5 und Rest von 2 folgen Fr.
+- 2026-11-26 (selbstkritisch): «Starten» aus einem Blatt liess das Blatt offen – nur durch einen Klick-Test gefunden. Neue Knöpfe in Blättern immer per echtem Klick testen, nicht per ACT-Aufruf.
+- 2026-11-26 (abends, Chat): Janis hat die Web-App gelöscht und neu hinzugefügt. Sicherung im Repo war vollständig. Bug gefunden: Verbinden in einer leeren App hätte die Sicherung leer überschrieben → PR #27 (leere App holt beim Verbinden die Sicherung, Auto-Sync überschreibt nie). Sync 19:06 geprüft: alle Daten wieder da. Fortschrittsfotos (nur lokal) verloren.
+
 ## Log 22.–24.11.2026
 
 - 2026-11-22: Jarvis eingerichtet.

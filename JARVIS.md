@@ -105,13 +105,13 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 ## Roadmap (Jetzt · Als Nächstes · Später – Jarvis arbeitet nur an «Jetzt», Janis verschiebt sonntags)
 
 - **Jetzt:**
-  1. **Design v3 Etappe 2 Rest** (Go 26.11.): Aufwärm-Markierung als Datenfeld + Aufwärm-Vorschläge 40 %/60 %, Gewichtsschritte pro
-     Übung/Gerät. Je eigener PR, über die Vorschau. (Abschluss-Screen: PR #36 in der Vorschau.)
+  1. **Design v3 Etappe 2 Rest** (Go 26.11.): Aufwärm-Markierung als Datenfeld + Aufwärm-Vorschläge 40 %/60 % (nach #36, berührt
+     Satz-Zählung und Abschluss). Abschluss-Screen PR #36 in der Vorschau; Gewichtsschritt pro Übung PR #37 fertig, Vorschau nach #36.
   2. **Nutzung lernen – erste Auswertung:** welche Bereiche (Fotos, Rückblick, Level/Abzeichen, Körpermasse, Notizen, Geräte-Einstellungen,
      Scheibenrechner) werden genutzt? Erste Sicht 27.11.: Körpermasse/Zielgewicht noch nie, Notizen und Geräte-Einstellungen ja,
      Eiweiss/Wasser erst seit heute live. Fotos, Rückblick, Level, Scheibenrechner hinterlassen keine Spur → Nutzungszähler (Frage offen).
      Entfernen-Fragen erst mit genug Daten (frühestens Mitte Dezember).
-  3. **Eiweiss-Portionen selbst anlegen** (P20 A Rest, z. B. «Skyr 25 g»), klein.
+  3. ~~Eiweiss-Portionen selbst anlegen~~ → PR #38 fertig (Review-Agent, Tests grün), wartet auf die Vorschau nach #37.
 - **Als Nächstes:** Körper-Tab Zeitraum-Umschalter wie Mockup · «In den Plan übernehmen» bei der Coach-Empfehlung (ändert den Plan
   per Knopf → nur mit Go) · Cockpit-Muskel-Ampel mit `richtwert` statt 10/20.
 - **Später:** P20 B–D (Kalorien, Rezepte, Konfigurator; Standard «nicht umsetzen») · Sprach-Assistent auf einem PC (Janis meldet sich).
@@ -126,6 +126,9 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 - Supersätze im Wechsel oder nacheinander → Standard **im Wechsel lassen**, Frist Mo 30.11.
 - P20 Ernährung B–D → Standard **nicht umsetzen**, Frist Mo 30.11.
 - PR #36 Abschluss-Screen (Vorschau) → Standard **live**, Frist Sa 28.11. 13:34.
+- PR #37 Gewichtsschritt: Sa 28.11. 13:34 nach #36 in die Vorschau + Push «zum Ausprobieren» → Standard **live**, Frist So 29.11. 13:34.
+- PR #38 Eigene Eiweiss-Portionen: So 29.11. 13:34 nach #37 in die Vorschau (oder früher, wenn #37 schon live ist) + Push
+  «zum Ausprobieren» → Standard **live**, Frist Mo 30.11. 13:34.
 - Nutzungszähler (neues optionales Feld `use` in der Sicherung: wie oft Fotos, Rückblick, Level, Scheibenrechner usw. geöffnet werden;
   nur Zähler) → Standard **einbauen**, Frist Mo 30.11. 18:34.
 
@@ -166,6 +169,30 @@ Erholung unverändert seit dem Morgen, Empfehlung **normal**. Daten aufräumen /
 - Daueraufgaben: Jarvis-Sync ok (heute 13:21), Garmin-Sync heute noch nicht (üblich Nachmittag), Erholung unverändert → **normal**.
   Keine neuen Trainings → Daten aufräumen / Plan pflegen nichts. Cockpit: Morgenlauf.
 
+### Fr 27.11.2026 – Arbeits-Lauf 18:34
+
+- PR #37 https://github.com/Geissi23/Kraftwerk/pull/37 – Gewichtsschritt pro Übung: im Übungsmenü «Gewichtsschritt · x kg» (1–10 kg
+  oder Standard). Wirkt auf +/−, Ziel-Gewicht, «Nächster Satz», Comeback, Aufwärmen, Deload. Optionales Feld `wstep` mit Migration.
+  Review-Agent: keine blockierenden Befunde; behoben: 1,25-kg-Werte wurden auf 0,1 gerundet/angezeigt, nur gültige Schritte zulassen,
+  Test hing vom gestarteten Training ab. Bewusst so: Kurzhanteln steigen jetzt um 2 kg (wie die Tafel) statt 2,5.
+  Noch nicht in der Vorschau (dort steht #36 bis morgen 13:34). Kein Push (nichts live, keine neue Entscheidung).
+- Kritischer Blick: Übungsmenü hat jetzt 13 Knöpfe – zu viel für «eine Aktion pro Screen». Kandidat zum Vereinfachen (Gruppen oder
+  seltene Punkte nach unten), aber erst mit Nutzungszahlen.
+- Daueraufgaben: Jarvis-Sync zuletzt 13:21 (keine neuen Trainings, ok), Garmin-Sync heute 2× ok. Erholung: HRV ausgeglichen, Schlaf
+  etwas kurz → **normal**. App-Notizen: keine neuen. Daten aufräumen / Plan pflegen: nichts. Cockpit: Morgenlauf.
+
+### Sa 28.11.2026 – Arbeits-Lauf 08:34
+
+- PR #38 https://github.com/Geissi23/Kraftwerk/pull/38 – Eigene Eiweiss-Portionen: Fortschritt › Körper › Eiweiss & Wasser › Ändern →
+  «Eigene Portionen» (Name + Gramm, max. 3). Sie ersetzen die Knöpfe +10/+25 g, Wasser bleibt. Optionales Feld `nport` mit Normalisierung.
+  Review-Agent: nichts Blockierendes; behoben: bei 1 Portion 2 Spalten statt Lücke, Hinweis bei voller Liste, Namen nicht im Emoji kürzen.
+  Vorschau nach #37. Kein Push (nichts live, keine neue Entscheidung).
+- Kritischer Blick: Eiweiss/Wasser ist seit gestern live und noch nie benutzt (Sicherung von 27.11. 13:21). Fester Knopf +10 g passt zu kaum
+  einer echten Portion – darum eigene Portionen. Nach einer Woche prüfen, ob der Zähler überhaupt genutzt wird.
+- Daueraufgaben: Jarvis-Sync zuletzt 27.11. 13:21 (keine neuen Trainings seit 25.11., ok für Fr/Sa). Garmin-Sync gestern 2×, heute noch
+  nicht (üblich Nachmittag). Erholung unverändert → **normal**. App-Notizen: keine neuen. Daten aufräumen / Plan pflegen: nichts.
+  Cockpit: Daten unverändert (gleiche Prüfsummen) → nur Zeitstempel aktualisiert.
+
 ## Backlog
 
 - [ ] Rest von Design v3 Etappe 2 (siehe Roadmap «Jetzt»).
@@ -174,28 +201,6 @@ Erholung unverändert seit dem Morgen, Empfehlung **normal**. Daten aufräumen /
 
 ## Log (ältere Einträge im Archiv)
 
-- 2026-11-25: Erster Arbeits-Lauf. PR #13 (Sheets wischen), #14 (Plan v4), #15 (Muskelgruppen fein), #16 (P16 Notizen + Geräte-Einstellungen), #17 (Zuletzt mit alten Plan-IDs) gemergt und live. Cockpit aktualisiert. Design-Konzept mit Mockups veröffentlicht. Neue Pitches P17–P19.
-- 2026-11-25 (selbstkritisch): Den Bug mit den alten Plan-IDs hätte ich beim Plan-Umbau am 22.11. finden müssen; künftig bei Plan-Änderungen «Zuletzt»/Vorschlag mit echtem Verlauf mittesten. Ausserdem: In PR-Texten und JARVIS.md keine Trainings- oder Gesundheitszahlen, auch keine Anzahlen.
-- 2026-11-25 (Bericht): Gesundheits-Check ok, Bericht und Push zu PR #13–#17 verschickt. Plan v4 im Sync noch nicht sichtbar (Sync lief vor dem Merge) → nächster Lauf prüft.
-- 2026-11-25: Bericht 25.11. vorgezogen verschickt (Nachtrag 15:25 mit Empfehlung fürs Training heute Abend).
-- 2026-11-25: Antwort von Janis im Eingang: P17/P18 ja, P19 nein, neue Designphilosophie (neues Konzept Fr), Idee Ernährung (Pitch P20), Squat 23.11. war Maschine (Korrektur Fr).
-- 2026-11-25 (selbstkritisch): Den Squat-«Rekord» habe ich ungeprüft gemeldet. An der Maschine war das kein Rekord. Künftig Rekorde gegen Varianten derselben Übung gegenprüfen und bei neuen Übungsnamen nachfragen.
-- 2026-11-25 (Bericht-Lauf 17:37): stiller Tag. Pages ok, `planVer` 5 im Sync, PR #19 (P17/P18) offen → Fr prüfen und mergen.
-- 2026-11-25 (abends, Chat): Alles sofort umgesetzt: PR #18 Squat Maschine, PR #19 P17 Erholung + P18 Foto-Pose, PR #20 Design v2 «Das Instrument» + Logo L1 (alle getestet und gemergt). P20 Ernährung gepitcht.
-- 2026-11-25 (selbstkritisch): Merge- und PR-Aufruf nie parallel schicken; GitHub-API war mehrfach 500/502, geduldig wiederholen.
-- 2026-11-25 (Arbeits-Lauf, verspätet ~17:50): PR #21 Titel ohne Worttrennung (neu ohne Rückfrage), Cockpit aktualisiert, Sync/Pages ok.
-- 2026-11-25 (selbstkritisch): Vor der Arbeit erst `git pull` auf JARVIS.md – eine Chat-Sitzung hatte parallel geschrieben. Und Playwright-Route-Filter nicht auf Wörter wie «claude» setzen (trifft auch file://-Pfade).
-- 2026-11-25 (Zusatzlauf): «Design v2 mergen» war bereits erledigt (PR #20), geprüft und per Push bestätigt.
-- 2026-11-26 (Zusatz-Arbeits-Lauf Do): App-Notizen erledigt → PR #22 (Satz-Knopf in der Tafel, Supersatz-Hinweis, feste Zahlengrösse), Cockpit aktualisiert, Befund Übersichtlichkeit für Fr notiert.
-- 2026-11-26 (selbstkritisch): Supersätze habe ich beim Plan-Umbau eingebaut, ohne zu prüfen, wie sich der Wechsel im Training anfühlt. Bei Plan-Änderungen künftig ein Training einmal komplett durchklicken.
-- 2026-11-26 (Zusatzlauf Design): PR #23 «Design v2 ruhiger» gemergt (alle Screens), Vorher/Nachher-Screenshots mit Testdaten unter jarvis/screens/2026-11-26.
-- 2026-11-26 (selbstkritisch): Ein Auto-Scroll, der den Tafel-Knopf ins Bild holen sollte, hat den Übungsnamen abgeschnitten – erst im Screenshot bemerkt und zurückgenommen. Visuelle Änderungen immer zuerst im Screenshot prüfen, nicht nur per Messwert.
-- 2026-11-26 (Arbeits-Lauf abends): Design v3 umgesetzt: Etappe 1 (PR #24) und Etappe 2 Teil 1 Training (PR #25) live, Push an Janis. Rest folgt.
-- 2026-11-26 (selbstkritisch): Die neue Pausenleiste hat die gelbe Karte zuerst verdeckt – erst im Screenshot gesehen. Bei festen Leisten
-  immer den verfügbaren Platz messen (Karte vs. Bereich über der Leiste) und auf dem kleinsten Gerät prüfen.
-- 2026-11-26 (Zusatzlauf Design v3): Etappe 3 Übersicht + Plan live (PR #26). Etappen 4, 5 und Rest von 2 folgen Fr.
-- 2026-11-26 (selbstkritisch): «Starten» aus einem Blatt liess das Blatt offen – nur durch einen Klick-Test gefunden. Neue Knöpfe in Blättern immer per echtem Klick testen, nicht per ACT-Aufruf.
-- 2026-11-26 (abends, Chat): Janis hat die Web-App gelöscht und neu hinzugefügt. Sicherung im Repo war vollständig. Bug gefunden: Verbinden in einer leeren App hätte die Sicherung leer überschrieben → PR #27 (leere App holt beim Verbinden die Sicherung, Auto-Sync überschreibt nie). Sync 19:06 geprüft: alle Daten wieder da. Fortschrittsfotos (nur lokal) verloren.
 - 2026-11-27 (Arbeits-Lauf): Design v3 Etappe 4 Fortschritt (PR #28) und Etappe 5 Eiweiss/Wasser + Körpermasse (PR #29) live. Nur Rest von Etappe 2 offen.
 - 2026-11-27 (selbstkritisch): Die erste Coach-Empfehlung erzeugte 16 Tipps – mit echten Daten sofort sichtbar. Generierte Listen immer mit echtem,
   lückenhaftem Datenstand prüfen und begrenzen. Playwright-Klicks scheiterten am festen Umschalter + Navigation → `scroll-padding` gesetzt (hilft auch echten Nutzern).
@@ -207,5 +212,11 @@ Erholung unverändert seit dem Morgen, Empfehlung **normal**. Daten aufräumen /
 - 2026-11-27 (zweiter Sofort-Lauf, gleicher Auftrag): Einrichtung war schon erledigt → nur PR #34 (SE-Breite) fertig und gemergt, PR #35 WebKit Pflicht.
 - 2026-11-27 (selbstkritisch): Beim ersten Versuch auf Verdacht am Kalender gedreht; das Sicherheitsnetz `overflow-x:clip` plus Messung hätte gleich gereicht.
 - 2026-11-27 (Arbeits-Lauf 13:34): PR #36 Abschluss-Screen v3 in die Vorschau, Nutzung erste Sicht, Jarvis-Sync bestätigt.
+- 2026-11-27 (Arbeits-Lauf 18:34): PR #37 Gewichtsschritt pro Übung (Review-Agent, Befunde behoben), wartet auf Vorschau.
+- 2026-11-27 (selbstkritisch, 18:34): Ausgewählter Chip war im Blatt kaum sichtbar (`#sheet .pill` überschreibt `.pill.on`) und der
+  Titel «Gewichtsschritt» stand am Rand – beides erst im Screenshot. Im Blatt für Auswahl-Chips `.plchips` nehmen, Titel kurz halten.
+- 2026-11-28 (Arbeits-Lauf 08:34): PR #38 Eigene Eiweiss-Portionen (Review-Agent), Cockpit geprüft.
+- 2026-11-28 (selbstkritisch): Drei PRs (#36–#38) stauen sich vor einer einzigen Vorschau – sichtbare Arbeit wartet bis zu 3 Tage.
+  Wenn das bleibt, mehrere Vorschau-Pfade oder Bündeln ähnlicher kleiner Änderungen erwägen.
 - 2026-11-27 (selbstkritisch): Der Titel brach auf dem SE mitten im Wort («OBERKÖRP-ER») – nur im Screenshot gesehen. Grosse Titel immer
   mit `min(…, vw)` begrenzen und auf dem SE ansehen; und keine Review-Runde, weil klein – beim nächsten sichtbaren PR wieder Review-Agent.
