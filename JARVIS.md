@@ -106,7 +106,7 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 
 - **Jetzt:**
   1. **Design v3 Etappe 2 Rest** (Go 26.11.): Aufwärm-Markierung als Datenfeld + Aufwärm-Vorschläge 40 %/60 % (nach #36, berührt
-     Satz-Zählung und Abschluss). Abschluss-Screen PR #36 in der Vorschau; Gewichtsschritt pro Übung PR #37 fertig, Vorschau nach #36.
+     Satz-Zählung und Abschluss). Abschluss-Screen PR #36 live (28.11.); Gewichtsschritt pro Übung PR #37 in der Vorschau bis So 29.11. 13:34.
   2. **Nutzung lernen – erste Auswertung:** welche Bereiche (Fotos, Rückblick, Level/Abzeichen, Körpermasse, Notizen, Geräte-Einstellungen,
      Scheibenrechner) werden genutzt? Erste Sicht 27.11.: Körpermasse/Zielgewicht noch nie, Notizen und Geräte-Einstellungen ja,
      Eiweiss/Wasser erst seit heute live. Fotos, Rückblick, Level, Scheibenrechner hinterlassen keine Spur → Nutzungszähler (Frage offen).
@@ -118,15 +118,14 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 
 ## Eingang
 
-- App-Notizen 27.11. 13:35 geprüft: keine neuen. Jarvis-Sync läuft (neuer Sync 27.11. 13:21) → Punkt «Jarvis-Sync einrichten» erledigt.
+- (leer) App-Notizen 28.11. 13:35 geprüft: keine neuen.
 
 ## Offene Fragen (Standard gilt ohne Antwort)
 
 - Squat-Aufwärmsätze vom 23.11. als Arbeitssätze erfasst → Standard **so lassen**, Frist Mo 30.11.
 - Supersätze im Wechsel oder nacheinander → Standard **im Wechsel lassen**, Frist Mo 30.11.
 - P20 Ernährung B–D → Standard **nicht umsetzen**, Frist Mo 30.11.
-- PR #36 Abschluss-Screen (Vorschau) → Standard **live**, Frist Sa 28.11. 13:34.
-- PR #37 Gewichtsschritt: Sa 28.11. 13:34 nach #36 in die Vorschau + Push «zum Ausprobieren» → Standard **live**, Frist So 29.11. 13:34.
+- PR #37 Gewichtsschritt (in der Vorschau seit Sa 28.11. 13:36) → Standard **live**, Frist So 29.11. 13:34.
 - PR #38 Eigene Eiweiss-Portionen: So 29.11. 13:34 nach #37 in die Vorschau (oder früher, wenn #37 schon live ist) + Push
   «zum Ausprobieren» → Standard **live**, Frist Mo 30.11. 13:34.
 - Nutzungszähler (neues optionales Feld `use` in der Sicherung: wie oft Fotos, Rückblick, Level, Scheibenrechner usw. geöffnet werden;
@@ -136,28 +135,17 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 
 Hinweis: Trainings- und Gesundheitszahlen stehen nie hier (öffentliches Repo).
 
-### Fr 27.11.2026 – Sofort-Lauf «Einrichtung neue Arbeitsweise» (ca. 11:00–11:45)
+### Sa 28.11.2026 – Arbeits-Lauf 13:34
 
-**Gemergt / live** (Pages veröffentlicht):
-- PR #30 https://github.com/Geissi23/Kraftwerk/pull/30 – automatische Tests bei jedem PR (Syntax, iPhone 13 + SE hell/dunkel, alle Tabs,
-  Training komplett, Daten-Erhalt inkl. Jarvis-Sync und altem Backup, keine Konsolenfehler). Absichtlich kaputte Version wird erkannt.
-- PR #31 https://github.com/Geissi23/Kraftwerk/pull/31 – Vorschau unter `/preview/` (Review-Agent: 1 blockierender Befund – Workflow
-  prüft jetzt, dass der Branch den Schutz enthält – plus Aufräumen alter Vorschau-Stände, Laden aus der Sicherung in Safari; behoben).
-  Vorschau steht auf dem Live-Stand. Rückgängig: «PR #31 rückgängig».
-- PR #32 https://github.com/Geissi23/Kraftwerk/pull/32 – Einstellungen › «Neu im Test» (Grundgerüst, gerade leer). Neues optionales Feld `beta`.
-- PR #33 https://github.com/Geissi23/Kraftwerk/pull/33 – Daumen hoch/runter im Abschluss-Screen, nur wenn etwas im Test ist. Feld `fb`.
-- Testen: Einstellungen → Zeile «Neu im Test · Gerade nichts im Test.» Sonst nichts Sichtbares. (Morgenlauf 27.11. steht im Archiv.)
-
-**Nachtrag (zweiter Sofort-Lauf, ca. 11:40):** PR #34 https://github.com/Geissi23/Kraftwerk/pull/34 gemergt – iPhone SE: Übersicht und
-Fortschritt liessen sich in Safari 3–7 px seitwärts schieben. Gewichtskarte schmaler, Kalendertage dürfen schmaler werden, Inhalt seitlich
-begrenzt (`overflow-x:clip`, Umschalter bleibt oben haften – geprüft). WebKit-Tests jetzt grün → PR #35 macht sie zur Pflicht.
-Rückgängig: «PR #34 rückgängig». Kein weiterer Push (keine neue Entscheidung).
-
-**Kritischer Blick:** Testbarkeit der App selbst. Bisher hat jeder Lauf von Hand durchgeklickt; dabei gingen Dinge wie die SE-Breite in
-Safari durch, weil lokal nur Chromium läuft. Jetzt prüft WebKit in der CI mit – und hat direkt einen echten Fehler gefunden.
-
-**Daueraufgaben:** Sync-Wächter ok (Jarvis-Sync 26.11. abends, Garmin-Sync gestern 2×, heute noch nicht – üblich Nachmittag).
-Erholung unverändert seit dem Morgen, Empfehlung **normal**. Daten aufräumen / Plan pflegen: nichts Neues. Cockpit: erledigt im Morgenlauf.
+- PR #36 https://github.com/Geissi23/Kraftwerk/pull/36 gemergt (Frist ohne Einwand abgelaufen, Tests grün) – Abschluss-Screen v3 ist live,
+  Pages veröffentlicht. Rückgängig: «PR #36 rückgängig».
+- PR #37 https://github.com/Geissi23/Kraftwerk/pull/37 mit `main` zusammengeführt (keine Konflikte), Tests grün (CI Chromium + WebKit,
+  lokal iPhone 13), jetzt in der Vorschau. Testen: Vorschau › Training › Übungsmenü › «Gewichtsschritt». Ohne Einwand live So 29.11. 13:34.
+- Kritischer Blick: «Neu im Test» + 👍/👎 sind seit gestern live, aber leer (`fb` leer, nichts im Test) – also bisher reines Gerüst.
+  Erster echter Einsatz: Aufwärm-Vorschläge (ändern den Ablauf im Gym) kommen hinter den Schalter.
+- Daueraufgaben: Jarvis-Sync zuletzt 27.11. 13:21 (kein Training seit 25.11.; für Fr/Sa üblich, ab Mo prüfen). Garmin-Sync gestern ok,
+  heute noch nicht (üblich Nachmittag). Erholung unverändert → **normal**. App-Notizen: keine neuen (die zwei vom 25.11. sind mit PR #22
+  erledigt). Daten aufräumen / Plan pflegen: nichts. Cockpit: Morgenlauf.
 
 ### Fr 27.11.2026 – Arbeits-Lauf 13:34
 
@@ -220,3 +208,6 @@ Erholung unverändert seit dem Morgen, Empfehlung **normal**. Daten aufräumen /
   Wenn das bleibt, mehrere Vorschau-Pfade oder Bündeln ähnlicher kleiner Änderungen erwägen.
 - 2026-11-27 (selbstkritisch): Der Titel brach auf dem SE mitten im Wort («OBERKÖRP-ER») – nur im Screenshot gesehen. Grosse Titel immer
   mit `min(…, vw)` begrenzen und auf dem SE ansehen; und keine Review-Runde, weil klein – beim nächsten sichtbaren PR wieder Review-Agent.
+- 2026-11-28 (Arbeits-Lauf 13:34): PR #36 live, PR #37 in die Vorschau.
+- 2026-11-28 (selbstkritisch, 13:34): Live-Seite kann ich von hier nicht abrufen (Proxy sperrt github.io) – Veröffentlichung nur über den
+  Pages-Workflow geprüft. Reicht, aber ein echter Abruf der Seite wäre sicherer.

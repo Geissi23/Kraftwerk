@@ -523,3 +523,29 @@ Abgelehnte Pitches bitte mit «nein» markieren oder löschen.
 - 2026-11-23: Janis genehmigt alle 7 Ablauf-Ideen: Team Manager auf Arbeits- und Bericht-Lauf umgestellt, erst machen dann fragen, stille Tage, Wochenplan am Montag, P16 Notiz-Knopf, Monats-Check, Sonntags-Wochenüberblick für beide Apps.
 - 2026-11-23: Leitbild «Immer besser werden» von Janis aufgenommen: kritischer Blick auf Features, auf Jarvis' eigene Arbeit und ehrliches Feedback an Janis. Gilt auch für den Team Manager.
 - 2026-11-23: Aufgeräumt: Team-Manager-Jarvis wird ab jetzt nur in der Team-Manager-Sitzung gepflegt (eigene JARVIS.md, Freeze). Diese Kraftwerk-Sitzung ändert nichts mehr am Team Manager. Der Sonntags-Wochenüberblick liest beide Apps.
+
+## Aus JARVIS.md verschoben am 28.11.2026
+
+### Fr 27.11.2026 – Sofort-Lauf «Einrichtung neue Arbeitsweise» (ca. 11:00–11:45)
+
+**Gemergt / live** (Pages veröffentlicht):
+- PR #30 https://github.com/Geissi23/Kraftwerk/pull/30 – automatische Tests bei jedem PR (Syntax, iPhone 13 + SE hell/dunkel, alle Tabs,
+  Training komplett, Daten-Erhalt inkl. Jarvis-Sync und altem Backup, keine Konsolenfehler). Absichtlich kaputte Version wird erkannt.
+- PR #31 https://github.com/Geissi23/Kraftwerk/pull/31 – Vorschau unter `/preview/` (Review-Agent: 1 blockierender Befund – Workflow
+  prüft jetzt, dass der Branch den Schutz enthält – plus Aufräumen alter Vorschau-Stände, Laden aus der Sicherung in Safari; behoben).
+  Vorschau steht auf dem Live-Stand. Rückgängig: «PR #31 rückgängig».
+- PR #32 https://github.com/Geissi23/Kraftwerk/pull/32 – Einstellungen › «Neu im Test» (Grundgerüst, gerade leer). Neues optionales Feld `beta`.
+- PR #33 https://github.com/Geissi23/Kraftwerk/pull/33 – Daumen hoch/runter im Abschluss-Screen, nur wenn etwas im Test ist. Feld `fb`.
+- Testen: Einstellungen → Zeile «Neu im Test · Gerade nichts im Test.» Sonst nichts Sichtbares. (Morgenlauf 27.11. steht im Archiv.)
+
+**Nachtrag (zweiter Sofort-Lauf, ca. 11:40):** PR #34 https://github.com/Geissi23/Kraftwerk/pull/34 gemergt – iPhone SE: Übersicht und
+Fortschritt liessen sich in Safari 3–7 px seitwärts schieben. Gewichtskarte schmaler, Kalendertage dürfen schmaler werden, Inhalt seitlich
+begrenzt (`overflow-x:clip`, Umschalter bleibt oben haften – geprüft). WebKit-Tests jetzt grün → PR #35 macht sie zur Pflicht.
+Rückgängig: «PR #34 rückgängig». Kein weiterer Push (keine neue Entscheidung).
+
+**Kritischer Blick:** Testbarkeit der App selbst. Bisher hat jeder Lauf von Hand durchgeklickt; dabei gingen Dinge wie die SE-Breite in
+Safari durch, weil lokal nur Chromium läuft. Jetzt prüft WebKit in der CI mit – und hat direkt einen echten Fehler gefunden.
+
+**Daueraufgaben:** Sync-Wächter ok (Jarvis-Sync 26.11. abends, Garmin-Sync gestern 2×, heute noch nicht – üblich Nachmittag).
+Erholung unverändert seit dem Morgen, Empfehlung **normal**. Daten aufräumen / Plan pflegen: nichts Neues. Cockpit: erledigt im Morgenlauf.
+
