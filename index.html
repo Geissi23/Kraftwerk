@@ -625,6 +625,14 @@ button.sn{background:transparent}
 .wuset .chk{height:44px;background:var(--s2)}
 .wuset.done b,.wuset.done span{opacity:.55;text-decoration:line-through}
 .wuset.done .chk{background:var(--ok-bg);color:var(--ok-t)}
+.wuline{display:flex;align-items:center;gap:12px;width:100%;min-height:44px;margin-top:8px;padding:8px 14px;border-radius:12px;background:var(--s1);color:var(--mut);text-align:left;font-size:14px}
+.wuline .wb,.wuli .wb{font-size:12px;font-weight:600;border:1px solid var(--s3);border-radius:6px;padding:2px 6px}
+.wuline .t{flex:1;min-width:0}
+.wuline svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.wuline .n,.wuli .n{font-family:var(--disp);font-style:italic;font-stretch:80%;font-weight:700;color:var(--fg)}
+.wuli{display:flex;align-items:center;gap:12px;min-height:48px;border-top:1px solid var(--s2)}
+.wuli:first-of-type{border-top:0}
+.wuli .n{flex:1;font-size:20px}
 .plat{margin-top:8px;background:var(--s1);box-shadow:inset 3px 0 0 var(--warn);color:var(--fg);padding:6px 12px 6px 15px;font-size:14px}
 .plat button.ph{display:flex;width:100%;justify-content:space-between;align-items:center;gap:10px;font-weight:600;color:var(--warn-t);min-height:40px;text-align:left}
 .plat ul{margin:6px 0 6px;padding-left:18px}
@@ -1911,7 +1919,7 @@ ACT.start=b=>{
 };
 ACT.resume=()=>openWorkout();
 ACT.cboff=()=>{const A=S.active;if(!A)return;const r=S.routines.find(x=>x.id===A.routineId);
-  if(r)A.exs=A.exs.map(ex=>{if(ex.rows.some(x=>x.done))return ex;const d=r.ex.find(e=>exKey(e.name)===ex.key);return d?buildEx(d,false):ex;});
+  if(r)A.exs=A.exs.map(ex=>{if(ex.rows.some(x=>x.done))return ex;const d=r.ex.find(e=>exKey(e.name)===ex.key);if(!d)return ex;const n=buildEx(d,false);if(wuList(ex).length)n.wu=wuList(ex);return n;});
   cbSet('');persist();renderWorkout();updateWk();toast('Normale Gewichte geladen');};
 function openWorkout(){$('#wk').classList.add('open');$('#wktitle').textContent=S.active.name;renderWorkout();updateWk();wake();setTimeout(()=>scrollTafel(true),30);}
 ACT.wkclose=()=>{$('#wk').classList.remove('open');render();};
@@ -1994,6 +2002,7 @@ function renderWorkout(){
       <div class="tools">${EX_LIB[ex.key]?`<button class="icon" data-act="exinfo" data-i="${i}" aria-label="Übungsinfo zu ${esc(ex.name)}">ⓘ</button>`:''}<button class="icon" data-act="exmenu" data-i="${i}" aria-label="Übung-Optionen">⋯</button></div></div>
       <div class="goal"${isCur?'':' hidden'}><span class="eyebrow">Ziel heute</span><span class="gv" id="gv${i}">${esc(g.head)}</span>${g.then?`<span class="gthen">${esc(g.then)}</span>`:''}${g.last?`<span class="glast">${esc(g.last)}</span>`:''}</div>
       ${isCur?exExtras(ex,i):''}
+      ${wuList(ex).length?`<button class="wuline" data-act="wuedit" data-i="${i}" aria-label="Aufwärmsätze ${esc(ex.name)}: ${esc(wuTxt(ex))}. Ändern"><span class="wb">W</span><span class="t">Aufwärmen <span class="n">${esc(wuTxt(ex))}</span></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>`:''}
       ${rows}
       <button class="addset" data-act="addset" data-i="${i}">+ Satz</button></div>`;
   }).join('')+`<button class="btn ghost full" style="margin-top:14px" data-act="addex">+ Übung hinzufügen</button>`;
@@ -2096,7 +2105,8 @@ ACT.exmenu=b=>{
     <button class="btn ghost" data-act="addset" data-i="${i}">Satz hinzufügen</button>
     <button class="btn ghost" data-act="exrmset" data-i="${i}">Letzten Satz entfernen</button>
     <button class="btn ghost" data-act="exhist" data-i="${i}">Mein Verlauf mit dieser Übung</button>
-    <button class="btn ghost" data-act="wutoggle" data-i="${i}">Aufwärmsätze anzeigen</button>
+    <button class="btn ghost" data-act="wuedit" data-i="${i}">Aufwärmsatz hinzufügen <span class="small muted">· zählt nicht</span></button>
+    <button class="btn ghost" data-act="wutoggle" data-i="${i}">Aufwärm-Vorschlag anzeigen</button>
     <button class="btn ghost" data-act="plates" data-i="${i}">Scheibenrechner</button>
     <button class="btn ghost" data-act="gearedit" data-i="${i}">Geräte-Einstellung${(S.gear||{})[ex.key]?' ändern':' merken'}</button>
     <button class="btn ghost" data-act="exup" data-i="${i}">Nach oben schieben</button>
@@ -2206,7 +2216,7 @@ document.addEventListener('input',e=>{if(e.target.id==='plw'){PL_CUR.w=num(e.tar
 
 /* P2 – Aufwärmsätze */
 const WU={};
-const wuKey=ex=>(S.active?S.active.id:'')+'|'+ex.key;
+const wuKey=ex=>(S.active?S.active.id:'')+'|'+(S.active?S.active.exs.indexOf(ex):'')+'|'+ex.key;
 function warmupSets(ex){
   const W=topW(ex);if(!(W>0))return [];
   const out=[];let prev=0;
@@ -2222,10 +2232,38 @@ function warmupSets(ex){
 }
 const firstHeavy=()=>S.active?S.active.exs.findIndex(isCompound):-1;
 ACT.wutoggle=b=>{const ex=S.active&&S.active.exs[+b.dataset.i];if(!ex)return;if(!warmupSets(ex).length){if(b.closest('#sheet'))closeSheet();toast('Trag zuerst dein Arbeitsgewicht ein.');return;}const k=wuKey(ex);WU[k]=WU[k]||{done:[]};WU[k].open=!WU[k].open;if(b.closest('#sheet'))closeSheet();renderWorkout();};
-ACT.wucheck=b=>{const ex=S.active&&S.active.exs[+b.dataset.i];if(!ex)return;const k=wuKey(ex),j=+b.dataset.j,st=WU[k]=WU[k]||{open:true,done:[]};
-  st.done=st.done.includes(j)?st.done.filter(x=>x!==j):[...st.done,j];
-  const n=warmupSets(ex).length;if(st.done.length>=n&&n){st.open=false;toast('Aufgewärmt. Jetzt zählt\'s!');}
+ACT.wucheck=b=>{const ex=S.active&&S.active.exs[+b.dataset.i];if(!ex)return;const k=wuKey(ex),j=+b.dataset.j,st=WU[k]=WU[k]||{open:true};
+  const x=warmupSets(ex)[j];if(!x)return;
+  if(wuDone(ex)[j]){ex.wu=wuList(ex);for(let m=ex.wu.length-1;m>=0;m--)if(num(ex.wu[m].w)===x.w&&num(ex.wu[m].r)===x.r){ex.wu.splice(m,1);break;}}
+  else if(!wuAdd(ex,x.w,x.r)){toast('Höchstens '+WU_MAX+' Aufwärmsätze.');return;}
+  persist();
+  const dn=wuDone(ex);if(dn.length&&dn.every(Boolean)){st.open=false;toast('Aufgewärmt. Jetzt zählt\'s!');}
   renderWorkout();};
+
+/* Aufwärmsätze speichern (Design v3, Feld ex.wu=[{w,r}], optional): zählen nie als Satz, nicht fürs Volumen, nicht für Rekorde */
+const WU_MAX=6;
+const wuList=ex=>Array.isArray(ex.wu)?ex.wu.filter(x=>x&&num(x.r)>0):[];
+/* Vorschlag j gilt als erledigt, wenn ein (noch nicht zugeordneter) gespeicherter Aufwärmsatz mit gleichem Gewicht und Wdh existiert */
+function wuDone(ex){const pool=wuList(ex).map(y=>[num(y.w),num(y.r)]);return warmupSets(ex).map(x=>{const k=pool.findIndex(y=>y[0]===x.w&&y[1]===x.r);if(k<0)return false;pool.splice(k,1);return true;});}
+function wuAdd(ex,w,r){ex.wu=wuList(ex);if(ex.wu.length>=WU_MAX)return false;ex.wu.push({w:Math.max(0,Math.round(num(w)*100)/100),r:Math.max(1,Math.round(num(r)))});return true;}
+const wuW=w=>num(w)>0?fmtN(num(w))+' kg':'ohne Gewicht';
+const wuTxt=ex=>wuList(ex).map(x=>(num(x.w)>0?fmtN(num(x.w)):'KG')+' × '+num(x.r)).join(' · ');
+function wuSheet(i){
+  const ex=S.active&&S.active.exs[i];if(!ex)return;const l=wuList(ex),W=topW(ex);
+  const dw=l.length?num(l[l.length-1].w):W>0?rnd(W*.5,wStep(ex)):'',dr=l.length?num(l[l.length-1].r):10;
+  openSheet(`<h2>Aufwärmsätze</h2><div class="muted small" style="margin-bottom:8px">${esc(ex.name)} · zählen nicht als Satz, nicht fürs Volumen</div>
+    ${l.length?`<div style="margin-bottom:10px">${l.map((x,k)=>`<div class="wuli"><span class="wb">W</span><span class="n">${wuW(x.w)} × ${num(x.r)}</span><button class="icon" data-act="wudel" data-i="${i}" data-k="${k}" aria-label="Aufwärmsatz ${k+1} löschen">×</button></div>`).join('')}</div>`:''}
+    ${l.length<WU_MAX?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><label class="fl">kg<input class="ti" id="wuw" inputmode="decimal" value="${dw!==''?fmtN(dw):''}"></label><label class="fl">Wdh<input class="ti" id="wur" inputmode="numeric" value="${dr}"></label></div>`:`<p class="muted small">Höchstens ${WU_MAX} Aufwärmsätze pro Übung.</p>`}
+    <div class="btnrow">${l.length<WU_MAX?`<button class="btn" data-act="wuadd" data-i="${i}">Aufwärmsatz hinzufügen</button>`:''}<button class="btn ghost" data-act="closesheet">Fertig</button></div>`);
+}
+ACT.wuedit=b=>wuSheet(+b.dataset.i);
+ACT.wuadd=b=>{const i=+b.dataset.i,ex=S.active&&S.active.exs[i];if(!ex)return;const r=num(($('#wur')||{}).value),wv=String(($('#wuw')||{}).value||'').trim();
+  if(!(r>0&&r<=50)){toast('Wiederholungen: 1 bis 50.');return;}
+  if(wv!==''&&!(num(wv)>=0&&/\d/.test(wv))){toast('Gewicht in kg eingeben (leer = ohne Gewicht).');return;}
+  wuAdd(ex,($('#wuw')||{}).value,r);persist();renderWorkout();wuSheet(i);toast('Aufwärmsatz gespeichert');};
+ACT.wudel=b=>{const i=+b.dataset.i,ex=S.active&&S.active.exs[i];if(!ex)return;const l=wuList(ex),x=l[+b.dataset.k];if(!x)return;
+  ex.wu=l.filter((y,k)=>k!==+b.dataset.k);
+  persist();renderWorkout();wuSheet(i);};
 
 /* P4 – Plateau */
 const PLT_OPEN={};
@@ -2269,14 +2307,15 @@ function exExtras(ex,i){
   const wus=warmupSets(ex);
   const heavy=i===firstHeavy();
   const showWu=wus.length&&(heavy||(st&&st.open));
-  if(showWu){const d=st?st.done.length:0;pills.push(`<button class="pill${st&&st.open?' on':''}" data-act="wutoggle" data-i="${i}" aria-expanded="${!!(st&&st.open)}">${ic('flame')}Aufwärmen${d?` ${Math.min(d,wus.length)}/${wus.length}`:` · ${wus.length} ${wus.length===1?"Satz":"Sätze"}`}</button>`);}
+  const wdn=wuDone(ex);
+  if(showWu){const d=wdn.filter(Boolean).length;pills.push(`<button class="pill${st&&st.open?' on':''}" data-act="wutoggle" data-i="${i}" aria-expanded="${!!(st&&st.open)}">${ic('flame')}Aufwärmen${d?` ${Math.min(d,wus.length)}/${wus.length}`:` · ${wus.length} ${wus.length===1?"Satz":"Sätze"}`}</button>`);}
   if(isBarbell(ex)&&topW(ex)>0)pills.push(`<button class="pill" data-act="plates" data-i="${i}">${ic('plate')}Scheiben</button>`);
   const gs=(S.gear||{})[ex.key];
   if(gs)pills.unshift(`<button class="pill gearpill" data-act="gearedit" data-i="${i}" aria-label="Geräte-Einstellung ändern: ${esc(gs)}">${ic('gear')}${esc(gs)}</button>`);
   else if(['Maschine','Kabelzug'].includes(gearOf(ex)))pills.push(`<button class="pill" data-act="gearedit" data-i="${i}">${ic('gear')}Einstellung</button>`);
   let wuBox='';
   if(showWu&&st&&st.open){
-    wuBox=`<div class="wu"><div class="wuh">Aufwärmsätze zählen nicht fürs Volumen, keine Pause nötig.</div>${wus.map((x,j)=>{const dn=st.done.includes(j);return `<div class="wuset${dn?' done':''}"><span class="small muted">${esc(x.t)}</span><b>${fmtN(x.w)} kg × ${x.r}</b><button class="chk" data-act="wucheck" data-i="${i}" data-j="${j}" aria-label="Aufwärmsatz ${j+1} abhaken" aria-pressed="${dn}">${checkSvg}</button></div>`;}).join('')}</div>`;
+    wuBox=`<div class="wu"><div class="wuh">Aufwärmsätze zählen nicht fürs Volumen, keine Pause nötig.</div>${wus.map((x,j)=>{const dn=wdn[j];return `<div class="wuset${dn?' done':''}"><span class="small muted">${esc(x.t)}</span><b>${fmtN(x.w)} kg × ${x.r}</b><button class="chk" data-act="wucheck" data-i="${i}" data-j="${j}" aria-label="Aufwärmsatz ${j+1} abhaken" aria-pressed="${dn}">${checkSvg}</button></div>`;}).join('')}</div>`;
   }
   return (pills.length?`<div class="pills">${pills.join('')}</div>`:'')+wuBox+plateauHtml(ex,i);
 }
@@ -3102,8 +3141,8 @@ ACT.finishok=()=>{
   const last={};A.exs.forEach(ex=>{last[ex.key]=lastSession(ex.key);});
   const wk=monday(new Date()).getTime(),nth=gymOnly().filter(w=>w.start>=wk).length+1;
   A.end=Date.now();
-  A.exs.forEach(ex=>{ex.rows=ex.rows.filter(r=>r.done).map(r=>{const o={w:num(r.w),r:num(r.r),done:true,pr:r.pr||null};if([1,2,3].includes(r.rir))o.rir=r.rir;return o;});});
-  A.exs=A.exs.filter(ex=>ex.rows.length);
+  A.exs.forEach(ex=>{ex.rows=ex.rows.filter(r=>r.done).map(r=>{const o={w:num(r.w),r:num(r.r),done:true,pr:r.pr||null};if([1,2,3].includes(r.rir))o.rir=r.rir;return o;});const wl=wuList(ex).slice(0,WU_MAX).map(x=>({w:num(x.w),r:num(x.r)}));if(wl.length)ex.wu=wl;else delete ex.wu;});
+  A.exs=A.exs.filter(ex=>ex.rows.length); // bewusst: nur aufgewärmt, kein Arbeitssatz → Übung fällt weg (Aufwärmen zählt nicht)
   A.kind='gym';
   const prList=A.exs.filter(ex=>ex.rows.some(r=>r.pr&&r.pr!=='first')).map(ex=>ex.name);
   A.prs=prList.length;
@@ -3122,7 +3161,7 @@ ACT.wdetail=b=>{
   const w=S.workouts.find(x=>x.id===b.dataset.id);if(!w)return;
   const wc=w.kind!=='mma'?weightCompare(vol(w),w.id):null;
   const body=w.kind==='mma'?'<p class="muted">MMA-Einheit (Technik und Sparring).</p>':`<div class="sum"><div class="stat"><div class="v">${fmtKg(vol(w))}</div><div class="l">Gesamtgewicht kg</div></div><div class="stat"><div class="v">${doneCount(w)}</div><div class="l">Sätze · ${fmtDur(w.end-w.start)}</div></div></div>${wc?`<p class="muted small" style="margin:0 0 12px">${esc(wc)}</p>`:''}`+
-    w.exs.map(ex=>`<div style="margin-bottom:10px"><button class="linkbtn" data-act="exdetail" data-key="${esc(ex.key)}">${esc(ex.name)}</button><div class="small muted">${ex.rows.filter(r=>r.done).map(r=>fmtN(num(r.w))+' × '+num(r.r)+(r.pr&&r.pr!=='first'?' ★':'')).join(' · ')}</div></div>`).join('');
+    w.exs.map(ex=>`<div style="margin-bottom:10px"><button class="linkbtn" data-act="exdetail" data-key="${esc(ex.key)}">${esc(ex.name)}</button><div class="small muted">${wuList(ex).length?'Aufwärmen '+esc(wuTxt(ex))+' · ':''}${ex.rows.filter(r=>r.done).map(r=>fmtN(num(r.w))+' × '+num(r.r)+(r.pr&&r.pr!=='first'?' ★':'')).join(' · ')}</div></div>`).join('');
   openSheet(`<h2>${esc(w.name)}</h2><div class="muted" style="margin-bottom:10px">${fmtDateLong(w.start)}</div>${body}<div class="btnrow"><button class="btn danger" data-act="wdel" data-id="${w.id}">Eintrag löschen</button><button class="btn ghost" data-act="closesheet">Schliessen</button></div>`);
 };
 ACT.wdel=b=>{
