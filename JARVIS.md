@@ -105,8 +105,8 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 ## Roadmap (Jetzt · Als Nächstes · Später – Jarvis arbeitet nur an «Jetzt», Janis verschiebt sonntags)
 
 - **Jetzt:**
-  1. **Design v3 Etappe 2 Rest** (Go 26.11.): Aufwärm-Markierung als Datenfeld + Aufwärm-Vorschläge 40 %/60 % (nach #36, berührt
-     Satz-Zählung und Abschluss). Abschluss-Screen PR #36 live (28.11.); Gewichtsschritt pro Übung PR #37 in der Vorschau bis So 29.11. 13:34.
+  1. **Design v3 Etappe 2 Rest** (Go 26.11.): Aufwärm-Markierung als Datenfeld → PR #39 fertig (Review-Agent, Tests grün).
+     Offen: Aufwärm-Vorschläge 40 %/60 % (hinter «Neu im Test»). Gewichtsschritt PR #37 in der Vorschau bis So 29.11. 13:34.
   2. **Nutzung lernen – erste Auswertung:** welche Bereiche (Fotos, Rückblick, Level/Abzeichen, Körpermasse, Notizen, Geräte-Einstellungen,
      Scheibenrechner) werden genutzt? Erste Sicht 27.11.: Körpermasse/Zielgewicht noch nie, Notizen und Geräte-Einstellungen ja,
      Eiweiss/Wasser erst seit heute live. Fotos, Rückblick, Level, Scheibenrechner hinterlassen keine Spur → Nutzungszähler (Frage offen).
@@ -126,14 +126,27 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 - Supersätze im Wechsel oder nacheinander → Standard **im Wechsel lassen**, Frist Mo 30.11.
 - P20 Ernährung B–D → Standard **nicht umsetzen**, Frist Mo 30.11.
 - PR #37 Gewichtsschritt (in der Vorschau seit Sa 28.11. 13:36) → Standard **live**, Frist So 29.11. 13:34.
-- PR #38 Eigene Eiweiss-Portionen: So 29.11. 13:34 nach #37 in die Vorschau (oder früher, wenn #37 schon live ist) + Push
-  «zum Ausprobieren» → Standard **live**, Frist Mo 30.11. 13:34.
+- PR #38 Eigene Eiweiss-Portionen + PR #39 Aufwärmsätze speichern: So 29.11. 13:34 nach #37 **gemeinsam** in die Vorschau
+  (Sammel-Branch `jarvis/vorschau-38-39` = main + #38 + #39, gegen den Vorschau-Stau) + ein Push «zum Ausprobieren» → Standard **live**,
+  Frist Mo 30.11. 13:34.
 - Nutzungszähler (neues optionales Feld `use` in der Sicherung: wie oft Fotos, Rückblick, Level, Scheibenrechner usw. geöffnet werden;
   nur Zähler) → Standard **einbauen**, Frist Mo 30.11. 18:34.
 
 ## Tagesprotokoll
 
 Hinweis: Trainings- und Gesundheitszahlen stehen nie hier (öffentliches Repo).
+
+### Sa 28.11.2026 – Arbeits-Lauf 18:34
+
+- PR #39 https://github.com/Geissi23/Kraftwerk/pull/39 – Aufwärmsätze speichern: Übungsmenü «Aufwärmsatz hinzufügen · zählt nicht»,
+  abgehakte Vorschläge werden mitgespeichert, Zeile «W Aufwärmen …» wie Mockup 3, im Verlauf sichtbar. Optionales Feld `ex.wu`, zählt nie
+  für Sätze/Volumen/Rekorde. Review-Agent: nichts Blockierendes; behoben: Haken hingen an Indizes (falsch nach Gewichtsänderung, weg nach
+  Neuladen) → jetzt aus den gespeicherten Sätzen abgeleitet; Limit-Hinweis; Eingabeprüfung; Comeback «Normal» behielt sie nicht.
+  Bewusst so: Übung tauschen verwirft Aufwärmsätze; Übung nur mit Aufwärmen fällt beim Abschluss weg. Vorschau mit #38 am So. Kein Push.
+- Kritischer Blick: Der bestehende Aufwärm-Vorschlag lebte nur im Speicher – abgehakt und nach einem Neuladen der Web-App war alles weg.
+  Das war ein stiller Fehler seit P2; mit #39 behoben.
+- Daueraufgaben: Jarvis-Sync zuletzt 27.11. 13:21 (kein Training seit 25.11., Wochenende ok). Garmin-Sync heute ok; letzte Nacht ohne
+  Schlafdaten (Uhr vermutlich nicht getragen), HRV-Trend ausgeglichen → **normal**. App-Notizen: keine neuen. Daten aufräumen / Plan: nichts.
 
 ### Sa 28.11.2026 – Arbeits-Lauf 13:34
 
@@ -188,6 +201,10 @@ Hinweis: Trainings- und Gesundheitszahlen stehen nie hier (öffentliches Repo).
 - [ ] Verwaister Branch `jarvis/ci-test-probe` auf GitHub (Löschen über den Proxy nicht möglich) – Janis kann ihn bei Gelegenheit löschen.
 
 ## Log (ältere Einträge im Archiv)
+
+- 2026-11-28 (Arbeits-Lauf 18:34): PR #39 Aufwärmsätze speichern (Review-Agent, Befunde behoben), Vorschau gebündelt mit #38.
+- 2026-11-28 (selbstkritisch, 18:34): Ich habe den Haken-Zustand zuerst an Listen-Indizes gehängt, obwohl die Vorschläge sich mit dem Gewicht
+  neu berechnen – der Review-Agent hat es gefunden. Abgeleiteten Zustand nie parallel speichern, sondern aus den Daten berechnen.
 
 - 2026-11-27 (Arbeits-Lauf): Design v3 Etappe 4 Fortschritt (PR #28) und Etappe 5 Eiweiss/Wasser + Körpermasse (PR #29) live. Nur Rest von Etappe 2 offen.
 - 2026-11-27 (selbstkritisch): Die erste Coach-Empfehlung erzeugte 16 Tipps – mit echten Daten sofort sichtbar. Generierte Listen immer mit echtem,
