@@ -132,6 +132,13 @@ async function runDevice(browserType, bname, devName, scheme) {
   await p.locator('#sheet [data-act="closesheet"]').last().click(); await p.waitForTimeout(250);
   ok(await p.evaluate(() => JSON.stringify(S.active.exs[0].wu) === '[{"w":20,"r":10}]' && !!document.querySelector('#wkbody .wuline')), label + ': Aufwärmsatz gespeichert und angezeigt');
   ok(await p.evaluate(o => doneCount(S.active) === o.d && vol(S.active) === o.v, dc0), label + ': Aufwärmsatz zählt nicht für Sätze und Volumen');
+  // Aufwärm-Vorschlag abhaken → Gewicht ändern → abwählen (Haken folgt den gespeicherten Sätzen)
+  ok(await p.evaluate(() => { const A = S.active, i = A.exs.findIndex(e => warmupSets(e).length); if (i < 0) return true; const ex = A.exs[i];
+    const before = JSON.stringify(ex.wu || []), d0 = wuDone(ex)[0], n0 = wuList(ex).length, tap = () => ACT.wucheck({ dataset: { i: String(i), j: '0' } });
+    tap(); const flip1 = wuDone(ex)[0] === !d0 && wuList(ex).length === n0 + (d0 ? -1 : 1);
+    tap(); const flip2 = wuDone(ex)[0] === d0 && wuList(ex).length === n0;
+    const same = JSON.stringify(wuList(ex).slice().sort((a, b) => a.w - b.w || a.r - b.r)) === JSON.stringify(JSON.parse(before).sort((a, b) => a.w - b.w || a.r - b.r));
+    renderWorkout(); return flip1 && flip2 && same; }), label + ': Aufwärm-Vorschlag abhaken und abwählen');
   // Abschluss (mit einer Neuerung im Test → Daumen-Rückmeldung)
   await p.evaluate(() => BETA.push({ id: 'testfunktion', name: 'Testfunktion', desc: 'Nur für den Test', since: ymd(new Date()) }));
   await p.locator('#wk [data-act="finish"]').first().click(); await p.waitForTimeout(200);
