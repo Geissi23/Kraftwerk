@@ -1006,7 +1006,7 @@ function defaultPlan(){
 }
 function baseState(){
   const p=defaultPlan();
-  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null,gear:{},jarvisNotes:[],nutri:{},measures:[],heightCm:0,beta:{},fb:[]};
+  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null,gear:{},jarvisNotes:[],nutri:{},measures:[],heightCm:0,beta:{},fb:[],wstep:{}};
 }
 
 /* ---------- plan migration ---------- */
@@ -1056,7 +1056,10 @@ function normExtras(){if(!S.gear||typeof S.gear!=='object'||Array.isArray(S.gear
   /* seit 27.11.2026: Schalter «Neu im Test» (beta: {id: true/false}) */
   if(!S.beta||typeof S.beta!=='object'||Array.isArray(S.beta))S.beta={};
   /* seit 27.11.2026: Rückmeldung zu «Neu im Test» nach dem Training (fb: [{t,id,v:1|-1,w}]) */
-  if(!Array.isArray(S.fb))S.fb=[];}
+  if(!Array.isArray(S.fb))S.fb=[];
+  /* seit 27.11.2026: eigener Gewichtsschritt pro Übung (wstep: {key: kg}), sonst Standard je Gerät */
+  if(!S.wstep||typeof S.wstep!=='object'||Array.isArray(S.wstep))S.wstep={};
+  Object.keys(S.wstep).forEach(k=>{if(![1,1.25,2,2.5,4.5,5,10].includes(+S.wstep[k]))delete S.wstep[k];});}
 normExtras();
 /* ---------- Neu im Test (27.11.2026) ----------
    Grosse Neuerungen, die den Ablauf im Gym verändern, trägt Jarvis hier ein (höchstens 3). Standard: an.
@@ -1105,7 +1108,7 @@ function savePlan(){S.pt=Date.now();persist();schedulePush();ghSchedule();}
 
 /* ---------- optional cloud sync (db capability) ---------- */
 const Sync={db:null,base:null,status:'Nur auf diesem Gerät gespeichert',timer:null};
-const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer,gear:S.gear,jarvisNotes:S.jarvisNotes,nutri:S.nutri,measures:S.measures,heightCm:S.heightCm,beta:S.beta,fb:S.fb});
+const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer,gear:S.gear,jarvisNotes:S.jarvisNotes,nutri:S.nutri,measures:S.measures,heightCm:S.heightCm,beta:S.beta,fb:S.fb,wstep:S.wstep});
 function schedulePush(){clearTimeout(Sync.timer);Sync.timer=setTimeout(pushPlan,1500);}
 async function pushPlan(){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/plan').set({json:JSON.stringify(planPart()),t:Date.now()});}catch(e){}}
 async function pushWorkout(w){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/w_'+w.id).set({json:JSON.stringify(w),t:Date.now()});}catch(e){}}
@@ -1126,7 +1129,7 @@ async function syncInit(){
     if(rp){
       S.deleted=[...new Set([...(S.deleted||[]),...(rp.deleted||[])])];
       if((rp.pt||0)>(S.pt||0)){
-        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer','gear','jarvisNotes','nutri','measures','heightCm','beta','fb'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});normExtras();
+        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer','gear','jarvisNotes','nutri','measures','heightCm','beta','fb','wstep'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});normExtras();
         if(!(S.planVer>=PLAN_VER)){migratePlan(S,S.planVer);pushPlan();}
         changed=true;
       }else pushPlan();
@@ -1168,22 +1171,22 @@ function buildEx(e,cb){
   if(last){
     const top=Math.max(...last.rows.map(r=>num(r.w)));
     const allMax=last.rows.length>=e.sets&&last.rows.every(r=>num(r.r)>=e.repMax);
-    const inc=isLower(e.name)?5:2.5;
+    const inc=wStep({key,name:e.name});
     hint='Letztes Mal: '+last.rows.map(r=>fmtN(num(r.w))+'×'+num(r.r)).join(' · ');
     if(cb){
       sets=Math.max(2,e.sets-1);
       const rd=w=>w>0?Math.max(inc,Math.round(w*0.9/inc)*inc):w;
       for(let j=0;j<sets;j++){const b=last.rows[j]||last.rows[last.rows.length-1];
         rows.push({w:rd(num(b.w)),r:Math.max(e.repMin,Math.min(e.repMax,num(b.r))),done:false});}
-      hint+='\nComeback: '+sets+' × '+fmtN(rows[0].w)+' kg (90 %), sauber und ohne Muskelversagen.';go=true;
+      hint+='\nComeback: '+sets+' × '+fmtP(rows[0].w)+' kg (90 %), sauber und ohne Muskelversagen.';go=true;
     }else if(allMax){
       for(let j=0;j<sets;j++){const b=last.rows[j]||last.rows[last.rows.length-1];rows.push({w:num(b.w)+inc,r:e.repMin,done:false});}
-      hint+='\nZiel: '+fmtN(top+inc)+' kg × '+e.repMin+' – alle Sätze am Limit geschafft!';go=true;
+      hint+='\nZiel: '+fmtP(top+inc)+' kg × '+e.repMin+' – alle Sätze am Limit geschafft!';go=true;
     }else{
       /* P13: doppelte Progression – pro Satz +1 Wdh. bis zum oberen Ende, dann mehr Gewicht */
       for(let j=0;j<sets;j++){const b=last.rows[j]||last.rows[last.rows.length-1];rows.push({w:num(b.w),r:Math.min(num(b.r)+1,e.repMax),done:false});}
       const lim=last.rows.filter(r=>num(r.r)>=e.repMax).length;
-      hint+='\nZiel: '+rows.map(r=>r.r).join('·')+' Wdh. bei '+fmtN(top)+' kg · '+lim+'/'+e.sets+' am Limit · ab '+e.sets+'×'+e.repMax+' → '+fmtN(top+inc)+' kg';go=true;
+      hint+='\nZiel: '+rows.map(r=>r.r).join('·')+' Wdh. bei '+fmtN(top)+' kg · '+lim+'/'+e.sets+' am Limit · ab '+e.sets+'×'+e.repMax+' → '+fmtP(top+inc)+' kg';go=true;
     }
   }else{
     for(let j=0;j<e.sets;j++)rows.push({w:'',r:e.repMin,done:false});
@@ -1203,12 +1206,12 @@ function suggestNext(ex){
   if(!(oneRM>0))return null;
   const target=Math.round((ex.repMin+ex.repMax)/2);
   const raw=oneRM/(1+Math.min(target,12)/30);
-  const step=isLower(ex.name)?5:2.5;
+  const step=wStep(ex);
   const maxDelta=w*0.10;
   const clamped=Math.max(-maxDelta,Math.min(maxDelta,raw-w));
-  const newW=Math.round((w+Math.round(clamped/step)*step)*10)/10;
+  const newW=Math.round((w+Math.round(clamped/step)*step)*100)/100;
   if(newW===w||!(newW>0))return null;
-  return {rowIdx:lastDone,w:newW,delta:Math.round((newW-w)*10)/10};
+  return {rowIdx:lastDone,w:newW,delta:Math.round((newW-w)*100)/100};
 }
 
 /* PR check: compare a set with all earlier data */
@@ -1928,7 +1931,9 @@ function activeSet(A){
   return {i:pick,j:A.exs[pick].rows.findIndex(r=>!r.done)};
 }
 const mgOf=n=>{const m=muscleOf(n);return m?((MG_INFO[m.p[0]]||{}).g||''):'';};
-const wStep=ex=>{const g=gearOf(ex);return g==='Körpergewicht'?1:g==='Kurzhantel'?2:isLower(ex.name)?5:2.5;};
+const wStepStd=ex=>{const g=gearOf(ex);return g==='Körpergewicht'?1:g==='Kurzhantel'?2:isLower(ex.name)?5:2.5;};
+/* Gewichtsschritt pro Übung: eigener Wert (Einstellung im Übungsmenü) oder Standard je Gerät */
+const wStep=ex=>{const v=+((S.wstep||{})[ex.key]);return v>0?v:wStepStd(ex);};
 const tvW=v=>(Math.max(1,String(v||'0').length)*.5+.45).toFixed(2);
 /* Gleiche Art von Wert = gleiche Grösse (Janis 25.11.): feste Grösse statt Verkleinern je nach Länge */
 const tvSize=()=>48;
@@ -1964,7 +1969,7 @@ function tafelHtml(ex,i,j){
   const lastTxt=lr?`letztes Mal ${fmtN(num(lr.w))} × ${num(lr.r)}`:'';
   return `<div class="tafel cut" role="group" aria-label="Aktiver Satz ${j+1} von ${n}: ${esc(ex.name)}">
     <div class="tf-h"><span class="mono">Satz ${j+1} von ${n}${lastTxt?' · '+lastTxt:''}</span><span class="mono">${ex.ss?`Supersatz ${esc(ex.ss)} · im Wechsel`:'<i class="pulse"></i>Aktiv'}</span></div>
-    <div class="tf-g">${val('w',wv,'KG','Gewicht in kg',fmtN(st)+' kg')}${val('r',rv,'WDH','Wiederholungen','1')}</div>
+    <div class="tf-g">${val('w',wv,'KG','Gewicht in kg',fmtP(st)+' kg')}${val('r',rv,'WDH','Wiederholungen','1')}</div>
     ${isBarbell(ex)&&num(r.w)>0?platesMini(num(r.w),i):''}
     <div class="rir"><span>Wie viele Wdh wären noch gegangen?</span><div class="rirb" role="group" aria-label="Wiederholungen im Tank (freiwillig)">${RIR_OPT.map(([v,t])=>`<button data-act="rir" data-i="${i}" data-j="${j}" data-v="${v}" aria-pressed="${r.rir===v}">${t}</button>`).join('')}</div></div>
     <button class="tf-ok" data-act="check" data-i="${i}" data-j="${j}" aria-label="Satz ${j+1} von ${esc(ex.name)} bestätigen">${checkSvg}<span>Bestätigen</span></button></div>`;
@@ -1978,7 +1983,7 @@ function renderWorkout(){
     const dn=ex.rows.filter(r=>r.done).length,isCur=!!act&&act.i===i,fin=ex.rows.length>0&&dn===ex.rows.length;
     const g=goalInfo(ex),mg=mgOf(ex.name),sug=suggestNext(ex);
     const rows=ex.rows.map((r,j)=>{
-      const sg=sug&&sug.rowIdx===j?`<div class="sugg">Nächster Satz: ${fmtN(sug.w)} kg (${sug.delta>=0?'+':''}${fmtN(sug.delta)})<button data-act="applysuggest" data-i="${i}">Übernehmen</button></div>`:'';
+      const sg=sug&&sug.rowIdx===j?`<div class="sugg">Nächster Satz: ${fmtP(sug.w)} kg (${sug.delta>=0?'+':''}${fmtP(sug.delta)})<button data-act="applysuggest" data-i="${i}">Übernehmen</button></div>`:'';
       if(isCur&&act.j===j)return tafelHtml(ex,i,j)+sg;
       const pr=r.pr&&r.pr!=='first';
       return `<div class="row ${r.done?'done':''} ${pr?'pr':''}">
@@ -2099,6 +2104,7 @@ ACT.exmenu=b=>{
     <button class="btn ghost" data-act="wutoggle" data-i="${i}">Aufwärmsätze anzeigen</button>
     <button class="btn ghost" data-act="plates" data-i="${i}">Scheibenrechner</button>
     <button class="btn ghost" data-act="gearedit" data-i="${i}">Geräte-Einstellung${(S.gear||{})[ex.key]?' ändern':' merken'}</button>
+    <button class="btn ghost" data-act="wstepedit" data-i="${i}">Gewichtsschritt · ${fmtP(wStep(ex))} kg</button>
     <button class="btn ghost" data-act="exup" data-i="${i}">Nach oben schieben</button>
     <button class="btn ghost" data-act="exlater" data-i="${i}">Überspringen (ans Ende)</button>
     <button class="btn ghost" data-act="jnote">Notiz an Jarvis</button>
@@ -2118,6 +2124,16 @@ ACT.gearadd=b=>{const el=$('#gearin');const v=el.value.trim();el.value=(v?v+' ·
 ACT.gearsave=b=>{const ex=S.active&&S.active.exs[+b.dataset.i];if(!ex)return;const v=($('#gearin').value||'').trim().slice(0,80);
   if(v)S.gear[ex.key]=v;else delete S.gear[ex.key];savePlan();closeSheet();renderWorkout();toast(v?'Einstellung gemerkt':'Einstellung gelöscht');};
 ACT.geardel=b=>{const ex=S.active&&S.active.exs[+b.dataset.i];if(!ex)return;delete S.gear[ex.key];savePlan();closeSheet();renderWorkout();toast('Einstellung gelöscht');};
+/* Gewichtsschritt pro Übung (z. B. Maschine mit 5-kg-Platten, Kurzhanteln in 2-kg-Schritten) */
+const WSTEP_OPT=[1,1.25,2,2.5,4.5,5,10];
+ACT.wstepedit=b=>{
+  const i=+b.dataset.i,ex=S.active&&S.active.exs[i];if(!ex)return;const cur=wStep(ex),std=wStepStd(ex),own=(S.wstep||{})[ex.key]>0;
+  openSheet(`<h2>Schritt</h2><p class="muted small">${esc(ex.name)}: so viel ändern «+» und «−» und die Vorschläge.</p>
+    <div class="plchips" role="group" aria-label="Gewichtsschritt in kg">${WSTEP_OPT.map(v=>`<button class="${v===cur?'on':''}" data-act="wstepset" data-i="${i}" data-v="${v}" aria-pressed="${v===cur}">${fmtP(v)} kg</button>`).join('')}</div>
+    <div class="btnrow">${own?`<button class="btn ghost" data-act="wstepset" data-i="${i}" data-v="0">Standard (${fmtP(std)} kg)</button>`:''}<button class="btn ghost" data-act="closesheet">Schliessen</button></div>`);
+};
+ACT.wstepset=b=>{const ex=S.active&&S.active.exs[+b.dataset.i];if(!ex)return;const v=+b.dataset.v;
+  if(v>0&&v!==wStepStd(ex))S.wstep[ex.key]=v;else delete S.wstep[ex.key];savePlan();closeSheet();renderWorkout();toast('Schritt '+fmtP(wStep(ex))+' kg');};
 /* P16: Notiz an Jarvis (geht mit dem Jarvis-Sync ins private Repo) */
 ACT.jnote=()=>{
   const list=(S.jarvisNotes||[]).slice().sort((a,b)=>b.t-a.t).slice(0,5);
@@ -2215,7 +2231,7 @@ function warmupSets(ex){
     out.push({w:bar,r:10,t:'Leere Stange'});prev=bar;
     [[.5,6],[.7,3],[.85,1]].forEach(([p,r])=>{const w=rnd(W*p,2.5);if(w>prev&&w<W){out.push({w,r,t:Math.round(p*100)+' %'});prev=w;}});
   }else{
-    const step=gearOf(ex)==='Kurzhantel'?2:2.5;
+    const step=wStep(ex);
     [[.5,8],[.7,4],[.85,1]].forEach(([p,r])=>{const w=rnd(W*p,step);if(w>0&&w>prev&&w<W){out.push({w,r,t:Math.round(p*100)+' %'});prev=w;}});
   }
   return out;
@@ -2249,9 +2265,9 @@ function plateauHtml(ex,i){
   if(p.bw){
     ideas=[`Langsamer absenken (3 Sekunden) und unten kurz pausieren, das macht dieselben Wdh. deutlich härter.`,`Zusatzgewicht nehmen (z. B. Gewichtsgürtel oder Kurzhantel) und im Bereich ${ex.repMin}–${ex.repMax} Wdh. neu aufbauen.`];
   }else{
-    const step=isLower(ex.name)?5:2.5,dl=Math.max(step,rnd(p.top*.9,step));
+    const step=wStep(ex),dl=Math.max(step,rnd(p.top*.9,step));
     const lowRange=ex.repMax<=8;
-    ideas=[`Deload: Gewicht 10 % runter auf ${fmtN(dl)} kg und in 2–3 Wochen sauber wieder hocharbeiten.<br><button class="pa" data-act="pltdl" data-i="${i}" data-w="${dl}">${fmtN(dl)} kg für heute übernehmen</button>`,
+    ideas=[`Deload: Gewicht 10 % runter auf ${fmtP(dl)} kg und in 2–3 Wochen sauber wieder hocharbeiten.<br><button class="pa" data-act="pltdl" data-i="${i}" data-w="${dl}">${fmtP(dl)} kg für heute übernehmen</button>`,
       lowRange?`Wdh.-Bereich wechseln: ein paar Wochen 10–12 Wdh. mit ca. 15 % weniger Gewicht, danach zurück zu ${ex.repMin}–${ex.repMax}.`
               :`Wdh.-Bereich wechseln: ein paar Wochen 6–8 Wdh. mit etwas mehr Gewicht, danach zurück zu ${ex.repMin}–${ex.repMax}.`];
   }
