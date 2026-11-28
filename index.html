@@ -813,7 +813,10 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--fg);backgro
 /* Design v3 Etappe 5: Eiweiss/Wasser, Körpermasse */
 .nb{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.nbh{display:flex;justify-content:space-between;font-size:14px}.nbh .num{font-size:16px}
 .nbb{height:6px;border-radius:3px;background:var(--s2);overflow:hidden}.nbb i{display:block;height:6px;border-radius:3px}.nbb i.p{background:var(--acc)}.nbb i.w{background:var(--water)}
-.nq{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.nq button{min-height:44px;border-radius:12px;background:var(--s2);font-size:14px;font-weight:600;color:var(--fg)}
+.nq{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.nq.n4{grid-template-columns:repeat(2,minmax(0,1fr))}.nq button{min-height:44px;border-radius:12px;background:var(--s2);font-size:14px;font-weight:600;color:var(--fg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px 6px;min-width:0}
+.nq .nqn{font-size:12px;font-weight:500;color:var(--mut);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nprow{display:flex;align-items:center;gap:10px;min-height:44px;border-bottom:1px solid var(--s2)}.nprow span:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.npadd{display:grid;grid-template-columns:minmax(0,1fr) 64px auto;gap:6px;margin-top:10px}
 .nhint{margin:10px 0 0;font-size:12px;color:var(--dim)}
 .mrow{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--s2);font-size:14px}.mrow .num{font-size:16px}.mrow small{font-size:12px;color:var(--mut)}.mrow small.up{color:var(--ok-t)}
 .meas .btn{margin-top:12px}
@@ -983,7 +986,7 @@ function defaultPlan(){
 }
 function baseState(){
   const p=defaultPlan();
-  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null,gear:{},jarvisNotes:[],nutri:{},measures:[],heightCm:0,beta:{},fb:[]};
+  return {v:1,pt:0,planVer:PLAN_VER,mode:'normal',goal:3,sound:true,soundVol:1,routines:p.routines,schedules:p.schedules,workouts:[],bodyweight:[],bwTarget:0,deleted:[],active:null,gear:{},jarvisNotes:[],nutri:{},nport:[],measures:[],heightCm:0,beta:{},fb:[]};
 }
 
 /* ---------- plan migration ---------- */
@@ -1025,11 +1028,14 @@ function loadState(){
   }catch(e){}
   return baseState();
 }
+const NPORT_MAX=3;
 let S=loadState();
 /* Optionale Felder (seit 25.11.2026): gear = Geräte-Einstellung pro Übung, jarvisNotes = Notizen an Jarvis */
 function normExtras(){if(!S.gear||typeof S.gear!=='object'||Array.isArray(S.gear))S.gear={};if(!Array.isArray(S.jarvisNotes))S.jarvisNotes=[];
   /* seit 27.11.2026 (Design v3 Etappe 5): nutri, measures, heightCm */
   if(!S.nutri||typeof S.nutri!=='object'||Array.isArray(S.nutri))S.nutri={};if(!Array.isArray(S.measures))S.measures=[];if(typeof S.heightCm!=='number')S.heightCm=0;
+  /* seit 28.11.2026: eigene Eiweiss-Portionen (nport: [{n: Name, g: Gramm}], höchstens 3) */
+  S.nport=(Array.isArray(S.nport)?S.nport:[]).filter(x=>x&&typeof x.n==='string'&&x.n.trim()&&+x.g>=1&&+x.g<=150).slice(0,NPORT_MAX).map(x=>({n:x.n.trim().slice(0,16),g:Math.round(+x.g)}));
   /* seit 27.11.2026: Schalter «Neu im Test» (beta: {id: true/false}) */
   if(!S.beta||typeof S.beta!=='object'||Array.isArray(S.beta))S.beta={};
   /* seit 27.11.2026: Rückmeldung zu «Neu im Test» nach dem Training (fb: [{t,id,v:1|-1,w}]) */
@@ -1082,7 +1088,7 @@ function savePlan(){S.pt=Date.now();persist();schedulePush();ghSchedule();}
 
 /* ---------- optional cloud sync (db capability) ---------- */
 const Sync={db:null,base:null,status:'Nur auf diesem Gerät gespeichert',timer:null};
-const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer,gear:S.gear,jarvisNotes:S.jarvisNotes,nutri:S.nutri,measures:S.measures,heightCm:S.heightCm,beta:S.beta,fb:S.fb});
+const planPart=()=>({routines:S.routines,schedules:S.schedules,mode:S.mode,goal:S.goal,sound:S.sound,soundVol:S.soundVol,bodyweight:S.bodyweight,bwTarget:S.bwTarget,deleted:S.deleted,pt:S.pt,planVer:S.planVer,gear:S.gear,jarvisNotes:S.jarvisNotes,nutri:S.nutri,nport:S.nport,measures:S.measures,heightCm:S.heightCm,beta:S.beta,fb:S.fb});
 function schedulePush(){clearTimeout(Sync.timer);Sync.timer=setTimeout(pushPlan,1500);}
 async function pushPlan(){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/plan').set({json:JSON.stringify(planPart()),t:Date.now()});}catch(e){}}
 async function pushWorkout(w){if(!Sync.db)return;try{await Sync.db.doc(Sync.base+'/w_'+w.id).set({json:JSON.stringify(w),t:Date.now()});}catch(e){}}
@@ -1103,7 +1109,7 @@ async function syncInit(){
     if(rp){
       S.deleted=[...new Set([...(S.deleted||[]),...(rp.deleted||[])])];
       if((rp.pt||0)>(S.pt||0)){
-        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer','gear','jarvisNotes','nutri','measures','heightCm','beta','fb'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});normExtras();
+        ['routines','schedules','mode','goal','sound','soundVol','bodyweight','bwTarget','pt','planVer','gear','jarvisNotes','nutri','nport','measures','heightCm','beta','fb'].forEach(k=>{if(rp[k]!==undefined)S[k]=rp[k];});normExtras();
         if(!(S.planVer>=PLAN_VER)){migratePlan(S,S.planVer);pushPlan();}
         changed=true;
       }else pushPlan();
@@ -2345,13 +2351,29 @@ function nutriCard(){
   const bar=(lab,v,goal,unit,cls)=>`<div class="nb"><div class="nbh"><span>${lab}</span><span class="num">${fmtN(v)} / ${fmtN(goal)} ${unit}</span></div><div class="nbb" role="img" aria-label="${lab}: ${fmtN(v)} von ${fmtN(goal)} ${unit}"><i class="${cls}" style="width:${Math.min(100,v/goal*100).toFixed(1)}%"></i></div></div>`;
   return `<section class="card nutri" id="nutri"><div class="blkh"><h2>Eiweiss &amp; Wasser heute</h2><button class="btn sm ghost" data-act="nutriedit">Ändern</button></div>
     ${bar('Eiweiss',d.p,pg,'g','p')}${bar('Wasser',d.w,WATER_GOAL,'l','w')}
-    <div class="nq"><button data-act="nadd" data-f="p" data-v="10">+ 10 g</button><button data-act="nadd" data-f="p" data-v="25">+ 25 g</button><button data-act="nadd" data-f="w" data-v="0.5">+ 0,5 l</button></div>
+    ${nquick()}
     <p class="nhint">Ziel ${pg} g = rund 1,8 g pro kg Körpergewicht${lastBw()?'':' (ohne Gewicht: 140 g)'}.${n?` Ø letzte 7 Tage: ${Math.round(sum/n)} g (${n} Tag${n===1?'':'e'} erfasst).`:''}</p></section>`;
 }
-ACT.nadd=b=>{nutriAdd(b.dataset.f,+b.dataset.v);const v=b.dataset.f==='p'?`+${b.dataset.v} g Eiweiss`:'+0,5 l Wasser';render();toast(v);};
-ACT.nutriedit=()=>{const d=nutriDay(ymd(new Date()));
-  openSheet(`<h2>Heute korrigieren</h2><label class="fl">Eiweiss (g)<input class="ti" id="nup" inputmode="numeric" value="${d.p||''}" placeholder="0"></label><label class="fl">Wasser (l)<input class="ti" id="nuw" inputmode="decimal" value="${d.w?String(d.w).replace('.',','):''}" placeholder="0"></label>
-    <div class="btnrow"><button class="btn acc" data-act="nutrisave">Speichern</button><button class="btn ghost" data-act="closesheet">Abbrechen</button></div>`);};
+/* Schnellknöpfe: eigene Portionen (Name + Gramm) ersetzen die Standardknöpfe +10/+25 g */
+function nquick(){
+  const P=S.nport||[],btn=(v,top,lab,f='p')=>`<button data-act="nadd" data-f="${f}" data-v="${v}"${top?` data-n="${esc(top)}"`:''}>${top?`<span class="nqn">${esc(top)}</span>`:''}<span>${lab}</span></button>`;
+  const bs=(P.length?P.map(x=>btn(x.g,x.n,'+ '+x.g+' g')):[btn(10,'','+ 10 g'),btn(25,'','+ 25 g')]).concat(btn(0.5,P.length?'Wasser':'','+ 0,5 l','w'));
+  return `<div class="nq${bs.length>3?' n4':''}">${bs.join('')}</div>`;
+}
+ACT.nadd=b=>{nutriAdd(b.dataset.f,+b.dataset.v);const v=b.dataset.f==='p'?`+${b.dataset.v} g Eiweiss${b.dataset.n?' · '+b.dataset.n:''}`:'+0,5 l Wasser';render();toast(v);};
+function nutriSheet(pv,wv,msg){
+  const P=S.nport||[];
+  const rows=P.map((x,i)=>`<div class="nprow"><span>${esc(x.n)}</span><span class="num">${x.g} g</span><button class="icon" data-act="nportdel" data-i="${i}" aria-label="${esc(x.n)} entfernen">×</button></div>`).join('');
+  openSheet(`<h2>Heute korrigieren</h2><label class="fl">Eiweiss (g)<input class="ti" id="nup" inputmode="numeric" value="${esc(pv)}" placeholder="0"></label><label class="fl">Wasser (l)<input class="ti" id="nuw" inputmode="decimal" value="${esc(wv)}" placeholder="0"></label>
+    <div class="btnrow"><button class="btn acc" data-act="nutrisave">Speichern</button><button class="btn ghost" data-act="closesheet">Abbrechen</button></div>
+    <div class="sec">Eigene Portionen</div>${rows||'<p class="nhint">Noch keine. Sie ersetzen die Knöpfe +10 g und +25 g.</p>'}
+    ${P.length<NPORT_MAX?`<div class="npadd"><input class="ti" id="npn" maxlength="16" placeholder="z. B. Skyr" aria-label="Name der Portion"><input class="ti" id="npg" inputmode="numeric" placeholder="g" aria-label="Gramm Eiweiss"><button class="btn soft" data-act="nportadd">Dazu</button></div>`:''}${msg?`<p class="nhint">${esc(msg)}</p>`:''}`);}
+ACT.nutriedit=()=>{const d=nutriDay(ymd(new Date()));nutriSheet(d.p||'',d.w?String(d.w).replace('.',','):'');};
+const nSheetVals=()=>[$('#nup')?$('#nup').value:'',$('#nuw')?$('#nuw').value:''];
+ACT.nportadd=()=>{const n=String($('#npn').value||'').trim().slice(0,16),g=Math.round(num($('#npg').value));
+  if(!n||!(g>=1&&g<=150)){nutriSheet(...nSheetVals(),'Name und Gramm (1–150) eingeben.');return;}
+  S.nport=(S.nport||[]).concat({n,g}).slice(0,NPORT_MAX);savePlan();render();nutriSheet(...nSheetVals());toast(n+' angelegt');};
+ACT.nportdel=b=>{const i=+b.dataset.i,x=(S.nport||[])[i];if(!x)return;S.nport.splice(i,1);savePlan();render();nutriSheet(...nSheetVals());toast(x.n+' entfernt');};
 ACT.nutrisave=()=>{const p=Math.max(0,Math.round(num($('#nup').value))),w=Math.max(0,Math.round(num(String($('#nuw').value).replace(',','.'))*100)/100),k=ymd(new Date());
   if(p||w)S.nutri[k]={p,w};else delete S.nutri[k];savePlan();closeSheet();render();toast('Gespeichert');};
 const MEAS=[['taille','Taille'],['brust','Brust'],['arm','Oberarm']];

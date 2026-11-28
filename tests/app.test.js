@@ -96,6 +96,19 @@ async function runDevice(browserType, bname, devName, scheme) {
   await p.click('[data-act="betatog"][data-id="testfunktion"]'); await p.waitForTimeout(150);
   ok(await p.evaluate(() => !betaOn('testfunktion') && JSON.parse(localStorage.getItem('kraftwerk.v1')).beta.testfunktion === false), label + ': Neu im Test ausschalten wird gespeichert');
   await p.evaluate(() => { S.beta = {}; BETA.length = 0; persist(); closeSheet(); }); await p.waitForTimeout(200);
+  // Eigene Eiweiss-Portionen: anlegen, Knopf zählt, entfernen (danach wie vorher)
+  await p.evaluate(() => { const n0 = S.nutri[ymd(new Date())]; window.__n0 = n0 ? JSON.stringify(n0) : null; ACT.gonutri(); }); await p.waitForTimeout(200);
+  await p.click('[data-act="nutriedit"]'); await p.waitForTimeout(150);
+  await p.fill('#npn', 'Skyr'); await p.fill('#npg', '25'); await p.click('[data-act="nportadd"]'); await p.waitForTimeout(150);
+  ok(await p.evaluate(() => JSON.parse(localStorage.getItem('kraftwerk.v1')).nport.length === 1 && S.nport[0].n === 'Skyr' && S.nport[0].g === 25), label + ': eigene Portion wird gespeichert');
+  await p.evaluate(() => closeSheet()); await p.waitForTimeout(150); await noHScroll('Eiweiss mit Portion'); await shot('3b-portion');
+  const p0 = await p.evaluate(() => nutriDay(ymd(new Date())).p);
+  await p.click('#nutri [data-act="nadd"][data-n="Skyr"]'); await p.waitForTimeout(150);
+  ok(await p.evaluate(x => nutriDay(ymd(new Date())).p === x + 25, p0), label + ': Portion-Knopf zählt Eiweiss');
+  await p.click('[data-act="nutriedit"]'); await p.waitForTimeout(150);
+  await p.click('[data-act="nportdel"][data-i="0"]'); await p.waitForTimeout(150);
+  ok(await p.evaluate(() => S.nport.length === 0 && !!document.querySelector('#nutri [data-act="nadd"][data-v="10"]')), label + ': Portion entfernen bringt Standardknöpfe zurück');
+  await p.evaluate(() => { const k = ymd(new Date()); if (window.__n0) S.nutri[k] = JSON.parse(window.__n0); else delete S.nutri[k]; persist(); closeSheet(); ACT.tab({ dataset: { tab: 'today' } }); }); await p.waitForTimeout(200);
 
   // Training komplett durchklicken
   await p.click('[data-tab="today"]'); await p.waitForTimeout(200);
