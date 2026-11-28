@@ -111,7 +111,7 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
      Scheibenrechner) werden genutzt? Erste Sicht 27.11.: Körpermasse/Zielgewicht noch nie, Notizen und Geräte-Einstellungen ja,
      Eiweiss/Wasser erst seit heute live. Fotos, Rückblick, Level, Scheibenrechner hinterlassen keine Spur → Nutzungszähler (Frage offen).
      Entfernen-Fragen erst mit genug Daten (frühestens Mitte Dezember).
-  3. **Eiweiss-Portionen selbst anlegen** (P20 A Rest, z. B. «Skyr 25 g»), klein.
+  3. ~~Eiweiss-Portionen selbst anlegen~~ → PR #38 fertig (Review-Agent, Tests grün), wartet auf die Vorschau nach #37.
 - **Als Nächstes:** Körper-Tab Zeitraum-Umschalter wie Mockup · «In den Plan übernehmen» bei der Coach-Empfehlung (ändert den Plan
   per Knopf → nur mit Go) · Cockpit-Muskel-Ampel mit `richtwert` statt 10/20.
 - **Später:** P20 B–D (Kalorien, Rezepte, Konfigurator; Standard «nicht umsetzen») · Sprach-Assistent auf einem PC (Janis meldet sich).
@@ -127,6 +127,8 @@ Bei jedem Lauf aktualisieren: `node jarvis/cockpit.js <kraftwerk-daten.json> ind
 - P20 Ernährung B–D → Standard **nicht umsetzen**, Frist Mo 30.11.
 - PR #36 Abschluss-Screen (Vorschau) → Standard **live**, Frist Sa 28.11. 13:34.
 - PR #37 Gewichtsschritt: Sa 28.11. 13:34 nach #36 in die Vorschau + Push «zum Ausprobieren» → Standard **live**, Frist So 29.11. 13:34.
+- PR #38 Eigene Eiweiss-Portionen: So 29.11. 13:34 nach #37 in die Vorschau (oder früher, wenn #37 schon live ist) + Push
+  «zum Ausprobieren» → Standard **live**, Frist Mo 30.11. 13:34.
 - Nutzungszähler (neues optionales Feld `use` in der Sicherung: wie oft Fotos, Rückblick, Level, Scheibenrechner usw. geöffnet werden;
   nur Zähler) → Standard **einbauen**, Frist Mo 30.11. 18:34.
 
@@ -179,6 +181,18 @@ Erholung unverändert seit dem Morgen, Empfehlung **normal**. Daten aufräumen /
 - Daueraufgaben: Jarvis-Sync zuletzt 13:21 (keine neuen Trainings, ok), Garmin-Sync heute 2× ok. Erholung: HRV ausgeglichen, Schlaf
   etwas kurz → **normal**. App-Notizen: keine neuen. Daten aufräumen / Plan pflegen: nichts. Cockpit: Morgenlauf.
 
+### Sa 28.11.2026 – Arbeits-Lauf 08:34
+
+- PR #38 https://github.com/Geissi23/Kraftwerk/pull/38 – Eigene Eiweiss-Portionen: Fortschritt › Körper › Eiweiss & Wasser › Ändern →
+  «Eigene Portionen» (Name + Gramm, max. 3). Sie ersetzen die Knöpfe +10/+25 g, Wasser bleibt. Optionales Feld `nport` mit Normalisierung.
+  Review-Agent: nichts Blockierendes; behoben: bei 1 Portion 2 Spalten statt Lücke, Hinweis bei voller Liste, Namen nicht im Emoji kürzen.
+  Vorschau nach #37. Kein Push (nichts live, keine neue Entscheidung).
+- Kritischer Blick: Eiweiss/Wasser ist seit gestern live und noch nie benutzt (Sicherung von 27.11. 13:21). Fester Knopf +10 g passt zu kaum
+  einer echten Portion – darum eigene Portionen. Nach einer Woche prüfen, ob der Zähler überhaupt genutzt wird.
+- Daueraufgaben: Jarvis-Sync zuletzt 27.11. 13:21 (keine neuen Trainings seit 25.11., ok für Fr/Sa). Garmin-Sync gestern 2×, heute noch
+  nicht (üblich Nachmittag). Erholung unverändert → **normal**. App-Notizen: keine neuen. Daten aufräumen / Plan pflegen: nichts.
+  Cockpit: Daten unverändert (gleiche Prüfsummen) → nur Zeitstempel aktualisiert.
+
 ## Backlog
 
 - [ ] Rest von Design v3 Etappe 2 (siehe Roadmap «Jetzt»).
@@ -201,5 +215,8 @@ Erholung unverändert seit dem Morgen, Empfehlung **normal**. Daten aufräumen /
 - 2026-11-27 (Arbeits-Lauf 18:34): PR #37 Gewichtsschritt pro Übung (Review-Agent, Befunde behoben), wartet auf Vorschau.
 - 2026-11-27 (selbstkritisch, 18:34): Ausgewählter Chip war im Blatt kaum sichtbar (`#sheet .pill` überschreibt `.pill.on`) und der
   Titel «Gewichtsschritt» stand am Rand – beides erst im Screenshot. Im Blatt für Auswahl-Chips `.plchips` nehmen, Titel kurz halten.
+- 2026-11-28 (Arbeits-Lauf 08:34): PR #38 Eigene Eiweiss-Portionen (Review-Agent), Cockpit geprüft.
+- 2026-11-28 (selbstkritisch): Drei PRs (#36–#38) stauen sich vor einer einzigen Vorschau – sichtbare Arbeit wartet bis zu 3 Tage.
+  Wenn das bleibt, mehrere Vorschau-Pfade oder Bündeln ähnlicher kleiner Änderungen erwägen.
 - 2026-11-27 (selbstkritisch): Der Titel brach auf dem SE mitten im Wort («OBERKÖRP-ER») – nur im Screenshot gesehen. Grosse Titel immer
   mit `min(…, vw)` begrenzen und auf dem SE ansehen; und keine Review-Runde, weil klein – beim nächsten sichtbaren PR wieder Review-Agent.
