@@ -122,6 +122,16 @@ async function runDevice(browserType, bname, devName, scheme) {
   ok(await p.evaluate(() => S.active.exs[0].rows.every(r => r.done)), label + `: alle ${sets0} Sätze von «${ex0}» abgehakt`);
   const nxt = await p.evaluate(() => { const a = activeSet(S.active); return a ? a.i : -1; });
   ok(nxt > 0, label + ': nächste Übung ist aktiv');
+  // Aufwärmsatz über das Übungsmenü (zählt nicht als Satz)
+  const dc0 = await p.evaluate(() => ({ d: doneCount(S.active), v: vol(S.active) }));
+  await p.locator('#wk [data-act="exmenu"]').first().click(); await p.waitForTimeout(250);
+  await p.locator('#sheet [data-act="wuedit"]').click(); await p.waitForTimeout(250);
+  await p.fill('#wuw', '20'); await p.fill('#wur', '10');
+  await p.locator('#sheet [data-act="wuadd"]').click(); await p.waitForTimeout(250);
+  await shot('5b-aufwaermen');
+  await p.locator('#sheet [data-act="closesheet"]').last().click(); await p.waitForTimeout(250);
+  ok(await p.evaluate(() => JSON.stringify(S.active.exs[0].wu) === '[{"w":20,"r":10}]' && !!document.querySelector('#wkbody .wuline')), label + ': Aufwärmsatz gespeichert und angezeigt');
+  ok(await p.evaluate(o => doneCount(S.active) === o.d && vol(S.active) === o.v, dc0), label + ': Aufwärmsatz zählt nicht für Sätze und Volumen');
   // Abschluss (mit einer Neuerung im Test → Daumen-Rückmeldung)
   await p.evaluate(() => BETA.push({ id: 'testfunktion', name: 'Testfunktion', desc: 'Nur für den Test', since: ymd(new Date()) }));
   await p.locator('#wk [data-act="finish"]').first().click(); await p.waitForTimeout(200);
@@ -135,6 +145,7 @@ async function runDevice(browserType, bname, devName, scheme) {
   ok(await p.evaluate(() => !document.getElementById('sheet').classList.contains('full')), label + ': Abschluss schliesst sauber');
   const after = await p.evaluate(() => ({ active: S.active, n: S.workouts.length, w: JSON.parse(localStorage.getItem('kraftwerk.v1')).workouts }));
   ok(!after.active && after.n === oldWorkouts.length + 1, label + ': Training abgeschlossen und gespeichert');
+  ok(JSON.stringify(after.w[after.w.length - 1].exs[0].wu) === '[{"w":20,"r":10}]', label + ': Aufwärmsatz bleibt im gespeicherten Training');
   ok(JSON.stringify(after.w.slice(0, oldWorkouts.length)) === JSON.stringify(oldWorkouts), label + ': alle bisherigen Trainings unverändert');
   // Andere Schlüssel unverändert (ausser erwarteten)
   const snap2 = await p.evaluate(snapshot);
