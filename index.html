@@ -1035,7 +1035,7 @@ function normExtras(){if(!S.gear||typeof S.gear!=='object'||Array.isArray(S.gear
   /* seit 27.11.2026 (Design v3 Etappe 5): nutri, measures, heightCm */
   if(!S.nutri||typeof S.nutri!=='object'||Array.isArray(S.nutri))S.nutri={};if(!Array.isArray(S.measures))S.measures=[];if(typeof S.heightCm!=='number')S.heightCm=0;
   /* seit 28.11.2026: eigene Eiweiss-Portionen (nport: [{n: Name, g: Gramm}], höchstens 3) */
-  S.nport=(Array.isArray(S.nport)?S.nport:[]).filter(x=>x&&typeof x.n==='string'&&x.n.trim()&&+x.g>=1&&+x.g<=150).slice(0,NPORT_MAX).map(x=>({n:x.n.trim().slice(0,16),g:Math.round(+x.g)}));
+  S.nport=(Array.isArray(S.nport)?S.nport:[]).filter(x=>x&&typeof x.n==='string'&&x.n.trim()&&+x.g>=1&&+x.g<=150).slice(0,NPORT_MAX).map(x=>({n:Array.from(x.n.trim()).slice(0,16).join(''),g:Math.round(+x.g)}));
   /* seit 27.11.2026: Schalter «Neu im Test» (beta: {id: true/false}) */
   if(!S.beta||typeof S.beta!=='object'||Array.isArray(S.beta))S.beta={};
   /* seit 27.11.2026: Rückmeldung zu «Neu im Test» nach dem Training (fb: [{t,id,v:1|-1,w}]) */
@@ -2358,7 +2358,7 @@ function nutriCard(){
 function nquick(){
   const P=S.nport||[],btn=(v,top,lab,f='p')=>`<button data-act="nadd" data-f="${f}" data-v="${v}"${top?` data-n="${esc(top)}"`:''}>${top?`<span class="nqn">${esc(top)}</span>`:''}<span>${lab}</span></button>`;
   const bs=(P.length?P.map(x=>btn(x.g,x.n,'+ '+x.g+' g')):[btn(10,'','+ 10 g'),btn(25,'','+ 25 g')]).concat(btn(0.5,P.length?'Wasser':'','+ 0,5 l','w'));
-  return `<div class="nq${bs.length>3?' n4':''}">${bs.join('')}</div>`;
+  return `<div class="nq${bs.length!==3?' n4':''}">${bs.join('')}</div>`;
 }
 ACT.nadd=b=>{nutriAdd(b.dataset.f,+b.dataset.v);const v=b.dataset.f==='p'?`+${b.dataset.v} g Eiweiss${b.dataset.n?' · '+b.dataset.n:''}`:'+0,5 l Wasser';render();toast(v);};
 function nutriSheet(pv,wv,msg){
@@ -2367,10 +2367,10 @@ function nutriSheet(pv,wv,msg){
   openSheet(`<h2>Heute korrigieren</h2><label class="fl">Eiweiss (g)<input class="ti" id="nup" inputmode="numeric" value="${esc(pv)}" placeholder="0"></label><label class="fl">Wasser (l)<input class="ti" id="nuw" inputmode="decimal" value="${esc(wv)}" placeholder="0"></label>
     <div class="btnrow"><button class="btn acc" data-act="nutrisave">Speichern</button><button class="btn ghost" data-act="closesheet">Abbrechen</button></div>
     <div class="sec">Eigene Portionen</div>${rows||'<p class="nhint">Noch keine. Sie ersetzen die Knöpfe +10 g und +25 g.</p>'}
-    ${P.length<NPORT_MAX?`<div class="npadd"><input class="ti" id="npn" maxlength="16" placeholder="z. B. Skyr" aria-label="Name der Portion"><input class="ti" id="npg" inputmode="numeric" placeholder="g" aria-label="Gramm Eiweiss"><button class="btn soft" data-act="nportadd">Dazu</button></div>`:''}${msg?`<p class="nhint">${esc(msg)}</p>`:''}`);}
+    ${P.length<NPORT_MAX?`<div class="npadd"><input class="ti" id="npn" maxlength="16" placeholder="z. B. Skyr" aria-label="Name der Portion"><input class="ti" id="npg" inputmode="numeric" placeholder="g" aria-label="Gramm Eiweiss"><button class="btn soft" data-act="nportadd">Dazu</button></div>`:'<p class="nhint">Höchstens 3. Entferne eine, um eine neue anzulegen.</p>'}${msg?`<p class="nhint">${esc(msg)}</p>`:''}`);}
 ACT.nutriedit=()=>{const d=nutriDay(ymd(new Date()));nutriSheet(d.p||'',d.w?String(d.w).replace('.',','):'');};
 const nSheetVals=()=>[$('#nup')?$('#nup').value:'',$('#nuw')?$('#nuw').value:''];
-ACT.nportadd=()=>{const n=String($('#npn').value||'').trim().slice(0,16),g=Math.round(num($('#npg').value));
+ACT.nportadd=()=>{const n=Array.from(String($('#npn').value||'').trim()).slice(0,16).join(''),g=Math.round(num($('#npg').value));
   if(!n||!(g>=1&&g<=150)){nutriSheet(...nSheetVals(),'Name und Gramm (1–150) eingeben.');return;}
   S.nport=(S.nport||[]).concat({n,g}).slice(0,NPORT_MAX);savePlan();render();nutriSheet(...nSheetVals());toast(n+' angelegt');};
 ACT.nportdel=b=>{const i=+b.dataset.i,x=(S.nport||[])[i];if(!x)return;S.nport.splice(i,1);savePlan();render();nutriSheet(...nSheetVals());toast(x.n+' entfernt');};
